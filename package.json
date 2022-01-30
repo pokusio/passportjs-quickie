@@ -1,0 +1,26 @@
+{
+  "name": "@pokus/restream-io",
+  "version": "0.0.1",
+  "description": "Well I am an OAuth2 application, that can play with restream.io Rest API (in the name of you)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No test have been implemented yet\" && exit 7 ",
+    "build": "echo \"No build has been implemented yet\"  && exit 127",
+    "start": "echo \"No start has been implemented yet\"  && exit 127",
+    "watch": "export POKUS_PORT=9099 && nodemon ./src/index.js",
+    "help": "echo \"set OS_DISTRIB to either 'macos' or 'linux'\"  && exit 127"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "express": "^4.17.2",
+    "express-session": "^1.17.2",
+    "passport": "^0.5.2",
+    "passport-google-oauth2": "^0.2.0",
+    "shelljs": "^0.8.5"
+  }
+}
