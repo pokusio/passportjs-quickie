@@ -24,14 +24,14 @@ const app = express()
  **************/
 
 
-
+app.use(express.static(`${__dirname}/static`))
 
 
 /************************************************************************************
  *   GET / Router / (un-protected)
  **************/
 app.get('/', (request, response) => {
-   res.status(302);
+   response.status(302);
   response.send('Hello Pokus !')
 })
 /************************************************************************************
@@ -40,7 +40,7 @@ app.get('/', (request, response) => {
  * ---> the hugo generated project for the doc contains and versions in the data folder, the [openapi.json] file
  **************/
 app.get('/api/v1/', (request, response) => {
-   res.status(302);
+   response.status(302);
   // response.send(`Hello Pokus !`)
   /* response.redirect(`https://static.pok-us.io`) */
   response.redirect(`https://api-docs.pok-us.io`)
@@ -52,8 +52,8 @@ app.get('/api/v1/', (request, response) => {
  * ---> that 404 is a hugo project
  **************/
 app.get('/api', (request, response) => {
-   res.status(404);
-  response.send('Hello Pokus !')
+   response.status(404);
+   response.sendFile(`${__dirname}/static/404/v1/raw/index.html`)
 })
 
 
