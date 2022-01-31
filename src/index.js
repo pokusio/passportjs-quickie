@@ -3,7 +3,7 @@ const hugo = require("./middlewares/hugo")
 
 
 const app = express()
-app.set('view engine', 'pug') // Confguration of the Template Engine "EJS"
+
 /************************************************************************************
  *   EJS Template + Hugo ?
  *    -->  Do I have keywords (langugage reserved) words that are both used by hugo and EJS ?
@@ -31,27 +31,29 @@ app.set('view engine', 'pug') // Confguration of the Template Engine "EJS"
  *   GET / Router / (un-protected)
  **************/
 app.get('/', (request, response) => {
+   res.status(302);
   response.send('Hello Pokus !')
 })
 /************************************************************************************
- *   GET /api Router / (un-protected) :
- * ---> gives a beautiful hugo geenrated 404
- * ---> or a redirect to the
+ *   GET /api/v1 Router / (un-protected) :
+ * ---> gives a beautiful hugo geenrated OpenAPI Doc, with all the api documentation, served at /api/v1
+ * ---> the hugo generated project for the doc contains and versions in the data folder, the [openapi.json] file
  **************/
-app.get('/api/v1', (request, response) => {
+app.get('/api/v1/', (request, response) => {
+   res.status(302);
   // response.send(`Hello Pokus !`)
-  response.redirect(`https://static.pok-us.io`)
+  /* response.redirect(`https://static.pok-us.io`) */
+  response.redirect(`https://api-docs.pok-us.io`)
 
 })
 /************************************************************************************
- *   GET /api/v1 Router / (un-protected) :
- * ---> returns a 404
+ *   GET /api/ Router / (un-protected) :
+ * ---> returns a beautiful 404
  * ---> that 404 is a hugo project
  **************/
 app.get('/api', (request, response) => {
    res.status(404);
-
-
+  response.send('Hello Pokus !')
 })
 
 
@@ -69,8 +71,28 @@ app.get('/api/v1/liveness', (request, response) => {
 })
 
 
+/************************************************************************************
+ *   GET /api/v1/login Router :
+ * ---> trigger the Oauth2 Authentication flow
+ **************/
+ app.get('/api/v1/login', (request, response) => {
+   /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
+   response.json({
+     message: `Pokus answers : Oh yes I al alive, very much alive !`,
+     whoami: `pokus`
+   })
+ })
+
+
+
+
+
+
 const port_number = process.env.POKUS_PORT || 8088;
+const net_host = process.env.POKUS_NET_HOST || `127.0.0.1`;
 
 // sendFile will go here
 
-app.listen(port_number);
+app.listen(port_number, () => {
+  console.info(`Listening on http://${net_host}:${port_number}`)
+});
