@@ -24,3 +24,4 @@ And now go to http://localhost:9099
 
 * https://www.passportjs.org/concepts/authentication/http-bearer/
 * https://www.youtube.com/watch?v=Q0a0594tOrc
+* https://blog.logrocket.com/documenting-your-express-api-with-swagger/  

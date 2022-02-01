@@ -56,31 +56,39 @@ app.get('/', (request, response) => {
    response.status(302);
   response.send('Hello Pokus !')
 })
+
 /************************************************************************************
  *   GET /api/v1 Router / (un-protected) :
  * ---> gives a beautiful hugo geenrated OpenAPI Doc, with all the api documentation, served at /api/v1
  * ---> the hugo generated project for the doc contains and versions in the data folder, the [openapi.json] file
+ *
+ *    +--> $ curl -iv http://127.0.0.1:9099/api/v1 -H "Accept: text/html"
+ *    +--> $ curl -iv http://127.0.0.1:9099/api/v1 -H "Accept: application/json" | tail -n 1 | jq .
+ *    +--> $ curl -iv http://127.0.0.1:9099/api/v1 -H "Accept: text/plain"
  **************/
 app.get('/api/v1/', (request, response) => {
-   response.status(302);
   // response.send(`Hello Pokus !`)
   /* response.redirect(`https://static.pok-us.io`) */
-  response.redirect(`https://api-docs.pok-us.io`)
 
-  // respond with html page
-  if (req.accepts('html')) {
-   res.render('404/v1/terminal', { requested_url: req.url });
+
+  // respond with rediretion to API docs if required content type is HTML
+  if (request.accepts('html')) {
+     response.status(302);
+   response.redirect(`https://api-docs.pok-us.io`);
    return;
   }
 
+  // respond with API version and openapi.json to API docs if required content type is HTML
   // respond with json
-  if (req.accepts('json')) {
-   res.send({ error: 'Not found' });
+  if (request.accepts('json')) {
+   response.status(201);
+   response.send({ api_version: '1.0.0-rc1' });
    return;
   }
 
-  // default to plain-text. send()
-  res.type('txt').send('Not found');
+  // defaults to API docs redirection
+  response.status(302);
+  response.redirect(`https://api-docs.pok-us.io`);
 
 })
 /************************************************************************************
@@ -150,18 +158,11 @@ app.get('/api/v1/liveness', (request, response) => {
   *    +--> middleware use()d, we assume 404, as nothing else
   *    +--> responded.
   *
-  *    +--> $ curl http://localhost:3000/notfound
-  *    +--> $ curl http://localhost:3000/notfound -H "Accept: application/json"
-  *    +--> $ curl http://localhost:3000/notfound -H "Accept: text/plain"
+  *    +--> $ curl -iv http://127.0.0.1:3000/notfound
+  *    +--> $ curl -iv http://127.0.0.1:3000/notfound -H "Accept: application/json"
+  *    +--> $ curl -iv http://127.0.0.1:3000/notfound -H "Accept: text/plain"
   *
   **************/
-
-
-
-
-
-
-
 app.use(function(req, res, next){
  res.status(404);
 
