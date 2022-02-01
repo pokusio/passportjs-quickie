@@ -1,1 +1,3 @@
 node_modules
+pokus.secrets.json
+docker/run

@@ -1,36 +1,38 @@
 const express = require("express")
 const winston = require('winston');
+
 const path = require('path');
 const ejs = require('ejs');
 
 const hugo = require("./middlewares/hugo")
+const pokus_environment = require("./environment/")
+const pokus_logging = require("./logger/")
 
-const tlsEnabled = process.env.TLS_ENABLED || false;
-
-const logger = winston.createLogger({
+/*   const pokus_logger = pokus_logging.getLogger();  */
+const pokus_logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: winston.format.cli(),
   transports: [new winston.transports.Console()],
 });
 
-
-logger.info(`/************************************************************************* `);
-logger.info(`/****** Initializing Winston logs : `);
-logger.info(`/************************************************************************* `);
-logger.info(`    [process.env.LOG_LEVEL] : ${process.env.LOG_LEVEL}`);
-logger.error(`Winston Init Tests:  error message`);
-logger.warn(`Winston Init Tests:  warn message`);
-logger.info(`Winston Init Tests:  info message`);
-logger.verbose(`Winston Init Tests:  verbose message`);
-logger.debug(`Winston Init Tests:  debug message`);
-logger.silly(`Winston Init Tests:  silly message`);
-logger.info(`/************************************************************************* `);
-logger.info(`/************************************************************************* `);
-
+pokus_logger.info(`/************************************************************************* `);
+pokus_logger.info(`/****** Initializing Winston logs : `);
+pokus_logger.info(`/************************************************************************* `);
+pokus_logger.info(`    [process.env.LOG_LEVEL] : ${process.env.LOG_LEVEL}`);
+pokus_logger.error(`Winston Init Tests:  error message`);
+pokus_logger.warn(`Winston Init Tests:  warn message`);
+pokus_logger.info(`Winston Init Tests:  info message`);
+pokus_logger.verbose(`Winston Init Tests:  verbose message`);
+pokus_logger.debug(`Winston Init Tests:  debug message`);
+pokus_logger.silly(`Winston Init Tests:  silly message`);
+pokus_logger.info(`/************************************************************************* `);
+pokus_logger.info(`/************************************************************************* `);
 
 
 
-const app = express()
+
+const app = express();
+
 
 
 /************************************************************************************
@@ -46,6 +48,13 @@ app.set('views', path.join(__dirname, 'views'));
 // which we can use in the templates
 // via settings['verbose errors']
 app.enable('verbose errors');
+
+
+/************************************************************************************
+ *   GET /static Router / (un-protected) (static folder served, for static pages like login 404 etc...)
+ **************/
+app.use(express.static(`${__dirname}/static`))
+
 
 
 
@@ -119,7 +128,7 @@ app.get('/api/v1/liveness', (request, response) => {
 
 
 /************************************************************************************
- *   GET /api/v1/login Router :
+ *   GET /api/v1/login Router / (un-protected) :
  * ---> trigger the Oauth2 Authentication flow
  **************/
  app.get('/api/v1/login', (request, response) => {
@@ -130,27 +139,52 @@ app.get('/api/v1/liveness', (request, response) => {
    })
  })
 
+
+/************************************************************************************
+ *   GET /api/v1/machines Router / (protected):
+ * ---> list all virtual machines
+ **************/
+ app.get('/api/v1/machines', (request, response) => {
+   /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
+   response.json({
+     message: `Pokus answers : Oh yes I al alive, very much alive !`,
+     whoami: `pokus`
+   })
+ })
+
  /************************************************************************************
-  *   GET /api/v1/login Router :
-  * ---> trigger the Oauth2 Authentication flow
+  ************************************************************************************
+  *                          [OAuth2]
+  ************************************************************************************
   **************/
-  app.get('/api/v1/login', (request, response) => {
+
+ /************************************************************************************
+  *   GET /google/callback Router / (Google OAuth2 Success):
+  * ---> list all virtual machines
+  **************/
+  app.get('/google/callback', (request, response) => {
     /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
     response.json({
-      message: `Pokus answers : Oh yes I al alive, very much alive !`,
+      message: `Pokus answers : Oh you just successfully logged in with Google OAuth2 !`,
       whoami: `pokus`
     })
   })
-
-
+  /************************************************************************************
+   *   GET /restream/callback Router / (Restream OAuth2 Success):
+   * ---> list all virtual machines
+   **************/
+   app.get('/google/callback', (request, response) => {
+     /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
+     response.json({
+       message: `Pokus answers : Oh you just successfully logged in with Restream OAuth2 !`,
+       whoami: `pokus`
+     })
+   })
  /************************************************************************************
-  *   GET /static Router / (un-protected) (static folder served, for static pages like login 404 etc...)
+  ************************************************************************************
+  *                          404
+  ************************************************************************************
   **************/
- app.use(express.static(`${__dirname}/static`))
-
-
-
-
  /************************************************************************************
   *   GET /static Router / (un-protected) (static folder served, for static pages like login 404 etc...)
   *
@@ -175,10 +209,10 @@ app.use(function(req, res, next){
 
  // respond with html page
  if (req.accepts('html')) {
-   logger.info(` Pokus : rendering 404 page for requested page :  [req.baseUrl] = [${req.baseUrl}]`);
-   logger.info(` Pokus : rendering 404 page for requested page :  [req.headers] = [${JSON.stringify(req.headers, " ", 2)}]`);
-   logger.info(` Pokus : rendering 404 page for requested page :  [req.url] = [${req.url}]`);
-   logger.info(` Pokus : rendering 404 page for requested page : ${requested_url_str}`);
+   pokus_logger.info(` Pokus : rendering 404 page for requested page :  [req.baseUrl] = [${req.baseUrl}]`);
+   pokus_logger.info(` Pokus : rendering 404 page for requested page :  [req.headers] = [${JSON.stringify(req.headers, " ", 2)}]`);
+   pokus_logger.info(` Pokus : rendering 404 page for requested page :  [req.url] = [${req.url}]`);
+   pokus_logger.info(` Pokus : rendering 404 page for requested page : ${requested_url_str}`);
 
 
    res.render('404/v1/terminal', { requested_url: `${requested_url_str}` });
@@ -206,11 +240,10 @@ app.use(function(req, res, next){
 
 
 
-const port_number = process.env.POKUS_PORT || 8088;
-const net_host = process.env.POKUS_NET_HOST || `127.0.0.1`;
+
 
 // sendFile will go here
 
-app.listen(port_number, () => {
-  console.info(`Listening on http://${net_host}:${port_number}`)
+app.listen(pokus_environment.getEnvironment().port_number, () => {
+  pokus_logger.info(`Listening on http://${pokus_environment.getEnvironment().net_fqdn}:${pokus_environment.getEnvironment().port_number}`)
 });

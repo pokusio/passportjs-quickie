@@ -1,0 +1,2 @@
+mongodb://pokus:pokus@mongo.pok-us.io:27017/db?ssl=false
+mongodb://pokus:pokus@mongo:27017/?authSource=admin
