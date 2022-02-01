@@ -185,3 +185,5 @@ docker run -it --name jblmn --rm -p 0.0.0.0:8083:8081 \
 * https://github.com/mongo-express/mongo-express-docker/issues/74
 * https://docs.docker.com/engine/swarm/secrets/#defining-and-using-secrets-in-compose-files
 * https://www.npmjs.com/package/express-winston
+* https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/mongoose
+* https://www.youtube.com/watch?v=h4A0-53Olm4

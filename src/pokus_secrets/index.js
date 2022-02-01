@@ -14,37 +14,39 @@ const secretFilePath = process.env.POKUS_SECRET_FILE_PATH || `pokus.secrets.json
 
 const fs = require('fs')
 
-let secretsAsJSON = {}
-
+let secretsAsRawJSON = {};
+let loadedSecretJson = {};
 try {
-  secretsAsJSON = fs.readFileSync(`${secretFilePath}`, 'utf8')
+  secretsAsRawJSON = fs.readFileSync(`${secretFilePath}`, 'utf8')
   pokus_logger.info(`/************************************************************************* `);
-  pokus_logger.info(`/****** Loading Pokus Secrets  : `);
+  pokus_logger.info(`/****** Loading Pokus Secrets File  : `);
   pokus_logger.info(`/************************************************************************* `);
-  pokus_logger.log(JSON.Stringify§(secretsAsJSON, " ", 2))
+  loadedSecretJson = JSON.parse(secretsAsRawJSON);
+  pokus_logger.info(JSON.stringify(loadedSecretJson, " ", 2))
+  pokus_logger.info(`/************************************************************************* `);
 } catch (err) {
-  pokus_logger.error(err)
+  pokus_logger.error(err);
 }
 
-const loadedSecretJson = secretsAsJSON;
 
-const getSecrets() = () {
-  return loadedSecretJson
+
+const getSecrets = () => {
+  return loadedSecretJson;
 }
 
-const getRestreamioOauth2Secrets() = () {
+const getRestreamioOauth2Secret = () => {
     return {
       clientID: `${loadedSecretJson.auth.restream.clientID}`,
       clientSecret: `${loadedSecretJson.auth.restream.clientSecret}`
     }
 }
-const getGoogleOauth2Secrets() = () {
+const getGoogleOauth2Secrets = () => {
     return {
       clientID: `${loadedSecretJson.auth.google.clientID}`,
       clientSecret: `${loadedSecretJson.auth.google.clientSecret}`
     }
 }
-const getDatabaseSecrets() = () {
+const getDatabaseSecrets = () => {
     return {
       username: `${loadedSecretJson.auth.mongoose.username}`,
       password: `${loadedSecretJson.auth.mongoose.password}`
@@ -70,33 +72,30 @@ const getDatabaseSecrets() = () {
 /// -------- -------- -------- -------- -------- -------- -------- -------- -------- ///
 /// -------- -------- -------- -------- -------- -------- -------- -------- -------- ///
 
-
-
 pokus_logger.info(`/************************************************************************* `);
-pokus_logger.info(`/****** Loading PokusBox environment : `);
 pokus_logger.info(`/************************************************************************* `);
-pokus_logger.info(`    [process.env.TLS_ENABLED] : ${process.env.TLS_ENABLED}`);
-pokus_logger.info(`    [process.env.POKUS_PORT] : ${process.env.POKUS_PORT}`);
-pokus_logger.info(`    [process.env.POKUS_NET_HOST] : ${process.env.POKUS_NET_HOST}`);
+pokus_logger.info(`/****** Finnally Loaded PokusBox secrets : `);
+pokus_logger.info(`/************************************************************************* `);
+pokus_logger.info(`    [loadedSecretJson] : ${JSON.stringify(loadedSecretJson, " ", 2)}`);
+pokus_logger.info(`/************************************************************************* `);
+pokus_logger.info(`    [loadedSecretJson] : `);
+pokus_logger.info(JSON.stringify(loadedSecretJson, " ", 2));
+pokus_logger.info(`/************************************************************************* `);
+pokus_logger.info(`/************************************************************************* `);
+pokus_logger.info(`    loadedSecretJson.auth.restream.clientID=[${loadedSecretJson.auth.restream.clientID}]   `);
+pokus_logger.info(`/************************************************************************* `);
+pokus_logger.info(`    loadedSecretJson.auth.restream.clientSecret=[${loadedSecretJson.auth.restream.clientSecret}]   `);
+pokus_logger.info(`/************************************************************************* `);
+pokus_logger.info(`    loadedSecretJson.auth.google.clientID=[${loadedSecretJson.auth.google.clientID}}]   `);
+pokus_logger.info(`/************************************************************************* `);
+pokus_logger.info(`    loadedSecretJson.auth.google.clientSecret=[${loadedSecretJson.auth.google.clientSecret}]   `);
+pokus_logger.info(`/************************************************************************* `);
 
 
-
-pokus_logger.info(`/************************************************************************* `);
-pokus_logger.info(`/****** Loading PokusBox environment (after defaults) : `);
-pokus_logger.info(`/************************************************************************* `);
-pokus_logger.info(`    [tlsEnabled] : ${tlsEnabled}`);
-pokus_logger.info(`    [port_number] : ${port_number}`);
-pokus_logger.info(`    [net_fqdn] : ${net_fqdn}`);
-pokus_logger.info(`/************************************************************************* `);
-
-const getEnvironment = () => {
-  return {
-    tsl_enabled: tlsEnabled,
-    port_number: `${port_number}`,
-    net_fqdn: `${net_fqdn}`
-  }
-}
 
 module.exports = {
-    getEnvironment: getEnvironment
+    getSecrets: getSecrets,
+    getRestreamioOauth2Secret: getRestreamioOauth2Secret,
+    getGoogleOauth2Secrets: getGoogleOauth2Secrets,
+    getDatabaseSecrets: getDatabaseSecrets
 };

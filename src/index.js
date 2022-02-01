@@ -7,6 +7,8 @@ const ejs = require('ejs');
 const hugo = require("./middlewares/hugo")
 const pokus_environment = require("./environment/")
 const pokus_logging = require("./logger/")
+const pokus_dal = require("./dal/")
+
 
 /*   const pokus_logger = pokus_logging.getLogger();  */
 const pokus_logger = winston.createLogger({
@@ -145,12 +147,47 @@ app.get('/api/v1/liveness', (request, response) => {
  * ---> list all virtual machines
  **************/
  app.get('/api/v1/machines', (request, response) => {
-   /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
-   response.json({
-     message: `Pokus answers : Oh yes I al alive, very much alive !`,
-     whoami: `pokus`
-   })
+ /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
+ response.json({
+   message: `Pokus answers : Oh yes I al alive, very much alive !`,
+   whoami: `pokus`
  })
+})
+
+
+
+
+/************************************************************************************
+*   POST /api/v1/puppies Router / (protected):
+* ---> list all virtual machines
+**************/
+app.post('/api/v1/puppies', (request, response) => {
+  const puppyFromReq = {
+    cute_name: `${request.body.cute_name}`,
+    is_female: request.body.is_female,
+    description: `${request.body.description}`
+  }
+  pokus_logger.info(` Pokus [POST /api/v1/puppies]: the puppy to add to the database is : ${JSON.stringify(puppyFromReq, " ", 2)} rendering 404 page for requested page : ${requested_url_str}`);
+
+  const testPuppy = {
+    cute_name: `tootsie`,
+    is_female: true,
+    description: `tootsie is such a loving dog`
+  }
+  pokus_dal.testDbWrites(testPuppy.cute_name, testPuppy.is_female, testPuppy.description);
+  pokus_dal.testDbWrites(testPuppy.cute_name, testPuppy.is_female, testPuppy.description);
+
+  /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
+  pokus_logger.info(` `);
+
+  response.status(201);
+  response.json({
+    message: `Pokus [POST /api/v1/puppies]: the puppy below described puppy was successfully added to the database : ${JSON.stringify(puppyFromReq, " ", 2)} rendering 404 page for requested page : ${requested_url_str}`,
+    puppy: puppyFromReq
+  })
+})
+
+
 
  /************************************************************************************
   ************************************************************************************
