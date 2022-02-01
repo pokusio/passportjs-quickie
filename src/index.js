@@ -123,6 +123,19 @@ app.get('/api/v1/liveness', (request, response) => {
  })
 
  /************************************************************************************
+  *   GET /api/v1/login Router :
+  * ---> trigger the Oauth2 Authentication flow
+  **************/
+  app.get('/api/v1/login', (request, response) => {
+    /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
+    response.json({
+      message: `Pokus answers : Oh yes I al alive, very much alive !`,
+      whoami: `pokus`
+    })
+  })
+
+
+ /************************************************************************************
   *   GET /static Router / (un-protected) (static folder served, for static pages like login 404 etc...)
   **************/
  app.use(express.static(`${__dirname}/static`))
