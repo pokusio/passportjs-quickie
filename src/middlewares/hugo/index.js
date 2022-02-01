@@ -1,5 +1,24 @@
 const shelljs = require("shelljs")
 
+/************************************************************************************
+ *   EJS Template + Hugo ?
+ *    -->  Do I have keywords (langugage reserved) words that are both used by hugo and EJS ?
+ *    -->  I run the hugo build, and I get an EJS valid template ?
+ *    -->  Well there is ne special case, where we can be assured the answer is yes :
+ *         ++ > in the case of 404 pages :
+ *              + typically, there is nothing specific to te user in 404
+ *              + we can assume that : a lot of people do use 404 pages that are seen exactly the same by all users, authneticaed and non authenticated users.
+ *              + If the 404 needs to be different for authenticated users, then we can still usehugo to geenrate the EJSwe wwant, for a partiular project...
+ *         ++ > in the case of 40
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ **************/
+
 const hugoBuild = () => {
 
   let hugoBuildCmdResult = shelljs.exec(`cd static/ && ls -alh . && hugo -b ${process.env.HUGO_BASE_URL}`);
