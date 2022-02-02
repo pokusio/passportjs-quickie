@@ -148,7 +148,7 @@ docker-compose up -d mongo
 
 docker stop jblm && docker rm jblm
 
-docker run -itd --name jblm --restart always -e ME_CONFIG_MONGODB_URL="mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false" --add-host "mongo.pok-us.io:192.168.43.6" --network hugo-starter-node_mongo_net --entrypoint "/bin/sh" debian
+docker run -itd --name jblm --restart always -e ME_CONFIG_MONGODB_URL="mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false" --add-host "mongo.pok-us.io:192.168.131.6" --network hugo-starter-node_mongo_net --entrypoint "/bin/sh" debian
 
 
 docker exec -it jblm bin -c "apt-get update -y && apt-get install -y iputils-ping"
@@ -158,7 +158,7 @@ docker stop jblm && docker rm jblm
 
 # and to test running mongo-express as simply as possible, which works ! Go to http://0.0.0.0:8083/
 docker run -it --name jblmn --rm -p 0.0.0.0:8083:8081 \
-    --add-host "mongo.pok-us.io:192.168.43.6" \
+    --add-host "mongo.pok-us.io:192.168.131.6" \
     -e ME_CONFIG_MONGODB_URL="mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false" \
     -e ME_CONFIG_MONGODB_AUTH_DATABASE="pokus" \
     -e ME_CONFIG_MONGODB_AUTH_USERNAME="pokus" \
