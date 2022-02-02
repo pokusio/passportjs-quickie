@@ -168,10 +168,11 @@ app.get('/api/v1/liveness', (request, response) => {
 **************/
 app.post('/api/v1/puppies', (request, response) => {
   const puppyFromReq = {
-    cute_name: `${req.params.cute_name}`,
-    is_female: req.params.is_female,
-    description: `${req.params.description}`
+    cute_name: `${request.params.cute_name}`,
+    is_female: request.params.is_female,
+    description: `${request.params.description}`
   }
+  let requested_url_str = request.url;
   pokus_logger.info(` Pokus [POST /api/v1/puppies]: the puppy to add to the database is : ${JSON.stringify(puppyFromReq, " ", 2)} rendering 404 page for requested page : ${requested_url_str}`);
 
   const testPuppy = {
