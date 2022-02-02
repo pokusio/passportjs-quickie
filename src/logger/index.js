@@ -11,7 +11,7 @@ const pokus_logger = winston.createLogger({
 
 
 pokus_logger.info(`/************************************************************************* `);
-pokus_logger.info(`/****** Initializing Winston logs : `);
+pokus_logger.info(`/****** APP LOGGER Initializing Winston logs : `);
 pokus_logger.info(`/************************************************************************* `);
 pokus_logger.info(`    [process.env.LOG_LEVEL] : ${process.env.LOG_LEVEL}`);
 pokus_logger.error(`Winston Init Tests:  error message`);

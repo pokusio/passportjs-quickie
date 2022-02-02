@@ -18,7 +18,7 @@ const pokus_logger = winston.createLogger({
 });
 
 pokus_logger.info(`/************************************************************************* `);
-pokus_logger.info(`/****** Initializing Winston logs : `);
+pokus_logger.info(`/****** APP ROOT Initializing Winston logs : `);
 pokus_logger.info(`/************************************************************************* `);
 pokus_logger.info(`    [process.env.LOG_LEVEL] : ${process.env.LOG_LEVEL}`);
 pokus_logger.error(`Winston Init Tests:  error message`);
@@ -64,7 +64,7 @@ app.use(express.static(`${__dirname}/static`))
  *   GET / Router / (un-protected)
  **************/
 app.get('/', (request, response) => {
-   response.status(302);
+  response.status(302);
   response.send('Hello Pokus !')
 })
 
@@ -123,7 +123,7 @@ app.get('/api', (request, response) => {
 app.get('/api/v1/liveness', (request, response) => {
   /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
   response.json({
-    message: `Pokus answers : Oh yes I al alive, very much alive !`,
+    message: `Pokus answers : Oh yes I am alive, very much alive !`,
     whoami: `pokus`
   })
 })
@@ -149,7 +149,7 @@ app.get('/api/v1/liveness', (request, response) => {
  app.get('/api/v1/machines', (request, response) => {
  /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
  response.json({
-   message: `Pokus answers : Oh yes I al alive, very much alive !`,
+   message: `Pokus answers : Oh yes I am alive, very much alive !`,
    whoami: `pokus`
  })
 })
@@ -160,12 +160,17 @@ app.get('/api/v1/liveness', (request, response) => {
 /************************************************************************************
 *   POST /api/v1/puppies Router / (protected):
 * ---> list all virtual machines
+*
+*    +--> $ curl -iv http://127.0.0.1:9099/api/v1/puppies
+*    +--> $ curl -iv http://127.0.0.1:9099/api/v1/puppies -d '{ "cute_name": "jerry", "description": "hes a cat actually", "is_female": false}' -X POST -H "Accept: application/json"
+*
+*
 **************/
 app.post('/api/v1/puppies', (request, response) => {
   const puppyFromReq = {
-    cute_name: `${request.body.cute_name}`,
-    is_female: request.body.is_female,
-    description: `${request.body.description}`
+    cute_name: `${req.params.cute_name}`,
+    is_female: req.params.is_female,
+    description: `${req.params.description}`
   }
   pokus_logger.info(` Pokus [POST /api/v1/puppies]: the puppy to add to the database is : ${JSON.stringify(puppyFromReq, " ", 2)} rendering 404 page for requested page : ${requested_url_str}`);
 
@@ -217,6 +222,8 @@ app.post('/api/v1/puppies', (request, response) => {
        whoami: `pokus`
      })
    })
+
+
  /************************************************************************************
   ************************************************************************************
   *                          404
@@ -229,16 +236,16 @@ app.post('/api/v1/puppies', (request, response) => {
   *    +--> middleware use()d, we assume 404, as nothing else
   *    +--> responded.
   *
-  *    +--> $ curl -iv http://127.0.0.1:3000/notfound
-  *    +--> $ curl -iv http://127.0.0.1:3000/notfound -H "Accept: application/json"
-  *    +--> $ curl -iv http://127.0.0.1:3000/notfound -H "Accept: text/plain"
+  *    +--> $ curl -iv http://127.0.0.1:9099/notfound
+  *    +--> $ curl -iv http://127.0.0.1:9099/notfound -H "Accept: application/json"
+  *    +--> $ curl -iv http://127.0.0.1:9099/notfound -H "Accept: text/plain"
   *
   **************/
 app.use(function(req, res, next){
  res.status(404);
 
  let requested_url_str = req.baseUrl + req.url;
- if (tlsEnabled) {
+ if (pokus_environment.getEnvironment().tsl_enabled) {
   requested_url_str = `https://${req.headers.host}${req.url}` ;
  } else {
   requested_url_str = `http://${req.headers.host}${req.url}` ;

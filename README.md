@@ -148,7 +148,7 @@ docker-compose up -d mongo
 
 docker stop jblm && docker rm jblm
 
-docker run -itd --name jblm --restart always -e ME_CONFIG_MONGODB_URL="mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false" --add-host "mongo.pok-us.io:192.168.131.6" --network hugo-starter-node_mongo_net --entrypoint "/bin/sh" debian
+docker run -itd --name jblm --restart always -e ME_CONFIG_MONGODB_URL="mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false" --add-host "mongo.pok-us.io:192.168.82.6" --network hugo-starter-node_mongo_net --entrypoint "/bin/sh" debian
 
 
 docker exec -it jblm bin -c "apt-get update -y && apt-get install -y iputils-ping"
@@ -158,7 +158,7 @@ docker stop jblm && docker rm jblm
 
 # and to test running mongo-express as simply as possible, which works ! Go to http://0.0.0.0:8083/
 docker run -it --name jblmn --rm -p 0.0.0.0:8083:8081 \
-    --add-host "mongo.pok-us.io:192.168.131.6" \
+    --add-host "mongo.pok-us.io:192.168.82.6" \
     -e ME_CONFIG_MONGODB_URL="mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false" \
     -e ME_CONFIG_MONGODB_AUTH_DATABASE="pokus" \
     -e ME_CONFIG_MONGODB_AUTH_USERNAME="pokus" \
@@ -172,6 +172,67 @@ docker run -it --name jblmn --rm -p 0.0.0.0:8083:8081 \
 
 ```
 
+## Testing database connection
+
+```bash
+
+docker run --name jbltest -itd --restart always mongo sh
+
+docker exec -it jbltest sh -c "mongo --version"
+docker exec -it jbltest sh -c "apt-get update -y && apt-get install -y iputils-ping"
+
+export POKUSDB_USERNAME="user"
+export POKUSDB_USERPWD="user"
+export POKUSDB_NET_HOST="192.168.82.6"
+
+
+export TEST_QUERY="mongo -u \"${POKUSDB_USERNAME}\" -p \"${POKUSDB_USERPWD}\" ${POKUSDB_NET_HOST} --authenticationDatabase \"admin\""
+
+
+docker exec -it jbltest sh -c "${TEST_QUERY}"
+
+# ===>>>
+# ===>>>
+# ===>>> Okay, so a first test with wrong user/pwd  involves authentication failed, that's good n expected.
+# ===>>>
+# ===>>>
+
+
+# bash-3.2$ export POKUSDB_USERNAME="user"
+# bash-3.2$ export POKUSDB_USERPWD="user"
+# bash-3.2$ export POKUSDB_NET_HOST="192.168.82.6"
+# bash-3.2$
+# bash-3.2$
+# bash-3.2$ export TEST_QUERY="mongo -u \"${POKUSDB_USERNAME}\" -p \"${POKUSDB_USERPWD}\" ${POKUSDB_NET_HOST} --authenticationDatabase \"admin\""
+# bash-3.2$
+# bash-3.2$
+# bash-3.2$ docker exec -it jbltest sh -c "${TEST_QUERY}"
+#
+# MongoDB shell version v5.0.6
+# connecting to: mongodb://192.168.82.6:27017/test?authSource=admin&compressors=disabled&gssapiServiceName=mongodb
+# Error: Authentication failed. :
+# connect@src/mongo/shell/mongo.js:372:17
+# @(connect):2:6
+# exception: connect failed
+# exiting with code 1
+# bash-3.2$
+
+
+export POKUSDB_USERNAME="pokus"
+export POKUSDB_USERPWD="pokus"
+export POKUSDB_NET_HOST="192.168.82.6"
+export POKUSDB_AUTH_DB="admin"
+
+
+export TEST_QUERY="mongo -u \"${POKUSDB_USERNAME}\" -p \"${POKUSDB_USERPWD}\" ${POKUSDB_NET_HOST} --authenticationDatabase \"${POKUSDB_AUTH_DB}\""
+
+
+docker exec -it jbltest sh -c "${TEST_QUERY}"
+
+# and there we have an authentication success as the super dooper admin
+```
+
+Right, now i see one thing that i do not specify in my `mongoDbURI` : the authentication database. That's with i added the `?authSource=admin` query param in `mongoDbURI`.
 
 
 ## References
