@@ -350,19 +350,29 @@ app.get('/api/v1/puppies', (request, response, next) => {
     // search criterai////
     retrievedPuppies = pokus_dal.getPuppies(searchCriterias.search_str, searchCriterias.female, searchCriterias.color, function (docs) {
       pokus_logger.info(`**********************************************************************`);
+      pokus_logger.info(``);
+      pokus_logger.info(``);
       pokus_logger.info(` Pokus [GET /api/v1/puppies]: [pokus_dal.getPuppies] callback to retrieve puppies async from mongoose :`);
       pokus_logger.info(``);
+      pokus_logger.info(``);
+      pokus_logger.info(`here is the [docs] object received from mongoose : `);
+      pokus_logger.info(``);
+      pokus_logger.info(``);
+      pokus_logger.info(`${JSON.stringify(docs, " ", 2)}`);
+      pokus_logger.info(``);
+      pokus_logger.info(``);
       pokus_logger.info(`**********************************************************************`);
-      pokusResponseCode = 204;
+      pokusResponseCode = 200;
       pokusResponseJSON = {
         message: ` ok ça vient bien du callback `,
         error: `nonya pas derreur c un test error`,
-        search: searchCriterias
+        search: searchCriterias,
+        results: docs
       };
       response.status(pokusResponseCode);
       response.json(pokusResponseJSON)
     });
-
+    /*
     pokus_logger.info(`**********************************************************************`);
     pokus_logger.info(` Pokus [GET /api/v1/puppies]: Pokus retrieved puppies from your search request : ${JSON.stringify(retrievedPuppies, " ", 2)}`);
     pokus_logger.info(`**********************************************************************`);
@@ -371,6 +381,7 @@ app.get('/api/v1/puppies', (request, response, next) => {
       search: searchCriterias,
       puppies: retrievedPuppies
     };
+    */
   } catch (e) {
     pokus_logger.info(`**********************************************************************`);
     pokus_logger.info(` Pokus [GET /api/v1/puppies]: An error occured while trying to retrieve puppies with your search request : ${JSON.stringify(searchCriterias, " ", 2)}`);
@@ -383,8 +394,10 @@ app.get('/api/v1/puppies', (request, response, next) => {
       search: searchCriterias
     };
   } finally {
+    /*
     response.status(pokusResponseCode);
-    response.json(pokusResponseJSON)
+    response.json(pokusResponseJSON);
+    */
   }
 
 })

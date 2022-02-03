@@ -36,7 +36,7 @@ try {
 }
 
 // Set up default mongoose connection // "mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false"
-const mongoDbURI = `mongodb://${mongoUsername}:${mongoUserPassword}@192.168.82.6:27017/${mongoDbName}?authSource=admin&ssl=false&retryWrites=true&w=majority`;
+const mongoDbURI = `mongodb://${mongoUsername}:${mongoUserPassword}@192.168.254.6:27017/${mongoDbName}?authSource=admin&ssl=false&retryWrites=true&w=majority`;
 /// mongoose.connect(mongoDbURI, {useNewUrlParser: true, useUnifiedTopology: true});
 var theconnectionToPokusBoxDb = null;
 try {
@@ -62,7 +62,13 @@ var defaultConnection = mongoose.connection;
 /// Bind connection to error event (to get notification of connection errors)
 /// theconnectionToPokusBoxDb.on('error', pokus_logger.error.bind(console, 'MongoDB connection error:'));
 defaultConnection.on('error', pokus_logger.error.bind(console, 'MongoDB connection error:'));
-
+defaultConnection.on('error', function(err) { console.log(`JBL_MONGO_CHASER une erreur mpngo s'est produite : [${err.message}]`); });
+defaultConnection.once('open', function() {
+  console.log(`JBL_MONGO_CHASER la connection MongoDB pour Mongoose vient de s'ouvrir`);
+});
+defaultConnection.once('close', function() {
+  console.log(`JBL_MONGO_CHASER la connection MongoDB pour Mongoose vient d'être cloturée`);
+});
 // theconnectionToPokusBoxDb does not have an "on" method // theconnectionToPokusBoxDb.on('error', pokus_logger.error.bind(console, 'MongoDB connection error:'));
 /*
 main().catch(err => console.log(err));
@@ -85,6 +91,7 @@ const handlecreatePuppyErrors = (err) => {
   pokus_logger.error(err);
   pokus_logger.error(`-----------------------------------------------------------------------------`);
 }
+
 const handletestDbReadsErrors = (err) => {
   pokus_logger.error(`-----------------------------------------------------------------------------`);
   pokus_logger.error(`An error occured during the execution of  [testDbReads = () => {] : `);
@@ -213,14 +220,16 @@ const getPuppies = (p_search_str, p_female, p_color, pokus_callback) => {
         pokus_callback(err, docs);
       });
       */
-      pokus_logger.info(`/** ******** no 'color', no 'is_female' search criterias`);
-      PuppyModel.find({ cute_name: `/${p_search_str}/i`}).then((docs) => {
+      pokus_logger.info(`/** ******** no 'color', no 'is_female' search criterias : `);
+      pokus_logger.info(`        XxxxModel.find({ cute_name: /${p_search_str}.*/}) `);
+
+      PuppyModel.find({ cute_name: /`${p_search_str}`.*/}).then((docs) => {
         pokus_callback(docs);
       });
     } else {
       // executes, passing results to callback
       /// retrievedPuppies = PuppyModel.find({ cute_name: `/${p_search_str}/i`, color: p_color}, function (err, docs) {});
-      PuppyModel.find({ cute_name: `/${p_search_str}/i`, color: p_color}, function (err, docs){
+      PuppyModel.find({ cute_name: /`${p_search_str}`.*/, color: p_color}, function (err, docs){
           pokus_callback(err, docs);
       });
 
@@ -228,13 +237,13 @@ const getPuppies = (p_search_str, p_female, p_color, pokus_callback) => {
   } else {
     if (p_colorSkip) {
       /// retrievedPuppies = PuppyModel.find({ cute_name: `/${p_search_str}/i`, is_female: p_female}, function (err, docs) {});
-      PuppyModel.find({ cute_name: `/${p_search_str}/i`, is_female: p_female}, function (err, docs) {
+      PuppyModel.find({ cute_name: /`${p_search_str}`.*/, is_female: p_female}, function (err, docs) {
         pokus_callback(err, docs);
       });
 
     } else {
       /// retrievedPuppies = PuppyModel.find({ cute_name: `/${p_search_str}/i`, is_female: p_female, color: p_color}, function (err, docs) {});
-      PuppyModel.find({ cute_name: `/${p_search_str}/i`, is_female: p_female, color: p_color}, function (err, docs) {
+      PuppyModel.find({ cute_name: /`${p_search_str}`.*/, is_female: p_female, color: p_color}, function (err, docs) {
         pokus_callback(err, docs);
       });
     }

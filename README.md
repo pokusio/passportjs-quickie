@@ -240,7 +240,7 @@ docker-compose up -d mongo
 
 docker stop jblm && docker rm jblm
 
-docker run -itd --name jblm --restart always -e ME_CONFIG_MONGODB_URL="mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false" --add-host "mongo.pok-us.io:192.168.82.6" --network hugo-starter-node_mongo_net --entrypoint "/bin/sh" debian
+docker run -itd --name jblm --restart always -e ME_CONFIG_MONGODB_URL="mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false" --add-host "mongo.pok-us.io:192.168.254.6" --network hugo-starter-node_mongo_net --entrypoint "/bin/sh" debian
 
 
 docker exec -it jblm bin -c "apt-get update -y && apt-get install -y iputils-ping"
@@ -250,7 +250,7 @@ docker stop jblm && docker rm jblm
 
 # and to test running mongo-express as simply as possible, which works ! Go to http://0.0.0.0:8083/
 docker run -it --name jblmn --rm -p 0.0.0.0:8083:8081 \
-    --add-host "mongo.pok-us.io:192.168.82.6" \
+    --add-host "mongo.pok-us.io:192.168.254.6" \
     -e ME_CONFIG_MONGODB_URL="mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false" \
     -e ME_CONFIG_MONGODB_AUTH_DATABASE="pokus" \
     -e ME_CONFIG_MONGODB_AUTH_USERNAME="pokus" \
@@ -264,7 +264,10 @@ docker run -it --name jblmn --rm -p 0.0.0.0:8083:8081 \
 
 ```
 
-## Testing database connection
+## Testing database
+
+
+* Testing database connection:
 
 ```bash
 
@@ -275,7 +278,7 @@ docker exec -it jbltest sh -c "apt-get update -y && apt-get install -y iputils-p
 
 export POKUSDB_USERNAME="user"
 export POKUSDB_USERPWD="user"
-export POKUSDB_NET_HOST="192.168.82.6"
+export POKUSDB_NET_HOST="192.168.254.6"
 
 
 export TEST_QUERY="mongo -u \"${POKUSDB_USERNAME}\" -p \"${POKUSDB_USERPWD}\" ${POKUSDB_NET_HOST} --authenticationDatabase \"admin\""
@@ -292,7 +295,7 @@ docker exec -it jbltest sh -c "${TEST_QUERY}"
 
 # bash-3.2$ export POKUSDB_USERNAME="user"
 # bash-3.2$ export POKUSDB_USERPWD="user"
-# bash-3.2$ export POKUSDB_NET_HOST="192.168.82.6"
+# bash-3.2$ export POKUSDB_NET_HOST="192.168.254.6"
 # bash-3.2$
 # bash-3.2$
 # bash-3.2$ export TEST_QUERY="mongo -u \"${POKUSDB_USERNAME}\" -p \"${POKUSDB_USERPWD}\" ${POKUSDB_NET_HOST} --authenticationDatabase \"admin\""
@@ -301,7 +304,7 @@ docker exec -it jbltest sh -c "${TEST_QUERY}"
 # bash-3.2$ docker exec -it jbltest sh -c "${TEST_QUERY}"
 #
 # MongoDB shell version v5.0.6
-# connecting to: mongodb://192.168.82.6:27017/test?authSource=admin&compressors=disabled&gssapiServiceName=mongodb
+# connecting to: mongodb://192.168.254.6:27017/test?authSource=admin&compressors=disabled&gssapiServiceName=mongodb
 # Error: Authentication failed. :
 # connect@src/mongo/shell/mongo.js:372:17
 # @(connect):2:6
@@ -312,7 +315,7 @@ docker exec -it jbltest sh -c "${TEST_QUERY}"
 
 export POKUSDB_USERNAME="pokus"
 export POKUSDB_USERPWD="pokus"
-export POKUSDB_NET_HOST="192.168.82.6"
+export POKUSDB_NET_HOST="192.168.254.6"
 export POKUSDB_AUTH_DB="admin"
 
 
@@ -326,6 +329,60 @@ docker exec -it jbltest sh -c "${TEST_QUERY}"
 
 Right, now i see one thing that i do not specify in my `mongoDbURI` : the authentication database. That's with i added the `?authSource=admin` query param in `mongoDbURI`.
 
+* Testing database queries
+
+
+```bash
+
+docker stop jbltest
+docker rm jbltest
+docker run --name jbltest -itd --restart always mongo sh
+
+
+export POKUSDB_USERNAME="pokus"
+export POKUSDB_USERPWD="pokus"
+export POKUSDB_NET_HOST="192.168.254.6"
+export POKUSDB_AUTH_DB="admin"
+export POKUS_DB_NAME="pokus"
+export MONGO_USER_NAME=pokus
+export MONGO_USER_PASSWORD=pokus
+export MONGO_DB_URI="mongodb://${MONGO_USER_NAME}:${MONGO_USER_PASSWORD}@${POKUSDB_NET_HOST}:27017/${POKUS_DB_NAME}?authSource=admin&ssl=false&retryWrites=true&w=majority"
+
+
+
+export TEST_QUERY="mongo -u \"${POKUSDB_USERNAME}\" -p \"${POKUSDB_USERPWD}\" ${POKUSDB_NET_HOST} --authenticationDatabase \"${POKUSDB_AUTH_DB}\""
+
+docker exec -it jbltest sh -c "${TEST_QUERY}"
+
+
+cat <<EOF > ./mongo.script.js
+
+var db = connect('${MONGO_DB_URI}');
+print('Database connected');
+
+allPuppies = db.puppies.find();
+
+//iterate the names collection and output each document
+while (allPuppies.hasNext()) {
+   printjson(allPuppies.next());
+}
+exampleResult = db.puppies.find({cute_name: /ch.*/});
+db.puppies.find({cute_name: /c.*/});
+db.puppies.find({cute_name: /.*ch.*/});
+print('test jbl de print');
+
+EOF
+
+docker cp $PWD/mongo.script.js jbltest:/
+docker exec -it jbltest sh -c "ls -alh /mongo.script.js"
+docker exec -it -u root jbltest sh -c "cp -f /mongo.script.js /root && rm /mongo.script.js"
+docker exec -it -u root jbltest sh -c "chmod a+rwx /root/mongo.script.js"
+docker exec -it jbltest sh -c "mongo ${MONGO_DB_URI} /root/mongo.script.js"
+
+
+
+# puppies.find({ cute_name: "/ch/i"})
+```
 
 ## References
 

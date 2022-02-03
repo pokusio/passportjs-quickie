@@ -12,7 +12,7 @@
     "test": "echo \"No test have been implemented yet\" && exit 7 ",
     "build": "echo \"No build has been implemented yet\"  && exit 127",
     "start": "echo \"No start has been implemented yet\"  && exit 127",
-    "watch": "export POKUS_DB_NET_FQDN=${POKUS_DB_NET_FQDN:-'192.168.82.6'}  && export POKUS_PORT=${POKUS_PORT:-'9099'} && nodemon --trace-warnings ./src/index.js",
+    "watch": "export POKUS_DB_NET_FQDN=${POKUS_DB_NET_FQDN:-'192.168.254.6'}  && export POKUS_PORT=${POKUS_PORT:-'9099'} && nodemon --trace-warnings ./src/index.js",
     "clean-logs": "touch ./pokus.tests.e2e-api.logs && rm ./*.logs",
     "wlog": "npm run clean-logs && npm run watch 2>&1 | tee -a ./pokus.watch.logs",
     "help": "echo \"set OS_DISTRIB to either 'macos' or 'linux'\"  && exit 127"
