@@ -1,6 +1,6 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-var autoIncrement = require('mongoose-auto-increment');
+var autoIncrement = require('mongoose-auto-increment'); /// this plugin uses the 'identitycounters' collection in the pokus database
 
 //Define a schema
 var Schema = mongoose.Schema;
@@ -26,6 +26,10 @@ var PuppySchema = new Schema({
   is_female: {
     type: Boolean,
     required: true
+  },
+  color: {
+    type: String,
+    required: false
   },
   birth_date: Date
 }, { collection: `puppies` });

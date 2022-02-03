@@ -79,9 +79,9 @@ puppies_mongoose_schemas.initializeMongooseAutoIncrement(defaultConnection);
 // Get the PuppyModel
 const PuppyModel = puppies_mongoose_schemas.getModel().model
 
-const handletestDbWritesErrors = (err) => {
+const handlecreatePuppyErrors = (err) => {
   pokus_logger.error(`-----------------------------------------------------------------------------`);
-  pokus_logger.error(`An error occured during the execution of  [testDbWrites = () => {] : `);
+  pokus_logger.error(`An error occured during the execution of  [createPuppy = () => {] : `);
   pokus_logger.error(err);
   pokus_logger.error(`-----------------------------------------------------------------------------`);
 }
@@ -91,13 +91,171 @@ const handletestDbReadsErrors = (err) => {
   pokus_logger.error(err);
   pokus_logger.error(`-----------------------------------------------------------------------------`);
 }
-/**
- * Test: insert a new puppy into the database, with :
+
+// const retrievedPuppies = pokus_dal.getPuppies(searchCriterias.search_str, searchCriterias.female, searchCriterias.color);
+
+/******************************************************************
+ *     CRUD Puppies : RETRIEVE (list, search, browse)
+ ******************************************************************
+ * Searches among puppies into the database, with :
+ * @parameter p_search_str String query string as first letters of the name, or string occuring inside description
+ * @parameter p_female Boolean search only among females?
+ * @parameter p_color String the color of the puppies
+ ***/
+/// const getPuppies = async (p_search_str, p_female, p_color) => {
+const getPuppies = (p_search_str, p_female, p_color, pokus_callback) => {
+
+  let retrievedPuppies = {
+    puppies: [
+      {
+        cute_name: "",
+        description: "",
+        is_female: "",
+        birth_date: ""
+      },
+      {
+        cute_name: "",
+        description: "",
+        is_female: "",
+        birth_date: ""
+      }
+    ]
+  } // that's  the structure expected : i so feel like switching to TypeScript ...
+  retrievedPuppies = {}
+
+
+
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/****** [getPuppies = ()] , searching for puppies with those criterias: `);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`    Puppy [p_search_str] : '${p_search_str}'`);
+  pokus_logger.info(`    Puppy [p_female] : ${p_female}`);
+  pokus_logger.info(`    Puppy [p_color] : "${p_color}"`);
+  pokus_logger.info(`/** `);
+
+  let p_colorSkip = false;
+  let p_femaleSkip = false;
+
+
+  if (p_female === null ) {
+    //
+    pokus_logger.info(`    Puppy [p_female] : IS null`);
+  } else {
+    //
+    pokus_logger.info(`    Puppy [p_female] : IS NOT null`);
+  }
+
+  if (p_female === undefined || p_female == "undefined" ) {
+    //
+    pokus_logger.info(`    Puppy [p_female] : IS undefined`);
+  } else {
+    //
+    pokus_logger.info(`    Puppy [p_female] : is NOT undefined`);
+  }
+
+  if (p_female === undefined || p_female == "undefined" || p_female === null ) {
+    //
+    pokus_logger.info(`    Puppy [p_female] : is null or undefined`);
+    p_femaleSkip = true;
+  } else {
+    //
+    pokus_logger.info(`    Puppy [p_female] : is NEITHER null NOR undefined`);
+  }
+
+  pokus_logger.info(`/** `);
+
+
+  if (p_color === null ) {
+    //
+    pokus_logger.info(`    Puppy [p_color] : IS null`);
+  } else {
+    //
+    pokus_logger.info(`    Puppy [p_color] : IS NOT null`);
+  }
+
+  if ( (typeof p_color == 'undefined') || p_color == "undefined" ) {
+    //
+    pokus_logger.info(`    Puppy [p_color] : IS undefined`);
+  } else {
+    //
+    pokus_logger.info(`    Puppy [p_color] : is NOT undefined`);
+  }
+
+  if ( (typeof p_color == 'undefined') || p_color == "undefined" || p_color === null ) {
+    //
+    pokus_logger.info(`    Puppy [p_color] : is null or undefined`);
+    p_colorSkip = true;
+
+  } else {
+    //
+    pokus_logger.info(`    Puppy [p_color] : is NEITHER null NOR undefined`);
+  }
+  pokus_logger.info(`TypeOf p_color is : [${typeof p_color}]`)
+
+  pokus_logger.info(`/************************************************************************* `);
+
+  // PuppyModel.find();
+
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/****** [getPuppies = ()] , before launching MongoDB search: `);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`    Puppy search [p_femaleSkip] : '${p_femaleSkip}'`);
+  pokus_logger.info(`    Puppy search [p_colorSkip] : ${p_colorSkip}`);
+  pokus_logger.info(`/** **********************************************`);
+
+
+  if (p_femaleSkip) {
+    if (p_colorSkip) {
+      // executes, passing results to callback
+      /// retrievedPuppies = PuppyModel.find({ cute_name: `/${p_search_str}/i`}, function (err, docs) {});
+      PuppyModel.find({ cute_name: `/${p_search_str}/i`}, function (err, docs) {
+        pokus_callback(err, docs);
+      });
+      PuppyModel.find({ cute_name: `/${p_search_str}/i`}, function (err, docs) {
+        pokus_callback(err, docs);
+      });
+    } else {
+      // executes, passing results to callback
+      /// retrievedPuppies = PuppyModel.find({ cute_name: `/${p_search_str}/i`, color: p_color}, function (err, docs) {});
+      PuppyModel.find({ cute_name: `/${p_search_str}/i`, color: p_color}, function (err, docs){
+          pokus_callback(err, docs);
+      });
+
+    }
+  } else {
+    if (p_colorSkip) {
+      /// retrievedPuppies = PuppyModel.find({ cute_name: `/${p_search_str}/i`, is_female: p_female}, function (err, docs) {});
+      PuppyModel.find({ cute_name: `/${p_search_str}/i`, is_female: p_female}, function (err, docs) {
+        pokus_callback(err, docs);
+      });
+
+    } else {
+      /// retrievedPuppies = PuppyModel.find({ cute_name: `/${p_search_str}/i`, is_female: p_female, color: p_color}, function (err, docs) {});
+      PuppyModel.find({ cute_name: `/${p_search_str}/i`, is_female: p_female, color: p_color}, function (err, docs) {
+        pokus_callback(err, docs);
+      });
+    }
+  }
+  // executes, passing results to callback
+
+  // executes, name LIKE john and only selecting the "name" and "friends" fields
+  // await MyModel.find({ name: /john/i }, 'name friends').exec();
+
+
+
+  return retrievedPuppies;
+}
+
+
+/******************************************************************
+ *     CRUD Puppies : CREATE
+ ******************************************************************
+ * Inserts a new puppy into the database, with :
  * @parameter p_cute_name String
  * @parameter p_is_female Boolean
  * @parameter p_description String
  ***/
-const testDbWrites = (p_cute_name, p_is_female, p_description) => {
+const createPuppy = (p_cute_name, p_is_female, p_description) => {
   /// var PuppySchema = new Schema({
     /// cute_name: String,
     /// description: String,
@@ -114,7 +272,7 @@ const testDbWrites = (p_cute_name, p_is_female, p_description) => {
   }, { collection: 'puppies', database: 'pokus' });
 
   pokus_logger.info(`/************************************************************************* `);
-  pokus_logger.info(`/****** [testDbWrites = ()] , test inserting a new puppy: `);
+  pokus_logger.info(`/****** [createPuppy = ()] , test inserting a new puppy: `);
   pokus_logger.info(`/************************************************************************* `);
   pokus_logger.info(`    Puppy [cute_name] : '${p_cute_name}'`);
   pokus_logger.info(`    Puppy [is_female] : ${p_is_female}`);
@@ -127,12 +285,12 @@ const testDbWrites = (p_cute_name, p_is_female, p_description) => {
     /// if (err) return handleError(err);
     if (err) {
       pokus_logger.error(`/************************************************************************* `);
-      pokus_logger.error(`/****** [testDbWrites = ()] Saving Puppy FAILED!!!`);
+      pokus_logger.error(`/****** [createPuppy = ()] Saving Puppy FAILED!!!`);
       pokus_logger.error(`/************************************************************************* `);
-      return handletestDbWritesErrors(err);
+      return handlecreatePuppyErrors(err);
     } else {
       pokus_logger.info(`/************************************************************************* `);
-      pokus_logger.info(`/****** [testDbWrites = ()] Puppy  saved! test SUCCESSFUL!!`);
+      pokus_logger.info(`/****** [createPuppy = ()] Puppy  saved! test SUCCESSFUL!!`);
       pokus_logger.info(`/************************************************************************* `);
     }
     // saved!
@@ -179,15 +337,9 @@ const testDbWrites = (p_cute_name, p_is_female, p_description) => {
 ///
 ///   }
 
-const getPuppies = () => {
-  return {
-    une: false,
-    deux: `peu de choses`,
-    trois: `trois petites choses`,
-  }
-}
+
 
 module.exports = {
     getPuppies: getPuppies,
-    testDbWrites: testDbWrites
+    createPuppy: createPuppy
 };

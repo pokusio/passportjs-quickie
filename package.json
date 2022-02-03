@@ -4,11 +4,14 @@
   "description": "Well I am an OAuth2 application, that can play with restream.io Rest API (in the name of you)",
   "main": "index.js",
   "scripts": {
+    "seas": "./.npm.scripts/dependencies.sh",
+    "spawntests": "./.npm.scripts/tests/generate-folder-structure.sh",
+    "e2e-api": "npm run clean-logs && node ./test/api.test.js 2>&1 | tee -a ./pokus.tests.e2e-api.logs",
     "test": "echo \"No test have been implemented yet\" && exit 7 ",
     "build": "echo \"No build has been implemented yet\"  && exit 127",
     "start": "echo \"No start has been implemented yet\"  && exit 127",
     "watch": "export POKUS_DB_NET_FQDN=${POKUS_DB_NET_FQDN:-'192.168.82.6'}  && export POKUS_PORT=${POKUS_PORT:-'9099'} && nodemon --trace-warnings ./src/index.js",
-    "clean-logs": "rm ./*.logs",
+    "clean-logs": "touch ./pokus.tests.e2e-api.logs && rm ./*.logs",
     "wlog": "npm run clean-logs && npm run watch 2>&1 | tee -a ./pokus.watch.logs",
     "help": "echo \"set OS_DISTRIB to either 'macos' or 'linux'\"  && exit 127"
   },
@@ -16,6 +19,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@decathlon/newman-reporter-pullrequest-decorator": "0.0.11",
+    "mocha": "^9.2.0",
+    "newman": "^5.3.1",
+    "newman-reporter-htmlextra": "^1.22.7",
+    "newman-reporter-htmlextra-and-perf": "^1.22.1",
+    "newman-reporter-json": "^1.0.0",
     "nodemon": "^2.0.15"
   },
   "dependencies": {

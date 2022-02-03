@@ -2,3 +2,6 @@ node_modules
 pokus.secrets.json
 docker/run
 *.logs
+
+# Where newman reporters persist their files :
+newman

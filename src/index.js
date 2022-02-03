@@ -10,6 +10,16 @@ const pokus_logging = require("./logger/")
 const pokus_dal = require("./dal/")
 
 
+/*** REQUIRES FOR API ENDPOINTS ROUTERS
+ *
+ **/
+
+ const puppiesPuppiesApiEndpoint = require("./api/routers/puppies/")
+ const virtualboxMachinesApiEndpoint = require("./api/routers/virtualbox/machines/")
+ const virtualboxDisksApiEndpoint = require("./api/routers/virtualbox/disks/")
+ const virtualboxSnapshotsApiEndpoint = require("./api/routers/virtualbox/snapshots/")
+
+
 /*   const pokus_logger = pokus_logging.getLogger();  */
 const pokus_logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
@@ -250,21 +260,134 @@ app.post('/api/v1/puppies', (request, response) => {
     is_female: true,
     description: `tootsie is such a loving dog`
   }
-  // pokus_dal.testDbWrites(testPuppy.cute_name, testPuppy.is_female, testPuppy.description);
-  pokus_dal.testDbWrites(puppyFromReq.cute_name, puppyFromReq.is_female, puppyFromReq.description);
 
-  /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
-  pokus_logger.info(` `);
+  let pokusResponseCode = 599;
+  let pokusResponseJSON = {};
+  try {
+    // pokus_dal.createPuppy(testPuppy.cute_name, testPuppy.is_female, testPuppy.description);
+    pokus_dal.createPuppy(puppyFromReq.cute_name, puppyFromReq.is_female, puppyFromReq.description);
+    pokus_logger.info(` `);
 
-  response.status(201);
-  response.json({
-    message: `Pokus [POST /api/v1/puppies]: the puppy below described puppy was successfully added to the database : ${JSON.stringify(puppyFromReq, " ", 2)} rendering 404 page for requested page : ${requested_url_str}`,
-    puppy: puppyFromReq
-  })
+    pokusResponseCode = 201;
+    pokusResponseJSON = {
+      message: `Pokus [POST /api/v1/puppies]: the puppy below described puppy was successfully added to the database : ${JSON.stringify(puppyFromReq, " ", 2)}`,
+      puppy: puppyFromReq
+    };
+  } catch (e) {
+    pokus_logger.info(`Pokus [POST /api/v1/puppies]: An error occured while trying to save the puppy below attached, to the pokus database `);
+
+    pokusResponseCode = 500;
+    pokusResponseJSON = {
+      message: `Pokus [POST /api/v1/puppies]: An error occured while trying to save the puppy below described, to the pokus database : ${JSON.stringify(puppyFromReq, " ", 2)} `,
+      error: `database error`,
+      puppy: puppyFromReq
+    };
+  } finally {
+    response.status(pokusResponseCode);
+    response.json(pokusResponseJSON)
+  }
+
 })
 
+ /**********************************************************************
+  *   GET /api/v1/puppies Router / (protected) ()
+  **********************************************************************
+  *    +--> Since this is the last non-error-handling
+  *
+  *    ?search=cha
+  *    ?search=cha&female=false
+  *    ?search=cha&female=false&color=yellow
+  *    +--> $ curl -iv http://127.0.0.1:9099/api/v1/puppies
+  *    +--> $ curl -iv http://127.0.0.1:9099/api/v1/puppies -H "Accept: application/json"
+  *    +--> $ curl -iv http://127.0.0.1:9099/api/v1/puppies -H "Accept: text/plain"
+  *
+  * to search / browse puppies
+  ****************/
+app.get('/api/v1/puppies', (request, response, next) => {
+  let requested_url_str = request.baseUrl + request.url;
+  if (pokus_environment.getEnvironment().tsl_enabled) {
+   requested_url_str = `https://${request.headers.host}${request.url}` ;
+  } else {
+   requested_url_str = `http://${request.headers.host}${request.url}` ;
+  }
+
+  pokus_logger.info(`**********************************************************************`);
+  pokus_logger.info(` Pokus [GET /api/v1/puppies]: Your puppies search request page : ${requested_url_str}`);
+  pokus_logger.info(`**********************************************************************`);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/****** [getPuppies = ()] , inspect query params : `);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`    Puppy [request.query] : `);
+  pokus_logger.info(`${JSON.stringify(request.query, " ", 2)}`);
+  pokus_logger.info(`/************************************************************************* `);
 
 
+
+  const searchCriterias = {
+    search_str: `${request.query.search}`,
+    female: request.query.female || null,
+    color: `${request.query.color}` || "",
+  }
+  /*
+  let pokusResponseCode = 500;
+  let pokusResponseJSON = {
+    message: `Pokus [POST /api/v1/puppies]: this is just an architecture test `,
+    error: `database error`,
+    search: searchCriterias
+  };
+  response.status(pokusResponseCode);
+  response.json(pokusResponseJSON)
+
+  next(new Error("JBL Stop debug point: this is just an architecture test"));
+  */
+
+
+  let pokusResponseCode = 599;
+  let pokusResponseJSON = {};
+  let retrievedPuppies = {};
+  try {
+    // pokus_dal.createPuppy(testPuppy.cute_name, testPuppy.is_female, testPuppy.description);
+    // search criterai////
+    retrievedPuppies = pokus_dal.getPuppies(searchCriterias.search_str, searchCriterias.female, searchCriterias.color, function (err, docs) {
+      pokus_logger.info(`**********************************************************************`);
+      pokus_logger.info(` Pokus [GET /api/v1/puppies]: [pokus_dal.getPuppies] callback to retrieve puppies async from mongoose :`);
+      pokus_logger.info(``);
+      pokus_logger.info(`**********************************************************************`);
+      pokusResponseCode = 204;
+      pokusResponseJSON = {
+        message: ` ok ça vient bien du callback `,
+        error: `nonya pas derreur c un test error`,
+        search: searchCriterias
+      };
+      response.status(pokusResponseCode);
+      response.json(pokusResponseJSON)
+    });
+
+    pokus_logger.info(`**********************************************************************`);
+    pokus_logger.info(` Pokus [GET /api/v1/puppies]: Pokus retrieved puppies from your search request : ${JSON.stringify(retrievedPuppies, " ", 2)}`);
+    pokus_logger.info(`**********************************************************************`);
+    pokusResponseCode = 201;
+    pokusResponseJSON = {
+      search: searchCriterias,
+      puppies: retrievedPuppies
+    };
+  } catch (e) {
+    pokus_logger.info(`**********************************************************************`);
+    pokus_logger.info(` Pokus [GET /api/v1/puppies]: An error occured while trying to retrieve puppies with your search request : ${JSON.stringify(searchCriterias, " ", 2)}`);
+    pokus_logger.info(`**********************************************************************`);
+    pokus_logger.info(e);
+    pokusResponseCode = 500;
+    pokusResponseJSON = {
+      message: ` Pokus [GET /api/v1/puppies]: An error occured while trying to retrieve puppies with your search request : ${JSON.stringify(searchCriterias, " ", 2)} `,
+      error: `database error`,
+      search: searchCriterias
+    };
+  } finally {
+    response.status(pokusResponseCode);
+    response.json(pokusResponseJSON)
+  }
+
+})
  /************************************************************************************
   ************************************************************************************
   *                          [OAuth2]
@@ -294,6 +417,15 @@ app.post('/api/v1/puppies', (request, response) => {
      })
    })
 
+
+
+
+
+ /************************************************************************************
+  ************************************************************************************
+  *                 NO OTHER ROUTER AFTER THAT POINT : 404 must be last
+  ************************************************************************************
+  **************/
 
  /************************************************************************************
   ************************************************************************************

@@ -1,0 +1,93 @@
+{
+  "info": {
+    "name": "Pokus API Puppies Endpoint Tests",
+    "description": "CRUD Tests for the Puppies REST API Endpoint",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+	"variable": [{
+      "id": "b6e566ed-ce2a-4be3-89c5-75f8d5ce91f3",
+      "key": "POKUS_PUPPY_CUTE_NAME",
+      "value": "donnie",
+      "type": "string"
+    },
+    {
+      "id": "b6e566ed-ce2a-4be3-89c5-75f8d5ce91f4",
+      "key": "POKUS_PUPPY_IS_FEMALE",
+      "value": "false",
+      "type": "boolean"
+    },
+    {
+      "id": "b6e566ed-ce2a-4be3-89c5-75f8d5ce91f5",
+      "key": "POKUS_PUPPY_COLOR",
+      "value": "yellow",
+      "type": "string"
+    },
+    {
+      "id": "b6e566ed-ce2a-4be3-89c5-75f8d5ce91f6",
+      "key": "POKUS_PUPPY_DESC",
+      "value": "he is a nice dog, he likes to play golf sometimes",
+      "type": "string"
+    },
+    {
+      "id": "b6e566ed-ce2a-4be3-89c5-75f8d5ce91f7",
+      "key": "POKUS_HOST",
+      "value": "0.0.0.0:9099",
+      "type": "string"
+    }],
+	"item": [
+    {
+			"name": "A simple GET request to search Puppies",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+              "/*pm.test('expect HTTP response status code be 201', function () {",
+							"    pm.response.to.have.status(201)",
+							"})*/",
+							"/*pm.test('expect response be 201', function () {",
+							"    pm.response.to.be.ok",
+							"})*/",
+							"/*pm.test('expect response json contain args', function () {",
+							"    pm.expect(pm.response.json().args).to.have.property('source')",
+							"      .and.equal('newman-sample-github-collection')",
+							"})*/"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://{{POKUS_HOST}}/api/v1/puppies?search=cha&female=false&color=yellow",
+					"protocol": "http",
+					"host": [
+						"{{POKUS_HOST}}"
+					],
+					"path": [
+						"get"
+					],
+					"query": [
+						{
+							"key": "source",
+							"value": "newman-template-pokus-collection",
+							"equals": true,
+							"description": "search for puppies that are yellow, that are males, and whose names start with 'cha'"
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

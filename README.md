@@ -75,6 +75,7 @@ export DOGGIE="{ \
   \"cute_name\": \"cherry\", \
   \"description\": \"shes a such a good dog, always warm welcoming home\", \
   \"is_female\": true \
+  \"color\": \"blue\"
 }"
 
 echo "${DOGGIE}" | jq .
@@ -84,17 +85,72 @@ curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept:
 export DOGGIE="{ \
   \"cute_name\": \"rollercoaster\", \
   \"description\": \"hes a  bit crazy, but all in all a real good dog, always definding home\", \
-  \"is_female\": true \
+  \"is_female\": true, \
+  \"color\": \"yellow\"
+}"
+
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json"
+
+/Users/jbl/hugo-starter-node/test/api/endpoint/puppies/CRUD_C/spec.newman.json
+export DOGGIE="{ \
+  \"cute_name\": \"madison\", \
+  \"description\": \"shes a  bit crazy, but madison all in all a real good dog, always cheerful\", \
+  \"is_female\": true, \
+  \"color\": \"yellow\"
 }"
 
 curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json"
 
 
+export DOGGIE="{ \
+  \"cute_name\": \"grace\", \
+  \"description\": \"shes very quiet, an eats a lot :), plus she's very esay going with children\", \
+  \"is_female\": true, \
+  \"color\": \"yellow\"
+}"
+
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json"
+
+
+export DOGGIE="{ \
+  \"cute_name\": \"kelly\", \
+  \"description\": \"she's very brave, needs a lot of physical activity, at least 4 long walks a week.\", \
+  \"is_female\": true, \
+  \"color\": \"yellow\"
+}"
+
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json"
+
+
+
+
 #########################################
 ## GET /api/v1/pupppies
+#    ?search=cha
+#    ?search=cha&female=false
+#    ?search=cha&female=false&color=yellow
 #
-curl -iv http://127.0.0.1:9099/api/v1/puppies -X GET -H "Accept: application/json"
 
+export POKUS_QUERY_PARAMS="search=cha"
+curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json"
+
+export POKUS_QUERY_PARAMS="search=cha&female=false"
+curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json"
+
+export POKUS_QUERY_PARAMS="search=cha&female=false&color=yellow"
+curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json"
+
+
+```
+
+
+* turn all this into newman tests, that will run autolatically with mochajs tests i guess
+
+
+* run all api tests :
+
+```bash
+npm run e2e-api
 ```
 
 ## Generate me
@@ -286,3 +342,12 @@ Right, now i see one thing that i do not specify in my `mongoDbURI` : the authen
 * https://www.youtube.com/watch?v=h4A0-53Olm4
 * https://medium.com/@mmajdanski/express-body-parser-and-why-may-not-need-it-335803cd048c
 *  MongoDB auto increment PKs : https://www.mongodb.com/developer/article/triggers-tricks-auto-increment-fields/?_ga=2.90839762.995010974.1643718120-390222689.1643718118
+* https://mongoosejs.com/docs/queries.html
+* https://mongoosejs.com/docs/tutorials/query_casting.html
+* async functions and REST API in Expressjs :
+  * https://medium.com/@Abazhenov/using-async-await-in-express-with-node-8-b8af872c0016
+  * https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await
+* https://www.npmjs.com/package/@collegedunia/newman-mocha
+* https://www.npmjs.com/package/newman-reporter-htmlextra-and-perf
+* https://www.npmjs.com/package/@decathlon/newman-reporter-pullrequest-decorator
+* https://stackabuse.com/get-query-strings-and-parameters-in-express-js/
