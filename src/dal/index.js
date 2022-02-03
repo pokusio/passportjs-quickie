@@ -221,33 +221,49 @@ const getPuppies = (p_search_str, p_female, p_color, pokus_callback) => {
       });
       */
       pokus_logger.info(`/** ******** no 'color', no 'is_female' search criterias : `);
-      pokus_logger.info(`        XxxxModel.find({ cute_name: /${p_search_str}.*/}) `);
-      let searchRegExp = '/' + p_search_str + '.*/';
+      pokus_logger.info(`        XxxxModel.find({ cute_name: { $regex: "^${p_search_str}.*$" }}) `);
+      let searchRegExp = "^" + p_search_str + ".*$";
 
-      pokus_logger.info(`/** ******** léger chgmt... : `);
-      PuppyModel.find({ cute_name: searchRegExp}).then((docs) => {
+      pokus_logger.info(`/** ******** léger chgmt...ou ppas : `);
+      PuppyModel.find({ cute_name: { $regex: searchRegExp } }).limit(20).then((docs) => {
         pokus_callback(docs);
       });
 
     } else {
+
+
+      pokus_logger.info(`/** ******** with 'color', but no 'is_female' search criterias : `);
+      pokus_logger.info(`        XxxxModel.find({ cute_name: { $regex: "^${p_search_str}.*$" }}) `);
+      let searchRegExp = "^" + p_search_str + ".*$";
+
       // executes, passing results to callback
       /// retrievedPuppies = PuppyModel.find({ cute_name: `/${p_search_str}/i`, color: p_color}, function (err, docs) {});
-      PuppyModel.find({ cute_name: /`${p_search_str}`.*/, color: p_color}, function (err, docs){
-          pokus_callback(err, docs);
+      PuppyModel.find({ cute_name: { $regex: searchRegExp }, color: `${p_color}`}).limit(20).then((docs) => {
+        pokus_callback(docs);
       });
 
     }
   } else {
     if (p_colorSkip) {
-      /// retrievedPuppies = PuppyModel.find({ cute_name: `/${p_search_str}/i`, is_female: p_female}, function (err, docs) {});
-      PuppyModel.find({ cute_name: /`${p_search_str}`.*/, is_female: p_female}, function (err, docs) {
-        pokus_callback(err, docs);
+
+      pokus_logger.info(`/** ******** no 'color', but with 'is_female' search criterias : `);
+      pokus_logger.info(`        XxxxModel.find({ cute_name: { $regex: "^${p_search_str}.*$" }}) `);
+      let searchRegExp = "^" + p_search_str + ".*$";
+
+      // executes, passing results to callback
+      /// retrievedPuppies = PuppyModel.find({ cute_name: `/${p_search_str}/i`, color: p_color}, function (err, docs) {});
+      PuppyModel.find({ cute_name: { $regex: searchRegExp }, is_female: p_female }).limit(20).then((docs) => {
+        pokus_callback(docs);
       });
 
     } else {
+      pokus_logger.info(`/** ******** with both 'color', and 'is_female' search criterias : `);
+      pokus_logger.info(`        XxxxModel.find({ cute_name: { $regex: "^${p_search_str}.*$" }}) `);
+      let searchRegExp = "^" + p_search_str + ".*$";
+      // executes, passing results to callback
       /// retrievedPuppies = PuppyModel.find({ cute_name: `/${p_search_str}/i`, is_female: p_female, color: p_color}, function (err, docs) {});
-      PuppyModel.find({ cute_name: /`${p_search_str}`.*/, is_female: p_female, color: p_color}, function (err, docs) {
-        pokus_callback(err, docs);
+      PuppyModel.find({ cute_name: { $regex: searchRegExp }, is_female: p_female, color: p_color}).limit(20).then((docs) => {
+        pokus_callback(docs);
       });
     }
   }
@@ -288,8 +304,9 @@ const getAllPuppies = (pokus_callback) => {
  * @parameter p_cute_name String
  * @parameter p_is_female Boolean
  * @parameter p_description String
+ * @throws MongooseException(s) with Mongoose [save()] method on all models
  ***/
-const createPuppy = (p_cute_name, p_is_female, p_description) => {
+const createPuppy = (p_cute_name, p_is_female, p_description, p_color) => {
   /// var PuppySchema = new Schema({
     /// cute_name: String,
     /// description: String,
@@ -302,7 +319,8 @@ const createPuppy = (p_cute_name, p_is_female, p_description) => {
   var cutest_puppy = new PuppyModel({
     cute_name: `${p_cute_name}`,
     is_female: p_is_female,
-    description: `${p_description}`
+    description: `${p_description}`,
+    color: `${p_color}`
   }, { collection: 'puppies', database: 'pokus' });
 
   pokus_logger.info(`/************************************************************************* `);
@@ -311,6 +329,7 @@ const createPuppy = (p_cute_name, p_is_female, p_description) => {
   pokus_logger.info(`    Puppy [cute_name] : '${p_cute_name}'`);
   pokus_logger.info(`    Puppy [is_female] : ${p_is_female}`);
   pokus_logger.info(`    Puppy [description] : "${p_description}"`);
+  pokus_logger.info(`    Puppy [color] : "${p_color}"`);
   pokus_logger.info(`/************************************************************************* `);
 
   /// --- /// --- /// --- /// --- /// --- /// --- /// --- ///

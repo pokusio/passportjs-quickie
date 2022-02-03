@@ -228,12 +228,14 @@ app.post('/api/v1/puppies', (request, response) => {
   const puppyFromReqZero = {
     cute_name: `${request.body.cute_name}`,
     is_female: request.body.is_female,
-    description: `${request.body.description}`
+    description: `${request.body.description}`,
+    color: `${request.body.color}`
   }
   const puppyFromReq = {
     cute_name: `${parsedBody.cute_name}`,
     is_female: parsedBody.is_female,
-    description: `${parsedBody.description}`
+    description: `${parsedBody.description}`,
+    color: `${request.body.color}`
   }
 
   pokus_logger.info(`/************************************************************************* `);
@@ -242,9 +244,11 @@ app.post('/api/v1/puppies', (request, response) => {
   pokus_logger.info(`    Puppy [request.body.cute_name] : '${request.body.cute_name}'`);
   pokus_logger.info(`    Puppy [request.body.is_female] : ${request.body.is_female}`);
   pokus_logger.info(`    Puppy [request.body.description] : "${request.body.description}"`);
+  pokus_logger.info(`    Puppy [request.body.color] : "${request.body.color}"`);
   pokus_logger.info(`    Puppy [parsedBody.cute_name] : '${parsedBody.cute_name}'`);
   pokus_logger.info(`    Puppy [parsedBody.is_female] : ${parsedBody.is_female}`);
   pokus_logger.info(`    Puppy [parsedBody.description] : "${parsedBody.description}"`);
+  pokus_logger.info(`    Puppy [request.body.color] : "${request.body.color}"`);
   pokus_logger.info(`    Puppy [request.body] : `);
   /// pokus_logger.info(request.body);
   pokus_logger.info(JSON.stringify(request.body, " ", 2));
@@ -258,17 +262,18 @@ app.post('/api/v1/puppies', (request, response) => {
   const testPuppy = {
     cute_name: `tootsie`,
     is_female: true,
-    description: `tootsie is such a loving dog`
+    description: `tootsie is such a loving dog`,
+    color: `yellow`
   }
 
   let pokusResponseCode = 599;
   let pokusResponseJSON = {};
   try {
     // pokus_dal.createPuppy(testPuppy.cute_name, testPuppy.is_female, testPuppy.description);
-    pokus_dal.createPuppy(puppyFromReq.cute_name, puppyFromReq.is_female, puppyFromReq.description);
+    pokus_dal.createPuppy(puppyFromReq.cute_name, puppyFromReq.is_female, puppyFromReq.description, puppyFromReq.color);
     pokus_logger.info(` `);
 
-    pokusResponseCode = 201;
+    pokusResponseCode = 201; /// '201 Created' (and not just '200  OK')
     pokusResponseJSON = {
       message: `Pokus [POST /api/v1/puppies]: the puppy below described puppy was successfully added to the database : ${JSON.stringify(puppyFromReq, " ", 2)}`,
       puppy: puppyFromReq

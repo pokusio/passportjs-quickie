@@ -123,6 +123,26 @@ curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept:
 
 
 
+export DOGGIE="{ \
+  \"cute_name\": \"charlie\", \
+  \"description\": \"another dog i added fr tests.\", \
+  \"is_female\": true, \
+  \"color\": \"yellow\" \
+}"
+
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${DOGGIE}"
+
+
+
+export DOGGIE="{ \
+  \"cute_name\": \"china\", \
+  \"description\": \"another yellow dog i added fr tests.\", \
+  \"is_female\": true, \
+  \"color\": \"yellow\" \
+}"
+
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${DOGGIE}"
+
 
 #########################################
 ## GET /api/v1/pupppies
@@ -131,15 +151,31 @@ curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept:
 #    ?search=cha&female=false&color=yellow
 #
 
+export POKUS_QUERY_PARAMS="search=ch" && curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
+
+
+# ---  
+# ---  
+# ---  with 'color', but no 'is_female' search criterias :
+export POKUS_QUERY_PARAMS="search=ch&color=yellow" && curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
+
+# ---  
+# ---  
+# ---  with 'color', but no 'is_female' search criterias :
+export POKUS_QUERY_PARAMS="search=ch&color=blue" && curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
+
 export POKUS_QUERY_PARAMS="search=cha"
 curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
 
-export POKUS_QUERY_PARAMS="search=cha&female=false"
-curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
 
-export POKUS_QUERY_PARAMS="search=cha&female=false&color=yellow"
-curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
 
+# --->>> no 'color', but with 'is_female' search criterias :
+export POKUS_QUERY_PARAMS="search=cha&female=false" && curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
+export POKUS_QUERY_PARAMS="search=cha&female=true" && curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
+
+export POKUS_QUERY_PARAMS="search=ch&female=true&color=yellow" && curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
+
+export POKUS_QUERY_PARAMS="search=&female=true&color=yellow" && curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
 
 ```
 
@@ -410,3 +446,4 @@ docker exec -it jbltest sh -c "mongo ${MONGO_DB_URI} /root/mongo.script.js"
 * https://www.npmjs.com/package/newman-reporter-htmlextra-and-perf
 * https://www.npmjs.com/package/@decathlon/newman-reporter-pullrequest-decorator
 * https://stackabuse.com/get-query-strings-and-parameters-in-express-js/
+* https://masteringjs.io/tutorials/mongoose/find-like
