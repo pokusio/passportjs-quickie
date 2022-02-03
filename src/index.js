@@ -294,6 +294,21 @@ app.post('/api/v1/puppies', (request, response) => {
 
 })
 
+/**
+ * will also consider undefined a string which calue is the string 'undefined'
+ **/
+const isNullOrUndefined = (myvariable) => {
+  if (p_female === undefined || p_female == "undefined" || p_female === null ) {
+    //
+    pokus_logger.info(`    Puppy myvariable=[${myvariable}] : is neither null nor undefined`);
+    return false;
+  } else {
+    //
+    pokus_logger.info(`    Puppy myvariable=[${myvariable}] : is either null or undefined`);
+    return true;
+  }
+
+}
 // -+-
 // -+- returns a bollean : if true, then we will execute find() to get all puppies
 // -+-
@@ -469,6 +484,7 @@ app.get('/api/v1/puppies', (request, response, next) => {
         search_str: `${request.query.search}`,
         female: request.query.female || null,
         color: `${request.query.color}` || "",
+        puppy_id: `${request.query.puppy_id}`
       }
 
       pokus_logger.info(`/************************************************************************* `);
@@ -477,6 +493,40 @@ app.get('/api/v1/puppies', (request, response, next) => {
       pokus_logger.info(`    Puppy [searchCriterias] : `);
       pokus_logger.info(`${JSON.stringify(searchCriterias, " ", 2)}`);
       pokus_logger.info(`/************************************************************************* `);
+
+      // --- // --- // --- // --- // --- // --- // --- // --- // --- // --- // --- // --- // --- //
+      // --- // --- //        if the puppy_id request parameter is
+      //                      sent, we ignore {search_str} {female} {color}
+      //
+      if (!isNullOrUndefined(searchCriterias.puppy_id)) {
+        pokus_dal.getPuppyById(searchCriterias.puppy_id, function (docs) {
+          pokus_logger.info(`**********************************************************************`);
+          pokus_logger.info(``);
+          pokus_logger.info(``);
+          pokus_logger.info(` Pokus [GET /api/v1/puppies]: [pokus_dal.getPuppies] callback to retrieve a puppy from its Id :`);
+          pokus_logger.info(``);
+          pokus_logger.info(``);
+          pokus_logger.info(`here is the [docs] object received from mongoose : `);
+          pokus_logger.info(``);
+          pokus_logger.info(``);
+          pokus_logger.info(`${JSON.stringify(docs, " ", 2)}`);
+          pokus_logger.info(``);
+          pokus_logger.info(``);
+          pokus_logger.info(`**********************************************************************`);
+          pokusResponseCode = 200;
+          pokusResponseJSON = {
+            message: `Pokus [GET /api/v1/puppies]: [pokus_dal.getPuppies] callback to retrieve a puppy from its Id :`,
+            search: {
+              puppy_id: searchCriterias.puppy_id
+            },
+            results: docs
+          };
+          response.status(pokusResponseCode);
+          response.json(pokusResponseJSON)
+        });
+        return;
+      }
+
 
       let fullSearchBool = doIsearchAll(searchCriterias.search_str, searchCriterias.female, searchCriterias.color);
 

@@ -298,6 +298,24 @@ const getAllPuppies = (pokus_callback) => {
 
 
 /******************************************************************
+ *     CRUD Puppies : RETRIEVE (list, search, browse)
+ ******************************************************************
+ * Retrieves all puppies into the database
+ ***/
+/// const getAllPuppies = async (p_search_str, p_female, p_color) => {
+const getPuppyById = (puppyId, pokus_callback) => {
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/****** [getAllPuppies = ()] , searching for puppy of '_id' equal to : [${puppyId}]`);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/** `);
+
+  PuppyModel.find({ _id: `${puppyId}` }).sort({ cute_name: -1 })
+      .limit(20).then((docs) => {
+      pokus_callback(docs);
+  });
+}
+
+/******************************************************************
  *     CRUD Puppies : CREATE
  ******************************************************************
  * Inserts a new puppy into the database, with :
