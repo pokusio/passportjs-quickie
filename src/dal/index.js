@@ -19,9 +19,6 @@ const pokus_logger = winston.createLogger({
 });
 
 
-// Get the PuppyModel
-const PuppyModel = puppies_mongoose_schemas.getModels().models[0].model
-
 // Set up default mongoose connection // "mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false"
 const mongoDbURI = `mongodb://${mongoUsername}:${mongoUserPassword}@192.168.82.6:27017/${mongoDbName}?authSource=admin&ssl=false&retryWrites=true&w=majority`;
 /// mongoose.connect(mongoDbURI, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -46,7 +43,7 @@ try {
 
 //  Get the default connection, which is based on the above configuration, i.e. based on the configured [MongoDbURI]
 var defaultConnection = mongoose.connection;
-
+puppies_mongoose_schemas.initializeMongooseAutoIncrement();
 /// Bind connection to error event (to get notification of connection errors)
 /// theconnectionToPokusBoxDb.on('error', pokus_logger.error.bind(console, 'MongoDB connection error:'));
 defaultConnection.on('error', pokus_logger.error.bind(console, 'MongoDB connection error:'));
@@ -60,6 +57,9 @@ async function main() {
 }
 */
 
+
+// Get the PuppyModel
+const PuppyModel = puppies_mongoose_schemas.getModels().models[0].model
 
 const handletestDbWritesErrors = (err) => {
   pokus_logger.error(`-----------------------------------------------------------------------------`);
@@ -93,7 +93,7 @@ const testDbWrites = (p_cute_name, p_is_female, p_description) => {
     cute_name: `${p_cute_name}`,
     is_female: p_is_female,
     description: `${p_description}`
-  });
+  }, { collection: 'puppies', database: 'pokus' });
 
   pokus_logger.info(`/************************************************************************* `);
   pokus_logger.info(`/****** [testDbWrites = ()] , test inserting a new puppy: `);

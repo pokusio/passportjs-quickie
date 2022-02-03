@@ -35,8 +35,9 @@ pokus_logger.info(`/************************************************************
 
 const app = express();
 
-
-
+// app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 /************************************************************************************
  *    VIEWS TEMPLATE ENGINE : EJS
  **************/
@@ -167,12 +168,81 @@ app.get('/api/v1/liveness', (request, response) => {
 *
 **************/
 app.post('/api/v1/puppies', (request, response) => {
-  const puppyFromReq = {
-    cute_name: `${request.params.cute_name}`,
-    is_female: request.params.is_female,
-    description: `${request.params.description}`
+
+
+  let stringifiedBody = JSON.stringify(request.body, " ", 2);
+
+  // 1./ display 'stringifiedBody' BEFORE any string operation
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/****** FINDME [POST /api/v1/puppies] Router,    [1./ display 'stringifiedBody' BEFORE any string operation]  : `);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(stringifiedBody);
+
+  // 2./ run operations on string
+  let editedStringifiedBody = stringifiedBody
+  // -> remove last character : a closing curly bracket
+  editedStringifiedBody = editedStringifiedBody.slice(0, -1)
+  // -> remove the 5 firsts characters : an opening curly bracket '    {'
+  editedStringifiedBody = editedStringifiedBody.substring(5)
+  // --> Okay, so removing first and last characters removed unwanted opening and closing brakcets: but e still have 6 remaining unwanted charaters, namely ': ""  ',at the end of the string, let's remove them :
+  // -> remove the 4 last characters : a closing curly bracket
+  editedStringifiedBody = editedStringifiedBody.slice(0, -1)
+  editedStringifiedBody = editedStringifiedBody.slice(0, -1)
+  editedStringifiedBody = editedStringifiedBody.slice(0, -1)
+  editedStringifiedBody = editedStringifiedBody.slice(0, -1)
+  editedStringifiedBody = editedStringifiedBody.slice(0, -1)
+  editedStringifiedBody = editedStringifiedBody.slice(0, -1)
+
+  // Remove all occurences of backslash :
+  editedStringifiedBody = editedStringifiedBody.replace(/\\/g,'')
+
+  // 3./ display 'stringifiedBody' AFTER operations
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/****** FINDME [POST /api/v1/puppies] Router,    [3./ display 'stringifiedBody' AFTER any string operation]  : `);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/****** [stringifiedBody]  : `);
+  pokus_logger.info(stringifiedBody);
+  pokus_logger.info(`/****** [editedStringifiedBody]  : `);
+  pokus_logger.info(editedStringifiedBody);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/************************************************************************* `);
+
+
+
+
+
+
+
+  let parsedBody = JSON.parse(editedStringifiedBody);
+  request.body = parsedBody;
+  const puppyFromReqZero = {
+    cute_name: `${request.body.cute_name}`,
+    is_female: request.body.is_female,
+    description: `${request.body.description}`
   }
+  const puppyFromReq = {
+    cute_name: `${parsedBody.cute_name}`,
+    is_female: parsedBody.is_female,
+    description: `${parsedBody.description}`
+  }
+
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/******FINDME [POST /api/v1/puppies] Router, The puppy received from the http request is: `);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`    Puppy [request.body.cute_name] : '${request.body.cute_name}'`);
+  pokus_logger.info(`    Puppy [request.body.is_female] : ${request.body.is_female}`);
+  pokus_logger.info(`    Puppy [request.body.description] : "${request.body.description}"`);
+  pokus_logger.info(`    Puppy [parsedBody.cute_name] : '${parsedBody.cute_name}'`);
+  pokus_logger.info(`    Puppy [parsedBody.is_female] : ${parsedBody.is_female}`);
+  pokus_logger.info(`    Puppy [parsedBody.description] : "${parsedBody.description}"`);
+  pokus_logger.info(`    Puppy [request.body] : `);
+  /// pokus_logger.info(request.body);
+  pokus_logger.info(JSON.stringify(request.body, " ", 2));
+  pokus_logger.info(`/************************************************************************* `);
+
+
   let requested_url_str = request.url;
+
   pokus_logger.info(` Pokus [POST /api/v1/puppies]: the puppy to add to the database is : ${JSON.stringify(puppyFromReq, " ", 2)} rendering 404 page for requested page : ${requested_url_str}`);
 
   const testPuppy = {
@@ -180,8 +250,8 @@ app.post('/api/v1/puppies', (request, response) => {
     is_female: true,
     description: `tootsie is such a loving dog`
   }
-  pokus_dal.testDbWrites(testPuppy.cute_name, testPuppy.is_female, testPuppy.description);
-  pokus_dal.testDbWrites(testPuppy.cute_name, testPuppy.is_female, testPuppy.description);
+  // pokus_dal.testDbWrites(testPuppy.cute_name, testPuppy.is_female, testPuppy.description);
+  pokus_dal.testDbWrites(puppyFromReq.cute_name, puppyFromReq.is_female, puppyFromReq.description);
 
   /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
   pokus_logger.info(` `);

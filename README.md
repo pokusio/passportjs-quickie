@@ -49,17 +49,53 @@ docker-compose up -d mongo
 
 ![mongo webui](./documentation/images/mongo_express.png)
 
+
+
 #### start `PokusBox`
 
 * In watch mode, (any change):
 
 ```bash
 npm i
-npm run watch
+npm run wlog
+
+# you get the logs into the ./pokus.watch.logs  logs file
 ```
 
-And now go to the url you see in the terminal output pokus logs ...
+#### Test the API Endpoints
 
+* Finally, you can run the following commands to test all REST API Endpoints :
+
+```bash
+
+#########################################
+## POST /api/v1/pupppies
+#
+export DOGGIE="{ \
+  \"cute_name\": \"cherry\", \
+  \"description\": \"shes a such a good dog, always warm welcoming home\", \
+  \"is_female\": true \
+}"
+
+echo "${DOGGIE}" | jq .
+
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json"
+
+export DOGGIE="{ \
+  \"cute_name\": \"rollercoaster\", \
+  \"description\": \"hes a  bit crazy, but all in all a real good dog, always definding home\", \
+  \"is_female\": true \
+}"
+
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json"
+
+
+#########################################
+## GET /api/v1/pupppies
+#
+curl -iv http://127.0.0.1:9099/api/v1/puppies -X GET -H "Accept: application/json"
+
+```
 
 ## Generate me
 
@@ -248,3 +284,5 @@ Right, now i see one thing that i do not specify in my `mongoDbURI` : the authen
 * https://www.npmjs.com/package/express-winston
 * https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/mongoose
 * https://www.youtube.com/watch?v=h4A0-53Olm4
+* https://medium.com/@mmajdanski/express-body-parser-and-why-may-not-need-it-335803cd048c
+*  MongoDB auto increment PKs : https://www.mongodb.com/developer/article/triggers-tricks-auto-increment-fields/?_ga=2.90839762.995010974.1643718120-390222689.1643718118

@@ -1,17 +1,1 @@
-{
-  "auth": {
-    "google": {
-      "clientID": "1080266325902-67dto9d8eg0scnm93uic8e92atl1p8fq.apps.googleusercontent.com",
-      "clientSecret": "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"
-    },
-    "restream": {
-      "clientID": "78ec5929-25b9-49e3-a1e9-b026cba85304",
-      "clientSecret": "e6f686d7-c999-434e-9a0f-8ae20ce9c7f6"
-    },
-    "mongoose": {
-      "dbname": "pokus",
-      "username": "pokus",
-      "password": "pokus"
-    }
-  }
-}
+{"{   \"cute_name\": \"cherry\",   \"description\": \"shes a such a good dog, always warm welcoming home\",   \"is_female\": true }": ""}
