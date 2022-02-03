@@ -5,11 +5,6 @@ var autoIncrement = require('mongoose-auto-increment');
 //Define a schema
 var Schema = mongoose.Schema;
 
-
-// var connection = mongoose.createConnection("mongodb://localhost/myDatabase");
-const initializeMongooseAutoIncrement = (connection) => {
-  autoIncrement.initialize(connection);
-}
 /*
 var bookSchema = new Schema({
     author: { type: Schema.Types.ObjectId, ref: 'Author' },
@@ -33,28 +28,28 @@ var PuppySchema = new Schema({
     required: true
   },
   birth_date: Date
-});
-
-PuppySchema.plugin(autoIncrement.plugin, 'Puppy');
+}, { collection: `puppies` });
 
 // var Book = connection.model('Book', bookSchema);
 
-var PuppyModel = mongoose.model('PuppyModel', PuppySchema );
+// var connection = mongoose.createConnection("mongodb://localhost/myDatabase");
+const initializeMongooseAutoIncrement = (connection) => {
+  autoIncrement.initialize(connection);
+  PuppySchema.plugin(autoIncrement.plugin, 'PuppyId');
+}
+const getModel = () => {
 
+  var PuppyModel = mongoose.model('PuppyModel', PuppySchema );
 
-
-const getModels = () => {
-  return { models: [
-    {
-      name: `PuppyModel`,
-      model: PuppyModel
-    }
-  ]}
+  return {
+        name: `PuppyModel`,
+        model: PuppyModel
+      }
 }
 // Compile model from schema
 
 
 module.exports = {
-    getModels: getModels,
+    getModel: getModel,
     initializeMongooseAutoIncrement: initializeMongooseAutoIncrement
 };

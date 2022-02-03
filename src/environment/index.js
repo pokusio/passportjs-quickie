@@ -11,7 +11,7 @@ const port_number = process.env.POKUS_PORT || `9099`;
 const net_fqdn = process.env.POKUS_NET_HOST || `127.0.0.1`;
 const db_net_fqdn = process.env.POKUS_DB_NET_FQDN || `127.0.0.1`;
 const db_port_number = process.env.POKUS_DB_PORT_NUMBER || `27017`;
-
+const secretFilePath = process.env.POKUS_SECRET_FILE_PATH || `./pokus.secrets.json`;
 
 
 pokus_logger.info(`/************************************************************************* `);
@@ -38,6 +38,7 @@ const getEnvironment = () => {
     port_number: `${port_number}`,
     net_fqdn: `${net_fqdn}`,
     db_net_fqdn: `${db_net_fqdn}`,
+    secret_file_path: `${secretFilePath}`,
     db_port_number: `${db_port_number}`
   }
 }

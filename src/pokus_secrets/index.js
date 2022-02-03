@@ -49,7 +49,8 @@ const getGoogleOauth2Secrets = () => {
 const getDatabaseSecrets = () => {
     return {
       username: `${loadedSecretJson.auth.mongoose.username}`,
-      password: `${loadedSecretJson.auth.mongoose.password}`
+      password: `${loadedSecretJson.auth.mongoose.password}`,
+      dbname: `${loadedSecretJson.auth.mongoose.dbname}`
     }
 }
 

@@ -1,6 +1,7 @@
 // getting-started.js
 const mongoose = require('mongoose');
 const winston = require('winston');
+const fs = require('fs');
 
 const pokus_environment = require("../environment/")
 const pokus_secrets = require("../pokus_secrets/")
@@ -19,13 +20,28 @@ const pokus_logger = winston.createLogger({
 });
 
 
+try {
+  pokus_logger.info(`/****** JBL DEBUG POINT is tracking an error`);
+} catch (trackedError) {
+  pokus_logger.info(`/****** JBL DEBUG POINT error found :`);
+  pokus_logger.error(trackedError);
+
+} finally {
+  pokus_logger.info(`/****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!* `);
+  pokus_logger.info(`/****** JBL DEBUG POINT`);
+  pokus_logger.info(`/****** JBL DEBUG POINT`);
+  pokus_logger.info(`/****** JBL DEBUG POINT`);
+  pokus_logger.info(`/****** JBL DEBUG POINT`);
+  pokus_logger.info(`/****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!* `);
+}
+
 // Set up default mongoose connection // "mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false"
 const mongoDbURI = `mongodb://${mongoUsername}:${mongoUserPassword}@192.168.82.6:27017/${mongoDbName}?authSource=admin&ssl=false&retryWrites=true&w=majority`;
 /// mongoose.connect(mongoDbURI, {useNewUrlParser: true, useUnifiedTopology: true});
 var theconnectionToPokusBoxDb = null;
 try {
   theconnectionToPokusBoxDb = mongoose.connect(mongoDbURI, {useNewUrlParser: true, useUnifiedTopology: true});
-  secretsAsRawJSON = fs.readFileSync(`${secretFilePath}`, 'utf8')
+  /// secretsAsRawJSON = fs.readFileSync(`${secretFilePath}`, 'utf8')
   pokus_logger.info(`/************************************************************************* `);
   pokus_logger.info(`/****** Connecting to MongoDB from Mongoose Using MongoDbURI = [${mongoDbURI}]  : `);
   pokus_logger.info(`/****** Connecting to MongoDB from Mongoose  : `);
@@ -43,12 +59,11 @@ try {
 
 //  Get the default connection, which is based on the above configuration, i.e. based on the configured [MongoDbURI]
 var defaultConnection = mongoose.connection;
-puppies_mongoose_schemas.initializeMongooseAutoIncrement();
 /// Bind connection to error event (to get notification of connection errors)
 /// theconnectionToPokusBoxDb.on('error', pokus_logger.error.bind(console, 'MongoDB connection error:'));
 defaultConnection.on('error', pokus_logger.error.bind(console, 'MongoDB connection error:'));
 
-
+// theconnectionToPokusBoxDb does not have an "on" method // theconnectionToPokusBoxDb.on('error', pokus_logger.error.bind(console, 'MongoDB connection error:'));
 /*
 main().catch(err => console.log(err));
 
@@ -58,8 +73,11 @@ async function main() {
 */
 
 
+// initialize the autoIncrement on Puppy Model, before getting the model (always)
+puppies_mongoose_schemas.initializeMongooseAutoIncrement(defaultConnection);
+
 // Get the PuppyModel
-const PuppyModel = puppies_mongoose_schemas.getModels().models[0].model
+const PuppyModel = puppies_mongoose_schemas.getModel().model
 
 const handletestDbWritesErrors = (err) => {
   pokus_logger.error(`-----------------------------------------------------------------------------`);
