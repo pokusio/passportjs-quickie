@@ -222,10 +222,13 @@ const getPuppies = (p_search_str, p_female, p_color, pokus_callback) => {
       */
       pokus_logger.info(`/** ******** no 'color', no 'is_female' search criterias : `);
       pokus_logger.info(`        XxxxModel.find({ cute_name: /${p_search_str}.*/}) `);
+      let searchRegExp = '/' + p_search_str + '.*/';
 
-      PuppyModel.find({ cute_name: /`${p_search_str}`.*/}).then((docs) => {
+      pokus_logger.info(`/** ******** léger chgmt... : `);
+      PuppyModel.find({ cute_name: searchRegExp}).then((docs) => {
         pokus_callback(docs);
       });
+
     } else {
       // executes, passing results to callback
       /// retrievedPuppies = PuppyModel.find({ cute_name: `/${p_search_str}/i`, color: p_color}, function (err, docs) {});
@@ -255,8 +258,27 @@ const getPuppies = (p_search_str, p_female, p_color, pokus_callback) => {
 
 
 
-  return retrievedPuppies;
+  // return retrievedPuppies;
 }
+
+/******************************************************************
+ *     CRUD Puppies : RETRIEVE (list, search, browse)
+ ******************************************************************
+ * Retrieves all puppies into the database
+ ***/
+/// const getAllPuppies = async (p_search_str, p_female, p_color) => {
+const getAllPuppies = (pokus_callback) => {
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/****** [getAllPuppies = ()] , searching for all puppies: `);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/** `);
+
+  PuppyModel.find().sort({ cute_name: -1 })
+      .limit(20).then((docs) => {
+      pokus_callback(docs);
+  });
+}
+
 
 
 /******************************************************************
@@ -353,5 +375,6 @@ const createPuppy = (p_cute_name, p_is_female, p_description) => {
 
 module.exports = {
     getPuppies: getPuppies,
+    getAllPuppies: getAllPuppies,
     createPuppy: createPuppy
 };

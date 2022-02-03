@@ -74,52 +74,52 @@ npm run wlog
 export DOGGIE="{ \
   \"cute_name\": \"cherry\", \
   \"description\": \"shes a such a good dog, always warm welcoming home\", \
-  \"is_female\": true \
-  \"color\": \"blue\"
+  \"is_female\": true, \
+  \"color\": \"blue\" \
 }"
 
 echo "${DOGGIE}" | jq .
 
-curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json"
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${DOGGIE}"
 
 export DOGGIE="{ \
   \"cute_name\": \"rollercoaster\", \
   \"description\": \"hes a  bit crazy, but all in all a real good dog, always definding home\", \
   \"is_female\": true, \
-  \"color\": \"yellow\"
+  \"color\": \"yellow\" \
 }"
 
-curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json"
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${DOGGIE}"
 
 /Users/jbl/hugo-starter-node/test/api/endpoint/puppies/CRUD_C/spec.newman.json
 export DOGGIE="{ \
   \"cute_name\": \"madison\", \
   \"description\": \"shes a  bit crazy, but madison all in all a real good dog, always cheerful\", \
   \"is_female\": true, \
-  \"color\": \"yellow\"
+  \"color\": \"yellow\" \
 }"
 
-curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json"
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${DOGGIE}"
 
 
 export DOGGIE="{ \
   \"cute_name\": \"grace\", \
   \"description\": \"shes very quiet, an eats a lot :), plus she's very esay going with children\", \
   \"is_female\": true, \
-  \"color\": \"yellow\"
+  \"color\": \"yellow\" \
 }"
 
-curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json"
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${DOGGIE}"
 
 
 export DOGGIE="{ \
   \"cute_name\": \"kelly\", \
   \"description\": \"she's very brave, needs a lot of physical activity, at least 4 long walks a week.\", \
   \"is_female\": true, \
-  \"color\": \"yellow\"
+  \"color\": \"yellow\" \
 }"
 
-curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json"
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${DOGGIE}"
 
 
 
@@ -132,13 +132,13 @@ curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept:
 #
 
 export POKUS_QUERY_PARAMS="search=cha"
-curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json"
+curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
 
 export POKUS_QUERY_PARAMS="search=cha&female=false"
-curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json"
+curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
 
 export POKUS_QUERY_PARAMS="search=cha&female=false&color=yellow"
-curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json"
+curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
 
 
 ```
@@ -152,6 +152,8 @@ curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H 
 ```bash
 npm run e2e-api
 ```
+
+
 
 ## Generate me
 

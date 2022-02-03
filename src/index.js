@@ -289,6 +289,124 @@ app.post('/api/v1/puppies', (request, response) => {
 
 })
 
+// -+-
+// -+- returns a bollean : if true, then we will execute find() to get all puppies
+// -+-
+const doIsearchAll = (p_search_str, p_female, p_color) => {
+  let doIsearchAll = false;
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/****** [getPuppies = ()] , searching for puppies with those criterias: `);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`    Puppy [p_search_str] : '${p_search_str}'`);
+  pokus_logger.info(`    Puppy [p_female] : ${p_female}`);
+  pokus_logger.info(`    Puppy [p_color] : "${p_color}"`);
+  pokus_logger.info(`/** `);
+
+  let p_colorSkip = false;
+  let p_femaleSkip = false;
+  let p_search_strSkip = false;
+
+
+  if (p_female === null ) {
+    //
+    pokus_logger.info(`    Puppy [p_female] : IS null`);
+  } else {
+    //
+    pokus_logger.info(`    Puppy [p_female] : IS NOT null`);
+  }
+
+  if (p_female === undefined || p_female == "undefined" ) {
+    //
+    pokus_logger.info(`    Puppy [p_female] : IS undefined`);
+  } else {
+    //
+    pokus_logger.info(`    Puppy [p_female] : is NOT undefined`);
+  }
+
+  if (p_female === undefined || p_female == "undefined" || p_female === null ) {
+    //
+    pokus_logger.info(`    Puppy [p_female] : is null or undefined`);
+    p_femaleSkip = true;
+  } else {
+    //
+    pokus_logger.info(`    Puppy [p_female] : is NEITHER null NOR undefined`);
+  }
+
+  pokus_logger.info(`/** `);
+
+
+  if (p_color === null ) {
+    //
+    pokus_logger.info(`    Puppy [p_color] : IS null`);
+  } else {
+    //
+    pokus_logger.info(`    Puppy [p_color] : IS NOT null`);
+  }
+
+  if ( (typeof p_color == 'undefined') || p_color == "undefined" ) {
+    //
+    pokus_logger.info(`    Puppy [p_color] : IS undefined`);
+  } else {
+    //
+    pokus_logger.info(`    Puppy [p_color] : is NOT undefined`);
+  }
+
+  if ( (typeof p_color == 'undefined') || p_color == "undefined" || p_color === null ) {
+    //
+    pokus_logger.info(`    Puppy [p_color] : is null or undefined`);
+    p_colorSkip = true;
+
+  } else {
+    //
+    pokus_logger.info(`    Puppy [p_color] : is NEITHER null NOR undefined`);
+  }
+  pokus_logger.info(`TypeOf p_color is : [${typeof p_color}]`)
+
+  // --- p_search_str
+
+  if (p_search_str === null ) {
+    //
+    pokus_logger.info(`    Puppy [p_search_str] : IS null`);
+  } else {
+    //
+    pokus_logger.info(`    Puppy [p_search_str] : IS NOT null`);
+  }
+
+  if (p_search_str === undefined || p_search_str == "undefined" ) {
+    //
+    pokus_logger.info(`    Puppy [p_search_str] : IS undefined`);
+  } else {
+    //
+    pokus_logger.info(`    Puppy [p_search_str] : is NOT undefined`);
+  }
+
+  if (p_search_str === undefined || p_search_str == "undefined" || p_search_str === null ) {
+    //
+    pokus_logger.info(`    Puppy [p_search_str] : is null or undefined`);
+    p_search_strSkip = true;
+  } else {
+    //
+    pokus_logger.info(`    Puppy [p_search_str] : is NEITHER null NOR undefined`);
+  }
+
+  pokus_logger.info(`/** `);
+
+
+  pokus_logger.info(`/************************************************************************* `);
+
+  // PuppyModel.find();
+
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/****** [getPuppies = ()] , before launching MongoDB search: `);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`    Puppy search [p_femaleSkip] : '${p_femaleSkip}'`);
+  pokus_logger.info(`    Puppy search [p_colorSkip] : ${p_colorSkip}`);
+  pokus_logger.info(`    Puppy search [p_search_strSkip] : ${p_search_strSkip}`);
+  pokus_logger.info(`/** **********************************************`);
+
+  doIsearchAll = p_femaleSkip && p_colorSkip && p_search_strSkip;
+  return doIsearchAll;
+}
  /**********************************************************************
   *   GET /api/v1/puppies Router / (protected) ()
   **********************************************************************
@@ -322,12 +440,6 @@ app.get('/api/v1/puppies', (request, response, next) => {
   pokus_logger.info(`/************************************************************************* `);
 
 
-
-  const searchCriterias = {
-    search_str: `${request.query.search}`,
-    female: request.query.female || null,
-    color: `${request.query.color}` || "",
-  }
   /*
   let pokusResponseCode = 500;
   let pokusResponseJSON = {
@@ -345,62 +457,107 @@ app.get('/api/v1/puppies', (request, response, next) => {
   let pokusResponseCode = 599;
   let pokusResponseJSON = {};
   let retrievedPuppies = {};
+  let searchCriterias = {};
   try {
-    // pokus_dal.createPuppy(testPuppy.cute_name, testPuppy.is_female, testPuppy.description);
-    // search criterai////
-    retrievedPuppies = pokus_dal.getPuppies(searchCriterias.search_str, searchCriterias.female, searchCriterias.color, function (docs) {
+
+      searchCriterias = {
+        search_str: `${request.query.search}`,
+        female: request.query.female || null,
+        color: `${request.query.color}` || "",
+      }
+
+      pokus_logger.info(`/************************************************************************* `);
+      pokus_logger.info(`/****** TRACKER - [getPuppies = ()] , inspect [searchCriterias] params : `);
+      pokus_logger.info(`/************************************************************************* `);
+      pokus_logger.info(`    Puppy [searchCriterias] : `);
+      pokus_logger.info(`${JSON.stringify(searchCriterias, " ", 2)}`);
+      pokus_logger.info(`/************************************************************************* `);
+
+      let fullSearchBool = doIsearchAll(searchCriterias.search_str, searchCriterias.female, searchCriterias.color);
+
+      pokus_logger.info(` Pokus [GET /api/v1/puppies]: [fullSearchBool] = [${fullSearchBool}]  `);
+
+      if (!fullSearchBool) {
+        pokus_dal.getPuppies(searchCriterias.search_str, searchCriterias.female, searchCriterias.color, function (docs) {
+          pokus_logger.info(`**********************************************************************`);
+          pokus_logger.info(``);
+          pokus_logger.info(``);
+          pokus_logger.info(` Pokus [GET /api/v1/puppies]: [pokus_dal.getPuppies] callback to retrieve puppies async from mongoose :`);
+          pokus_logger.info(``);
+          pokus_logger.info(``);
+          pokus_logger.info(`here is the [docs] object received from mongoose : `);
+          pokus_logger.info(``);
+          pokus_logger.info(``);
+          pokus_logger.info(`${JSON.stringify(docs, " ", 2)}`);
+          pokus_logger.info(``);
+          pokus_logger.info(``);
+          pokus_logger.info(`**********************************************************************`);
+          pokusResponseCode = 200;
+          pokusResponseJSON = {
+            message: ` ok ça vient bien du callback `,
+            error: `nonya pas derreur c un test error`,
+            search: {},
+            results: docs
+          };
+          response.status(pokusResponseCode);
+          response.json(pokusResponseJSON)
+        });
+      } else {
+        pokus_dal.getAllPuppies(function (docs) {
+          pokus_logger.info(`**********************************************************************`);
+          pokus_logger.info(``);
+          pokus_logger.info(``);
+          pokus_logger.info(` Pokus [GET /api/v1/puppies]: [pokus_dal.getPuppies] callback to retrieve puppies async from mongoose :`);
+          pokus_logger.info(``);
+          pokus_logger.info(``);
+          pokus_logger.info(`here is the [docs] object received from mongoose : `);
+          pokus_logger.info(``);
+          pokus_logger.info(``);
+          pokus_logger.info(`${JSON.stringify(docs, " ", 2)}`);
+          pokus_logger.info(``);
+          pokus_logger.info(``);
+          pokus_logger.info(`**********************************************************************`);
+          pokusResponseCode = 200;
+          pokusResponseJSON = {
+            message: ` ok ça vient bien du callback `,
+            error: `nonya pas derreur c un test error`,
+            search: {},
+            results: docs
+          };
+          response.status(pokusResponseCode);
+          response.json(pokusResponseJSON)
+        });
+      }
+      /*
       pokus_logger.info(`**********************************************************************`);
-      pokus_logger.info(``);
-      pokus_logger.info(``);
-      pokus_logger.info(` Pokus [GET /api/v1/puppies]: [pokus_dal.getPuppies] callback to retrieve puppies async from mongoose :`);
-      pokus_logger.info(``);
-      pokus_logger.info(``);
-      pokus_logger.info(`here is the [docs] object received from mongoose : `);
-      pokus_logger.info(``);
-      pokus_logger.info(``);
-      pokus_logger.info(`${JSON.stringify(docs, " ", 2)}`);
-      pokus_logger.info(``);
-      pokus_logger.info(``);
+      pokus_logger.info(` Pokus [GET /api/v1/puppies]: Pokus retrieved puppies from your search request : ${JSON.stringify(retrievedPuppies, " ", 2)}`);
       pokus_logger.info(`**********************************************************************`);
-      pokusResponseCode = 200;
+      pokusResponseCode = 200; // '201' leans created, and i want 200 OK
       pokusResponseJSON = {
-        message: ` ok ça vient bien du callback `,
-        error: `nonya pas derreur c un test error`,
         search: searchCriterias,
-        results: docs
+        puppies: retrievedPuppies
       };
-      response.status(pokusResponseCode);
-      response.json(pokusResponseJSON)
-    });
-    /*
-    pokus_logger.info(`**********************************************************************`);
-    pokus_logger.info(` Pokus [GET /api/v1/puppies]: Pokus retrieved puppies from your search request : ${JSON.stringify(retrievedPuppies, " ", 2)}`);
-    pokus_logger.info(`**********************************************************************`);
-    pokusResponseCode = 200; // '201' leans created, and i want 200 OK
-    pokusResponseJSON = {
-      search: searchCriterias,
-      puppies: retrievedPuppies
-    };
-    */
+      */
   } catch (e) {
-    pokus_logger.info(`**********************************************************************`);
-    pokus_logger.info(` Pokus [GET /api/v1/puppies]: An error occured while trying to retrieve puppies with your search request : ${JSON.stringify(searchCriterias, " ", 2)}`);
-    pokus_logger.info(`**********************************************************************`);
-    pokus_logger.info(e);
-    pokusResponseCode = 500;
-    pokusResponseJSON = {
-      message: ` Pokus [GET /api/v1/puppies]: An error occured while trying to retrieve puppies with your search request : ${JSON.stringify(searchCriterias, " ", 2)} `,
-      error: `database error`,
-      search: searchCriterias
-    };
+      pokus_logger.info(`**********************************************************************`);
+      pokus_logger.info(` Pokus [GET /api/v1/puppies]: An error occured while trying to retrieve puppies with your search request : ${JSON.stringify(searchCriterias, " ", 2)}`);
+      pokus_logger.info(`**********************************************************************`);
+      pokus_logger.info(e);
+      pokusResponseCode = 500;
+      pokusResponseJSON = {
+        message: ` Pokus [GET /api/v1/puppies]: An error occured while trying to retrieve puppies with your search request : ${JSON.stringify(searchCriterias, " ", 2)} `,
+        error: `database error`,
+        search: searchCriterias
+      };
   } finally {
-    /*
-    response.status(pokusResponseCode);
-    response.json(pokusResponseJSON);
-    */
+      /*
+      response.status(pokusResponseCode);
+      response.json(pokusResponseJSON);
+      */
   }
 
 })
+
  /************************************************************************************
   ************************************************************************************
   *                          [OAuth2]
