@@ -17,7 +17,8 @@ var PuppySchema = new Schema({
   puppyId: { type: Schema.Types.ObjectId, ref: 'PuppyId' },
   cute_name: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   description: {
     type: String,

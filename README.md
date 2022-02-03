@@ -71,78 +71,104 @@ npm run wlog
 #########################################
 ## POST /api/v1/pupppies
 #
-export DOGGIE="{ \
+export MY_PUPPY="{ \
   \"cute_name\": \"cherry\", \
   \"description\": \"shes a such a good dog, always warm welcoming home\", \
   \"is_female\": true, \
   \"color\": \"blue\" \
 }"
 
-echo "${DOGGIE}" | jq .
+echo "${MY_PUPPY}" | jq .
 
-curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${DOGGIE}"
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${MY_PUPPY}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${MY_PUPPY}"
 
-export DOGGIE="{ \
+export MY_PUPPY="{ \
   \"cute_name\": \"rollercoaster\", \
   \"description\": \"hes a  bit crazy, but all in all a real good dog, always definding home\", \
   \"is_female\": true, \
   \"color\": \"yellow\" \
 }"
 
-curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${DOGGIE}"
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${MY_PUPPY}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${MY_PUPPY}"
 
 /Users/jbl/hugo-starter-node/test/api/endpoint/puppies/CRUD_C/spec.newman.json
-export DOGGIE="{ \
+export MY_PUPPY="{ \
   \"cute_name\": \"madison\", \
   \"description\": \"shes a  bit crazy, but madison all in all a real good dog, always cheerful\", \
   \"is_female\": true, \
   \"color\": \"yellow\" \
 }"
 
-curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${DOGGIE}"
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${MY_PUPPY}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${MY_PUPPY}"
 
 
-export DOGGIE="{ \
+export MY_PUPPY="{ \
   \"cute_name\": \"grace\", \
   \"description\": \"shes very quiet, an eats a lot :), plus she's very esay going with children\", \
   \"is_female\": true, \
   \"color\": \"yellow\" \
 }"
 
-curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${DOGGIE}"
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${MY_PUPPY}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${MY_PUPPY}"
 
 
-export DOGGIE="{ \
+export MY_PUPPY="{ \
   \"cute_name\": \"kelly\", \
   \"description\": \"she's very brave, needs a lot of physical activity, at least 4 long walks a week.\", \
   \"is_female\": true, \
   \"color\": \"yellow\" \
 }"
 
-curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${DOGGIE}"
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${MY_PUPPY}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${MY_PUPPY}"
 
 
 
-export DOGGIE="{ \
+export MY_PUPPY="{ \
   \"cute_name\": \"charlie\", \
   \"description\": \"another dog i added fr tests.\", \
   \"is_female\": true, \
   \"color\": \"yellow\" \
 }"
 
-curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${DOGGIE}"
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${MY_PUPPY}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${MY_PUPPY}"
 
 
 
-export DOGGIE="{ \
+export MY_PUPPY="{ \
   \"cute_name\": \"china\", \
-  \"description\": \"another yellow dog i added fr tests.\", \
+  \"description\": \"another yellow dog named china i added fr tests.\", \
   \"is_female\": true, \
   \"color\": \"yellow\" \
 }"
 
-curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${DOGGIE}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${DOGGIE}"
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${MY_PUPPY}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${MY_PUPPY}"
 
+# try adding 2 puppies with same name, but the other one has another description
+export MY_PUPPY="{ \
+  \"cute_name\": \"china\", \
+  \"description\": \"that's the other one that has a different description, znd which will never be added n saved to the database. Will throw a Monggose Exception.\", \
+  \"is_female\": true, \
+  \"color\": \"yellow\" \
+}"
+
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${MY_PUPPY}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${MY_PUPPY}"
+
+
+cat <<EOF >./example.output.of.case.logs
+****
+error:   /****** [createPuppy = ()] Saving Puppy FAILED!!!
+error:   /*************************************************************************
+error:   -----------------------------------------------------------------------------
+error:   An error occured during the execution of  [createPuppy = () => {] :
+error:   E11000 duplicate key error collection: pokus.puppies index: cute_name_1 dup key: { cute_name: "china" }
+error:   -----------------------------------------------------------------------------
+EOF
+
+echo "-----------------------------------------------------------------------------"
+echo "  Now you should have an output like this : "
+echo "-----------------------------------------------------------------------------"
+cat ./example.output.of.case.logs
+echo "-----------------------------------------------------------------------------"
 
 #########################################
 ## GET /api/v1/pupppies
