@@ -348,7 +348,7 @@ app.get('/api/v1/puppies', (request, response, next) => {
   try {
     // pokus_dal.createPuppy(testPuppy.cute_name, testPuppy.is_female, testPuppy.description);
     // search criterai////
-    retrievedPuppies = pokus_dal.getPuppies(searchCriterias.search_str, searchCriterias.female, searchCriterias.color, function (err, docs) {
+    retrievedPuppies = pokus_dal.getPuppies(searchCriterias.search_str, searchCriterias.female, searchCriterias.color, function (docs) {
       pokus_logger.info(`**********************************************************************`);
       pokus_logger.info(` Pokus [GET /api/v1/puppies]: [pokus_dal.getPuppies] callback to retrieve puppies async from mongoose :`);
       pokus_logger.info(``);
@@ -366,7 +366,7 @@ app.get('/api/v1/puppies', (request, response, next) => {
     pokus_logger.info(`**********************************************************************`);
     pokus_logger.info(` Pokus [GET /api/v1/puppies]: Pokus retrieved puppies from your search request : ${JSON.stringify(retrievedPuppies, " ", 2)}`);
     pokus_logger.info(`**********************************************************************`);
-    pokusResponseCode = 201;
+    pokusResponseCode = 200; // '201' leans created, and i want 200 OK
     pokusResponseJSON = {
       search: searchCriterias,
       puppies: retrievedPuppies

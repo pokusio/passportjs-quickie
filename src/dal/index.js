@@ -208,11 +208,14 @@ const getPuppies = (p_search_str, p_female, p_color, pokus_callback) => {
     if (p_colorSkip) {
       // executes, passing results to callback
       /// retrievedPuppies = PuppyModel.find({ cute_name: `/${p_search_str}/i`}, function (err, docs) {});
+      /*
       PuppyModel.find({ cute_name: `/${p_search_str}/i`}, function (err, docs) {
         pokus_callback(err, docs);
       });
-      PuppyModel.find({ cute_name: `/${p_search_str}/i`}, function (err, docs) {
-        pokus_callback(err, docs);
+      */
+      pokus_logger.info(`/** ******** no 'color', no 'is_female' search criterias`);
+      PuppyModel.find({ cute_name: `/${p_search_str}/i`}).then((docs) => {
+        pokus_callback(docs);
       });
     } else {
       // executes, passing results to callback

@@ -43,12 +43,12 @@
 					"script": {
 						"type": "text/javascript",
 						"exec": [
-              "/*pm.test('expect HTTP response status code be 201', function () {",
-							"    pm.response.to.have.status(201)",
-							"})*/",
-							"/*pm.test('expect response be 201', function () {",
+              "pm.test('expect HTTP response status code be 201', function () {",
+							"    pm.response.to.have.status(200)",
+							"})",
+							"pm.test('expect response be 201', function () {",
 							"    pm.response.to.be.ok",
-							"})*/",
+							"})",
 							"/*pm.test('expect response json contain args', function () {",
 							"    pm.expect(pm.response.json().args).to.have.property('source')",
 							"      .and.equal('newman-sample-github-collection')",

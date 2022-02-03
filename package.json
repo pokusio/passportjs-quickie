@@ -6,7 +6,9 @@
   "scripts": {
     "seas": "./.npm.scripts/dependencies.sh",
     "spawntests": "./.npm.scripts/tests/generate-folder-structure.sh",
-    "e2e-api": "npm run clean-logs && node ./test/api.test.js 2>&1 | tee -a ./pokus.tests.e2e-api.logs",
+    "e2e-api": "npm run clean && node ./test/api.test.js 2>&1 | tee -a ./pokus.tests.e2e-api.logs",
+    "e2e-serve": "serve ./newman/",
+    "clean": "npm run clean-logs && rm -fr newman/ && mkdir -p newman/",
     "test": "echo \"No test have been implemented yet\" && exit 7 ",
     "build": "echo \"No build has been implemented yet\"  && exit 127",
     "start": "echo \"No start has been implemented yet\"  && exit 127",

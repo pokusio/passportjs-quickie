@@ -14,6 +14,8 @@ npm install --save-dev @decathlon/newman-reporter-pullrequest-decorator
 npm install --save-dev newman-reporter-json
 
 
+npm i -g serve
+
 # https://www.npmjs.com/package/newman-reporter-htmlextra-and-perf
 # https://www.npmjs.com/package/@decathlon/newman-reporter-pullrequest-decorator
 
