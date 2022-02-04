@@ -329,27 +329,27 @@ const doIsearchAll = (p_search_str, p_female, p_color) => {
 
   if (p_female === null ) {
     //
-    pokus_logger.info(`    Puppy [p_female] : IS null`);
+    pokus_logger.info(` [1]   Puppy [p_female] : IS null`);
   } else {
     //
-    pokus_logger.info(`    Puppy [p_female] : IS NOT null`);
+    pokus_logger.info(` [2]   Puppy [p_female] : IS NOT null`);
   }
 
   if (p_female === undefined || p_female == "undefined" ) {
     //
-    pokus_logger.info(`    Puppy [p_female] : IS undefined`);
+    pokus_logger.info(` [3]   Puppy [p_female] : IS undefined`);
   } else {
     //
-    pokus_logger.info(`    Puppy [p_female] : is NOT undefined`);
+    pokus_logger.info(` [4]   Puppy [p_female] : is NOT undefined`);
   }
 
   if (p_female === undefined || p_female == "undefined" || p_female === null ) {
     //
-    pokus_logger.info(`    Puppy [p_female] : is null or undefined`);
+    pokus_logger.info(` [5]   Puppy [p_female] : is null or undefined`);
     p_femaleSkip = true;
   } else {
     //
-    pokus_logger.info(`    Puppy [p_female] : is NEITHER null NOR undefined`);
+    pokus_logger.info(` [6]   Puppy [p_female] : is NEITHER null NOR undefined`);
   }
 
   pokus_logger.info(`/** `);
@@ -460,20 +460,6 @@ app.get('/api/v1/puppies', (request, response, next) => {
   pokus_logger.info(`/************************************************************************* `);
 
 
-  /*
-  let pokusResponseCode = 500;
-  let pokusResponseJSON = {
-    message: `Pokus [POST /api/v1/puppies]: this is just an architecture test `,
-    error: `database error`,
-    search: searchCriterias
-  };
-  response.status(pokusResponseCode);
-  response.json(pokusResponseJSON)
-
-  next(new Error("JBL Stop debug point: this is just an architecture test"));
-  */
-
-
   let pokusResponseCode = 599;
   let pokusResponseJSON = {};
   let retrievedPuppies = {};
@@ -482,23 +468,28 @@ app.get('/api/v1/puppies', (request, response, next) => {
 
       searchCriterias = {
         search_str: `${request.query.search}`,
-        female: request.query.female || null,
+        female: request.query.female || true,
         color: `${request.query.color}` || "",
         puppy_id: `${request.query.puppy_id}`
       }
-
-      pokus_logger.info(`/************************************************************************* `);
-      pokus_logger.info(`/****** TRACKER - [getPuppies = ()] , inspect [searchCriterias] params : `);
-      pokus_logger.info(`/************************************************************************* `);
-      pokus_logger.info(`    Puppy [searchCriterias] : `);
-      pokus_logger.info(`${JSON.stringify(searchCriterias, " ", 2)}`);
-      pokus_logger.info(`/************************************************************************* `);
 
       // --- // --- // --- // --- // --- // --- // --- // --- // --- // --- // --- // --- // --- //
       // --- // --- //        if the puppy_id request parameter is
       //                      sent, we ignore {search_str} {female} {color}
       //
-      if (!isNullOrUndefined(searchCriterias.puppy_id)) {
+      let isNullOrUndefinedBool = isNullOrUndefined(searchCriterias.puppy_id)
+
+      pokus_logger.info(`/************************************************************************* `);
+      pokus_logger.info(`/****** TRACKER 1 - [getPuppies = ()] , inspect [searchCriterias] params : `);
+      pokus_logger.info(`/************************************************************************* `);
+      pokus_logger.info(`    Puppy [searchCriterias] : `);
+      pokus_logger.info(`${JSON.stringify(searchCriterias, " ", 2)}`);
+      pokus_logger.info(`/************************************************************************* `);
+      pokus_logger.info(`    Puppy isNullOrUndefinedBool=[${isNullOrUndefinedBool}] : `);
+      pokus_logger.info(`/************************************************************************* `);
+
+
+      if (!isNullOrUndefinedBool) {
         pokus_dal.getPuppyById(searchCriterias.puppy_id, function (docs) {
           pokus_logger.info(`**********************************************************************`);
           pokus_logger.info(``);
@@ -562,7 +553,7 @@ app.get('/api/v1/puppies', (request, response, next) => {
           pokus_logger.info(`**********************************************************************`);
           pokus_logger.info(``);
           pokus_logger.info(``);
-          pokus_logger.info(` Pokus [GET /api/v1/puppies]: [pokus_dal.getPuppies] callback to retrieve puppies async from mongoose :`);
+          pokus_logger.info(` Pokus [GET /api/v1/puppies][getAllPuppies()]: [pokus_dal.getPuppies] callback to retrieve puppies async from mongoose :`);
           pokus_logger.info(``);
           pokus_logger.info(``);
           pokus_logger.info(`here is the [docs] object received from mongoose : `);

@@ -112,26 +112,6 @@ const handletestDbReadsErrors = (err) => {
 /// const getPuppies = async (p_search_str, p_female, p_color) => {
 const getPuppies = (p_search_str, p_female, p_color, pokus_callback) => {
 
-  let retrievedPuppies = {
-    puppies: [
-      {
-        cute_name: "",
-        description: "",
-        is_female: "",
-        birth_date: ""
-      },
-      {
-        cute_name: "",
-        description: "",
-        is_female: "",
-        birth_date: ""
-      }
-    ]
-  } // that's  the structure expected : i so feel like switching to TypeScript ...
-  retrievedPuppies = {}
-
-
-
   pokus_logger.info(`/************************************************************************* `);
   pokus_logger.info(`/****** [getPuppies = ()] , searching for puppies with those criterias: `);
   pokus_logger.info(`/************************************************************************* `);
@@ -298,21 +278,30 @@ const getAllPuppies = (pokus_callback) => {
 
 
 /******************************************************************
- *     CRUD Puppies : RETRIEVE (list, search, browse)
+ *     CRUD Puppies : RETRIEVE by Id
  ******************************************************************
- * Retrieves all puppies into the database
+ * Retrieves the puppy with the specified 'puppyId'
  ***/
 /// const getAllPuppies = async (p_search_str, p_female, p_color) => {
 const getPuppyById = (puppyId, pokus_callback) => {
   pokus_logger.info(`/************************************************************************* `);
-  pokus_logger.info(`/****** [getAllPuppies = ()] , searching for puppy of '_id' equal to : [${puppyId}]`);
+  pokus_logger.info(`/****** TRACKER 2 - [getPuppyById = ()] , inspect [puppyId] param : `);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`    Puppy [puppyId] : `);
+  pokus_logger.info(`${puppyId}`);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/****** [getPuppyById = ()] , searching for puppy of 'puppyId' equal to : [${puppyId}]`);
   pokus_logger.info(`/************************************************************************* `);
   pokus_logger.info(`/** `);
 
-  PuppyModel.find({ _id: `${puppyId}` }).sort({ cute_name: -1 })
-      .limit(20).then((docs) => {
+  PuppyModel.find({ puppyId: puppyId }).then((docs) => {
       pokus_callback(docs);
   });
+////  PuppyModel.findById(`${puppyId}`).then((docs) => {
+////      pokus_callback(docs);
+////  });
+
 }
 
 /******************************************************************
@@ -413,5 +402,6 @@ const createPuppy = (p_cute_name, p_is_female, p_description, p_color) => {
 module.exports = {
     getPuppies: getPuppies,
     getAllPuppies: getAllPuppies,
+    getPuppyById: getPuppyById,
     createPuppy: createPuppy
 };
