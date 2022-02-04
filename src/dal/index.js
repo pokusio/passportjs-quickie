@@ -283,7 +283,7 @@ const getAllPuppies = (pokus_callback) => {
 /******************************************************************
  *     CRUD Puppies : RETRIEVE by Id
  ******************************************************************
- * Retrieves the puppy with the specified 'puppyId'
+ * Retrieves the puppy with the specified 'puppyId' _id
  ***/
 /// const getAllPuppies = async (p_search_str, p_female, p_color) => {
 const getPuppyById = (puppyId, pokus_callback) => {
@@ -298,7 +298,7 @@ const getPuppyById = (puppyId, pokus_callback) => {
   pokus_logger.info(`/************************************************************************* `);
   pokus_logger.info(`/** `);
 
-  PuppyModel.find({ puppyId: puppyId }).then((docs) => {
+  PuppyModel.find({ _id: puppyId }).then((docs) => {
       pokus_callback(docs);
   });
 ////  PuppyModel.findById(`${puppyId}`).then((docs) => {
