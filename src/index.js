@@ -8,6 +8,7 @@ const hugo = require("./middlewares/hugo")
 const pokus_environment = require("./environment/")
 const pokus_logging = require("./logger/")
 const pokus_dal = require("./dal/")
+const pokus_user_dal = require("./dal/user")
 
 
 /*** REQUIRES FOR API ENDPOINTS ROUTERS
@@ -139,6 +140,19 @@ app.get('/api/v1/liveness', (request, response) => {
   })
 })
 
+
+
+/************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ *   GET /api/v1/login Router / (un-protected) : Login page
+ *   GET /api/v1/auth/google Router /          : target of the "Login with Google" button
+ *   GET /api/v1/auth/restream Router /        : target of the "Login with Restream" button
+ *   GET /api/v1/auth/github Router /          : target of the "Login with Github" button
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ **************/
 
 /************************************************************************************
  *   GET /api/v1/login Router / (un-protected) :

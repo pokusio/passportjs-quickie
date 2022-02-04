@@ -480,3 +480,17 @@ docker exec -it jbltest sh -c "mongo ${MONGO_DB_URI} /root/mongo.script.js"
 * https://www.npmjs.com/package/@decathlon/newman-reporter-pullrequest-decorator
 * https://stackabuse.com/get-query-strings-and-parameters-in-express-js/
 * https://masteringjs.io/tutorials/mongoose/find-like
+* Restream API Oauth2 scopes :
+  * https://developers.restream.io/docs#upcoming-events, see the note `Required scopes: stream.read` below setion title
+  * https://developers.restream.io/docs#in-progress-events, see the note `Required scopes: stream.read` below section title
+  * I am almost sure that i can get all HTTP Links to all currently runing livestreaming, on all external platforms like twitch etc... using this Restream REST API endpoint :
+    * https://developers.restream.io/docs#event
+    * and especially there, in the JSon response, i am interested in the `.destinations[0].externalUrl` field
+    * if there are several destinations, i will loop ,over the array to get all external urls
+    * So basically :
+      * I will use the two endpoints _"In Progress Events"_ and _"Upcoming Events"_  , to detect if a livestream has started (and maybe webhhoks ?). Goal is to determine the ID of the event we want to promote
+      * then I query Restream REST API to get all external URLs,
+      * and finally :
+        * deploy the website with updated livestream links,
+        * send all the links with a discord bot, to discord channels (for all people who added the discord bot to their servers
+        * send a new post on all socials (hackernoon etc etc)

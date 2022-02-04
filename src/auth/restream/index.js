@@ -23,6 +23,11 @@ const pokus_secrets = require("../../pokus_secrets/")
  *
  *
  *   https://www.passportjs.org/packages/passport-oauth2/
+ *
+ *
+ * Restream API Oauth2 scopes :
+ * https://developers.restream.io/docs#upcoming-events, see the note `Required scopes: stream.read` below setion title
+ * https://developers.restream.io/docs#in-progress-events, see the note `Required scopes: stream.read` below setion title
  **************/
 
 passport.use(new OAuth2Strategy({
