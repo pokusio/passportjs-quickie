@@ -78,10 +78,13 @@ async function main() {
 }
 */
 
-
+// ---
 // initialize the autoIncrement on Puppy Model, before getting the model (always)
-puppies_mongoose_schemas.initializeMongooseAutoIncrement(defaultConnection);
-
+//
+// ---> If I use auto increment Plugin, Object Id is not of the right format anymore
+//
+// puppies_mongoose_schemas.initializeMongooseAutoIncrement(defaultConnection);
+//
 // Get the PuppyModel
 const PuppyModel = puppies_mongoose_schemas.getModel().model
 
@@ -323,7 +326,10 @@ const createPuppy = (p_cute_name, p_is_female, p_description, p_color) => {
 
   /// --- /// --- /// --- /// --- /// --- /// --- /// --- ///
   // Create an instance of model PuppyModel
+  let lapk = mongoose.Types.ObjectId();
   var cutest_puppy = new PuppyModel({
+    // puppyId: `${mongoose.Types.ObjectId()}`,
+    _id: `${lapk}`,
     cute_name: `${p_cute_name}`,
     is_female: p_is_female,
     description: `${p_description}`,

@@ -14,7 +14,7 @@ var bookSchema = new Schema({
 });
 */
 var PuppySchema = new Schema({
-  puppyId: { type: Schema.Types.ObjectId, ref: 'PuppyId' },
+  // puppyId: { type: Schema.Types.ObjectId, ref: 'PuppyId' }, /// I just want mongoose mongodb to manage thpse object id increment etc...
   cute_name: {
     type: String,
     required: true,
