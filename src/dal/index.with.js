@@ -11,7 +11,7 @@ const mongoUsername = pokus_secrets.getDatabaseSecrets().username;
 const mongoUserPassword = pokus_secrets.getDatabaseSecrets().password;
 const mongoDbName = pokus_secrets.getDatabaseSecrets().dbname;
 
-const pokus_connections = require("./connection/pool/")
+
 
 /*   const pokus_logger = pokus_logging.getLogger();  */
 const pokus_logger = winston.createLogger({
@@ -20,14 +20,56 @@ const pokus_logger = winston.createLogger({
   transports: [new winston.transports.Console()],
 });
 
-// // ---
-// // initialize the autoIncrement on Puppy Model, before getting the model (always)
-// //
-// // ---> If I use auto increment Plugin, Object Id is not of the right format anymore
+
+// Set up default mongoose connection // "mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false"
+const mongoDbURI = `mongodb://${mongoUsername}:${mongoUserPassword}@192.168.254.6:27017/${mongoDbName}?authSource=admin&ssl=false&retryWrites=true&w=majority`;
+/// mongoose.connect(mongoDbURI, {useNewUrlParser: true, useUnifiedTopology: true});
+var theconnectionToPokusBoxDb = null;
+try {
+  theconnectionToPokusBoxDb = mongoose.connect(mongoDbURI, {useNewUrlParser: true, useUnifiedTopology: true});
+  /// secretsAsRawJSON = fs.readFileSync(`${secretFilePath}`, 'utf8')
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/****** Connecting to MongoDB from Mongoose Using MongoDbURI = [${mongoDbURI}]  : `);
+  pokus_logger.info(`/****** Connecting to MongoDB from Mongoose  : `);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(JSON.stringify(theconnectionToPokusBoxDb, " ", 2))
+  pokus_logger.info(`/************************************************************************* `);
+} catch (err) {
+  pokus_logger.error(err);
+} finally {
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/****** Finished trying to Connect to MongoDB from Mongoose  `);
+  pokus_logger.info(`/************************************************************************* `);
+}
+/// mongoose.connect(mongoDbURI);
+
+//  Get the default connection, which is based on the above configuration, i.e. based on the configured [MongoDbURI]
+var defaultConnection = mongoose.connection;
+/// Bind connection to error event (to get notification of connection errors)
+/// theconnectionToPokusBoxDb.on('error', pokus_logger.error.bind(console, 'MongoDB connection error:'));
+defaultConnection.on('error', pokus_logger.error.bind(console, 'MongoDB connection error:'));
+defaultConnection.on('error', function(err) { console.log(`JBL_MONGO_CHASER une erreur mpngo s'est produite : [${err.message}]`); });
+defaultConnection.once('open', function() {
+  console.log(`JBL_MONGO_CHASER la connection MongoDB pour Mongoose vient de s'ouvrir`);
+});
+defaultConnection.once('close', function() {
+  console.log(`JBL_MONGO_CHASER la connection MongoDB pour Mongoose vient d'être cloturée`);
+});
+// theconnectionToPokusBoxDb does not have an "on" method // theconnectionToPokusBoxDb.on('error', pokus_logger.error.bind(console, 'MongoDB connection error:'));
+/*
+main().catch(err => console.log(err));
+
+async function main() {
+  await mongoose.connect(`mongodb://${pokus_environment.getEnvironment().db_net_fqdn}:${pokus_environment.getEnvironment().db_port_number}/${pokus_secrets.getDatabaseSecrets().dbname}`);
+}
+*/
+
+// ---
+// initialize the autoIncrement on Puppy Model, before getting the model (always)
 //
-// const defaultConnection = pokus_connections.getConnectionPool()[0].connection;
+// ---> If I use auto increment Plugin, Object Id is not of the right format anymore
+//
 // puppies_mongoose_schemas.initializeMongooseAutoIncrement(defaultConnection);
-//  pokus_connections
 //
 // Get the PuppyModel
 const PuppyModel = puppies_mongoose_schemas.getModel().model
@@ -310,43 +352,6 @@ const createPuppy = (p_cute_name, p_is_female, p_description, p_color) => {
     created_puppy: cutest_puppy,
   }
 }
-
-/**
- * Test: retrieving all the cutest puppies from database
- ***/
-
-///   const testDbReads = () => {
-///
-///     // find all athletes who play tennis, selecting the 'name' and 'age' fields
-///     /*
-///     PuppyModel.find({ 'is_female': 'true' }, 'cute_name description', function (err, puppies) {
-///       if (err) return handleError(err);
-///       // 'puppies' contains the list of athletes that match the criteria.
-///
-///     })
-///     */
-///
-///     // find all athletes that play tennis
-///     var query = Athlete.find({ 'is_female': 'true' });
-///
-///     // selecting the 'name' and 'age' fields
-///     query.select('cute_name description');
-///
-///     // limit our results to 5 items
-///     query.limit(5);
-///
-///     // sort by cute_name
-///     query.sort({ cute_name: -1 });
-///
-///     // execute the query at a later time
-///     query.exec(function (err, athletes) {
-///       if (err) return handleError(err);
-///       // athletes contains an ordered list of 5 athletes who play Tennis
-///     })
-///
-///
-///   }
-
 
 
 module.exports = {
