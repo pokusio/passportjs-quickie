@@ -298,14 +298,14 @@ app.post('/api/v1/puppies', (request, response) => {
  * will also consider undefined a string which calue is the string 'undefined'
  **/
 const isNullOrUndefined = (myvariable) => {
-  if (p_female === undefined || p_female == "undefined" || p_female === null ) {
+  if (myvariable === undefined || myvariable == "undefined" || myvariable === null ) {
     //
     pokus_logger.info(`    Puppy myvariable=[${myvariable}] : is neither null nor undefined`);
-    return false;
+    return true;
   } else {
     //
     pokus_logger.info(`    Puppy myvariable=[${myvariable}] : is either null or undefined`);
-    return true;
+    return false;
   }
 
 }
@@ -464,6 +464,7 @@ app.get('/api/v1/puppies', (request, response, next) => {
   let pokusResponseJSON = {};
   let retrievedPuppies = {};
   let searchCriterias = {};
+
   try {
 
       searchCriterias = {
@@ -473,6 +474,37 @@ app.get('/api/v1/puppies', (request, response, next) => {
         puppy_id: `${request.query.puppy_id}`
       }
 
+      try {
+        const testParsingPuppyId = Number(`${request.query.puppy_id}`);
+        pokus_logger.info(`/************************************************************************* `);
+        pokus_logger.info(`/****** - Pokus [GET /api/v1/puppies] : `);
+        pokus_logger.info(`/************************************************************************* `);
+        pokus_logger.info(`    The [puppy_id] sent by http request could `);
+        pokus_logger.info(`    successfully be parsed from string to integer using [const testParsingPuppyId = Number(\`\${request.query.puppy_id}\`)] : `);
+        pokus_logger.info(`Ths gave the integer : ${testParsingPuppyId}`)
+        pokus_logger.info(`/************************************************************************* `);
+        searchCriterias.puppy_id
+      } catch (e) {
+
+        pokus_logger.error(`/************************************************************************* `);
+        pokus_logger.error(`/****** - Pokus [GET /api/v1/puppies] : `);
+        pokus_logger.error(`/************************************************************************* `);
+        pokus_logger.error(`    The [puppy_id] sent by http request could `);
+        pokus_logger.error(`    not be parsed from string to integer using [const testParsingPuppyId = Number(\`\${request.query.puppy_id}\`)] `);
+        pokus_logger.error(e);
+        pokus_logger.error(`/************************************************************************* `);
+
+
+        errMsg = errMsg + `/****** - Pokus [GET /api/v1/puppies] : ${e}`;
+        errMsg = errMsg + `    The [puppy_id] sent by http request could `;
+        errMsg = errMsg + `    not be parsed from string to integer using [const testParsingPuppyId = Number(\`\${request.query.puppy_id}\`)]`;
+
+
+        throw new Error(errMsg);
+
+      } finally {
+
+      }
       // --- // --- // --- // --- // --- // --- // --- // --- // --- // --- // --- // --- // --- //
       // --- // --- //        if the puppy_id request parameter is
       //                      sent, we ignore {search_str} {female} {color}
