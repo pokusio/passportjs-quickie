@@ -260,6 +260,87 @@ const getPuppyById = (puppyId, pokus_callback) => {
 
 
 /******************************************************************
+ *     CRUD Puppies : DELETE
+ ******************************************************************
+ * Deletes a puppy into the database, from its ObjectID :
+ * @parameter p_puppyId String a valid Mongoose MongoDB ObjectId, which is the _id of the record you want to delete from the Mongo database.
+ * @throws MongooseException(s) with Mongoose [save()] method on all models
+ ***/
+const deletePuppyById = (p_response, p_puppyId) => {
+  // will make use of query path parameters and parameters to update the puppy by id,
+
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/******FINDME [DELETE /api/v1/puppies] Router, [deletePuppyById()] ID of the puppy to delete : `);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`    Puppy [_id] : '${p_puppyId}'`);
+  pokus_logger.info(`/************************************************************************* `);
+
+
+  let pokusResponseCode = 599;
+  let pokusResponseJSON = {};
+  try {
+
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`/****** TRACKER 2 - [deletePuppyById = ()] , inspect [puppyId] param : `);
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`    Puppy [p_puppyId] : `);
+    pokus_logger.info(`${p_puppyId}`);
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`/****** [deletePuppyById = ()] , updating puppy of 'puppyId' equal to : [${p_puppyId}]`);
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`/** `);
+
+    PuppyModel.deleteOne({ _id: p_puppyId }, function(mongooseErr, result){
+
+        if(mongooseErr){
+            // res.send(err)
+            pokus_logger.error(`There was an error while deleting puppy of id [${p_puppyId}]`);
+
+            pokusResponseCode = 500; /// '200 OK' (and not '201  Created'), nothing is created, only updated
+            pokusResponseJSON = {
+              message: `Pokus [DELETE /api/v1/puppies], [deletePuppyById()]: An error occured while trying to delete the puppy of ID [${p_puppyId}] in the database`,
+              puppy_id: p_puppyId,
+              rootError: mongooseErr
+            };
+            p_response.status(pokusResponseCode);
+            p_response.json(pokusResponseJSON);
+        } else {
+            // res.send(result)
+            pokus_logger.info(`Successfully deleted puppy of id [${p_puppyId}]`);
+            pokusResponseCode = 200; /// '200 OK' (and not '201  Created'), nothing is created, only updated
+            pokusResponseJSON = {
+              message: `Pokus [DELETE /api/v1/puppies], [deletePuppyById()]: the puppy of id [${p_puppyId}] was successfully deleted from the database.`,
+              puppy_id: p_puppyId
+            };
+            p_response.status(pokusResponseCode);
+            p_response.json(pokusResponseJSON);
+        }
+
+    })
+
+  } catch (error) {
+    pokus_logger.info(`Pokus [DELETE /api/v1/puppies], [deletePuppyById()]: An error occured while trying to delete the puppy of id [${p_puppyId}], in the pokus database. Error message : [${error}]`);
+
+    pokusResponseCode = 500;
+    pokusResponseJSON = {
+      message: `Pokus [DELETE /api/v1/puppies], [deletePuppyById()]: An error occured while trying to delete the puppy of id [${p_puppyId}], in the pokus database. Error message : [${error}]`,
+      error: `database error`,
+      puppy_id: p_puppyId
+    };
+    p_response.status(pokusResponseCode);
+    p_response.json(pokusResponseJSON);
+  } finally {
+    //
+  }
+}
+
+
+
+
+
+
+/******************************************************************
  *     CRUD Puppies : UPDATE
  ******************************************************************
  * Inserts a new puppy into the database, with :
@@ -496,5 +577,6 @@ module.exports = {
     getAllPuppies: getAllPuppies,
     getPuppyById: getPuppyById,
     createPuppy: createPuppy,
-    updatePuppyById: updatePuppyById
+    updatePuppyById: updatePuppyById,
+    deletePuppyById: deletePuppyById
 };

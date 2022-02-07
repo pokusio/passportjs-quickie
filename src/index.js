@@ -432,11 +432,45 @@ const doIsearchAll = (p_search_str, p_female, p_color) => {
   return doIsearchAll;
 }
 
+/**********************************************************************
+ *   GET /api/v1/puppies Router / (protected)
+ **********************************************************************
+ *   [(CRUD DELETE PUPPIES)]
+ **********************************************************************
+ *    +--> Since this is the last non-error-handling
+ *
+ *    ?puppy_id=<value of your puppy's ID>
+ *
+ *    +--> $ curl -X DELETE -iv http://127.0.0.1:9099/api/v1/puppies?puppy_id=<value of your puppy's ID>
+ *
+ * to delete puppies
+ ****************/
+app.delete('/api/v1/puppies', (request, response, next) => {
+
+    // 1./ display 'retrieved query params' BEFORE any string operation
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`/****** FINDME [DELETE /api/v1/puppies] Router,    : [${request.query.puppy_id}] `);
+    pokus_logger.info(`/************************************************************************* `);
+
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`/******FINDME [DELETE /api/v1/puppies] Router, The puppy received from the http request is: `);
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`    Puppy [request.query.puppy_id] : '${request.query.puppy_id}'`);
+    pokus_logger.info(`/************************************************************************* `);
+
+
+
+    pokus_logger.info(` Pokus [DELETE /api/v1/puppies]: the puppy to delete in the database `);
+    pokus_dal.deletePuppyById(response, request.query.puppy_id);
+
+});
+
+
 
 
 
 /**********************************************************************
- *   GET /api/v1/puppies/:puppyId Router / (protected)
+ *   PUT /api/v1/puppies Router / (protected)
  **********************************************************************
  *   [(CRUD UPDATE PUPPIES)]
  **********************************************************************
@@ -449,7 +483,7 @@ const doIsearchAll = (p_search_str, p_female, p_color) => {
  *    +--> $ curl -X PUT -iv http://127.0.0.1:9099/api/v1/puppies -H "Accept: application/json"
  *    +--> $ curl -X PUT -iv http://127.0.0.1:9099/api/v1/puppies -H "Accept: text/plain"
  *
- * to uodate puppies
+ * to update puppies
  ****************/
 app.put('/api/v1/puppies', (request, response, next) => {
   // will make use of query path parameters and parameters to update the puppy by id

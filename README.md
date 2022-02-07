@@ -269,6 +269,19 @@ curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${MY_PUPPY}" -X PUT -H "Accept
 curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
 ```
 
+* To test deleting puppies :
+
+```bash
+export PUPPY_ID="62007bfa1d6266b54970d9c8"
+export WRONG_PUPPY_ID="92005b5b827d6996ec40a089"
+
+# + -> Should fail (to test the error mgmt behavior) :
+curl -X DELETE -iv "http://127.0.0.1:9099/api/v1/puppies?puppy_id=${WRONG_PUPPY_ID}"
+# + -> Should succeed : 
+curl -X DELETE -iv "http://127.0.0.1:9099/api/v1/puppies?puppy_id=${PUPPY_ID}"
+
+```
+
 * turn all this into newman tests, that will run autolatically with mochajs tests i guess
 
 
