@@ -22,7 +22,7 @@ const pokus_logger = winston.createLogger({
 
 
 // Set up default mongoose connection // "mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false"
-const mongoDbURI = `mongodb://${mongoUsername}:${mongoUserPassword}@192.168.254.6:27017/${mongoDbName}?authSource=admin&ssl=false&retryWrites=true&w=majority`;
+const mongoDbURI = `mongodb://${mongoUsername}:${mongoUserPassword}@192.168.1.101:27017/${mongoDbName}?authSource=admin&ssl=false&retryWrites=true&w=majority`;
 /// mongoose.connect(mongoDbURI, {useNewUrlParser: true, useUnifiedTopology: true});
 var theconnectionToPokusBoxDb = null;
 try {

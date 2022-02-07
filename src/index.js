@@ -183,6 +183,8 @@ app.get('/api/v1/liveness', (request, response) => {
 
 
 /************************************************************************************
+*   [(CRUD CREATE PUPPIES)]
+**********************************************************************
 *   POST /api/v1/puppies Router / (protected):
 * ---> list all virtual machines
 *
@@ -239,12 +241,7 @@ app.post('/api/v1/puppies', (request, response) => {
 
   let parsedBody = JSON.parse(editedStringifiedBody);
   request.body = parsedBody;
-  const puppyFromReqZero = {
-    cute_name: `${request.body.cute_name}`,
-    is_female: request.body.is_female,
-    description: `${request.body.description}`,
-    color: `${request.body.color}`
-  }
+
   const puppyFromReq = {
     cute_name: `${parsedBody.cute_name}`,
     is_female: parsedBody.is_female,
@@ -272,13 +269,6 @@ app.post('/api/v1/puppies', (request, response) => {
   let requested_url_str = request.url;
 
   pokus_logger.info(` Pokus [POST /api/v1/puppies]: the puppy to add to the database is : ${JSON.stringify(puppyFromReq, " ", 2)} rendering 404 page for requested page : ${requested_url_str}`);
-
-  const testPuppy = {
-    cute_name: `tootsie`,
-    is_female: true,
-    description: `tootsie is such a loving dog`,
-    color: `yellow`
-  }
 
   let pokusResponseCode = 599;
   let pokusResponseJSON = {};
@@ -441,8 +431,125 @@ const doIsearchAll = (p_search_str, p_female, p_color) => {
   doIsearchAll = p_femaleSkip && p_colorSkip && p_search_strSkip;
   return doIsearchAll;
 }
+
+
+
+
+/**********************************************************************
+ *   GET /api/v1/puppies/:puppyId Router / (protected)
+ **********************************************************************
+ *   [(CRUD UPDATE PUPPIES)]
+ **********************************************************************
+ *    +--> Since this is the last non-error-handling
+ *
+ *    ?search=cha
+ *    ?search=cha&female=false
+ *    ?search=cha&female=false&color=yellow
+ *    +--> $ curl -X PUT -iv http://127.0.0.1:9099/api/v1/puppies
+ *    +--> $ curl -X PUT -iv http://127.0.0.1:9099/api/v1/puppies -H "Accept: application/json"
+ *    +--> $ curl -X PUT -iv http://127.0.0.1:9099/api/v1/puppies -H "Accept: text/plain"
+ *
+ * to uodate puppies
+ ****************/
+app.put('/api/v1/puppies', (request, response, next) => {
+  // will make use of query path parameters and parameters to update the puppy by id
+
+    let stringifiedBody = JSON.stringify(request.body, " ", 2);
+
+    // 1./ display 'stringifiedBody' BEFORE any string operation
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`/****** FINDME [PUT /api/v1/puppies] Router,    [1./ display 'stringifiedBody' BEFORE any string operation]  : `);
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(stringifiedBody);
+
+    // 2./ run operations on string
+    let editedStringifiedBody = stringifiedBody
+    // -> remove last character : a closing curly bracket
+    editedStringifiedBody = editedStringifiedBody.slice(0, -1)
+    // -> remove the 5 firsts characters : an opening curly bracket '    {'
+    editedStringifiedBody = editedStringifiedBody.substring(5)
+    // --> Okay, so removing first and last characters removed unwanted opening and closing brakcets: but e still have 6 remaining unwanted charaters, namely ': ""  ',at the end of the string, let's remove them :
+    // -> remove the 4 last characters : a closing curly bracket
+    editedStringifiedBody = editedStringifiedBody.slice(0, -1)
+    editedStringifiedBody = editedStringifiedBody.slice(0, -1)
+    editedStringifiedBody = editedStringifiedBody.slice(0, -1)
+    editedStringifiedBody = editedStringifiedBody.slice(0, -1)
+    editedStringifiedBody = editedStringifiedBody.slice(0, -1)
+    editedStringifiedBody = editedStringifiedBody.slice(0, -1)
+
+    // Remove all occurences of backslash :
+    editedStringifiedBody = editedStringifiedBody.replace(/\\/g,'')
+
+    // 3./ display 'stringifiedBody' AFTER operations
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`/****** FINDME [PUT /api/v1/puppies] Router,    [3./ display 'stringifiedBody' AFTER any string operation]  : `);
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`/****** [stringifiedBody]  : `);
+    pokus_logger.info(stringifiedBody);
+    pokus_logger.info(`/****** [editedStringifiedBody]  : `);
+    pokus_logger.info(editedStringifiedBody);
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`/************************************************************************* `);
+
+    let parsedBody = JSON.parse(editedStringifiedBody);
+    request.body = parsedBody;
+
+    const puppyFromReq = {
+      puppy_id: `${parsedBody.puppy_id}`,
+      cute_name: `${parsedBody.cute_name}`,
+      is_female: parsedBody.is_female,
+      description: `${parsedBody.description}`,
+      color: `${request.body.color}`
+    }
+
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`/******FINDME [PUT /api/v1/puppies] Router, The puppy received from the http request is: `);
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`    Puppy [request.body.puppy_id] : '${request.body.puppy_id}'`);
+    pokus_logger.info(`    Puppy [request.body.cute_name] : '${request.body.cute_name}'`);
+    pokus_logger.info(`    Puppy [request.body.is_female] : ${request.body.is_female}`);
+    pokus_logger.info(`    Puppy [request.body.description] : "${request.body.description}"`);
+    pokus_logger.info(`    Puppy [request.body.color] : "${request.body.color}"`);
+    pokus_logger.info(`    Puppy [parsedBody.puppy_id] : '${parsedBody.puppy_id}'`);
+    pokus_logger.info(`    Puppy [parsedBody.cute_name] : '${parsedBody.cute_name}'`);
+    pokus_logger.info(`    Puppy [parsedBody.is_female] : ${parsedBody.is_female}`);
+    pokus_logger.info(`    Puppy [parsedBody.description] : "${parsedBody.description}"`);
+    pokus_logger.info(`    Puppy [request.body.color] : "${request.body.color}"`);
+    pokus_logger.info(`    Puppy [request.body] : `);
+    /// pokus_logger.info(request.body);
+    pokus_logger.info(JSON.stringify(request.body, " ", 2));
+    pokus_logger.info(`/************************************************************************* `);
+
+
+    let requested_url_str = request.url;
+
+    pokus_logger.info(` Pokus [PUT /api/v1/puppies]: the puppy to update in the database is : ${JSON.stringify(puppyFromReq, " ", 2)} / requested page : ${requested_url_str}`);
+    let pokusResponseCode = 599;
+    let pokusResponseJSON = {};
+    try {
+      // pokus_dal.createPuppy(testPuppy.cute_name, testPuppy.is_female, testPuppy.description);
+      pokus_dal.updatePuppyById(response, puppyFromReq.puppy_id, puppyFromReq.cute_name, puppyFromReq.is_female, puppyFromReq.description, puppyFromReq.color);
+
+    } catch (pokusError) {
+      pokus_logger.error(`Pokus [PUT /api/v1/puppies]: An error occured while trying to save the puppy below attached, in the pokus database [[${pokusError}]]`);
+      pokusResponseCode = 500;
+      pokusResponseJSON = {
+        message: `Pokus [PUT /api/v1/puppies]: An error occured while trying to update the puppy below described, in the pokus database : ${JSON.stringify(puppyFromReq, " ", 2)} `,
+        error: pokusError,
+        puppy: puppyFromReq
+      };
+      /// response.status(pokusResponseCode);
+      /// response.json(pokusResponseJSON)
+    } finally {
+      /// response.status(pokusResponseCode);
+      /// response.json(pokusResponseJSON)
+    }
+
+});
  /**********************************************************************
   *   GET /api/v1/puppies Router / (protected) ()
+  **********************************************************************
+  *   [(CRUD RETRIEVE PUPPIES)]
   **********************************************************************
   *    +--> Since this is the last non-error-handling
   *
@@ -536,8 +643,46 @@ app.get('/api/v1/puppies', (request, response, next) => {
       pokus_logger.info(`/************************************************************************* `);
 
 
+
+
+
+            try {
+              const testParsingPuppyId = Number(`${request.query.puppy_id}`);
+              pokus_logger.info(`/************************************************************************* `);
+              pokus_logger.info(`/****** - Pokus [GET /api/v1/puppies] : `);
+              pokus_logger.info(`/************************************************************************* `);
+              pokus_logger.info(`    The [puppy_id] sent by http request could `);
+              pokus_logger.info(`    successfully be parsed from string to integer using [const testParsingPuppyId = Number(\`\${request.query.puppy_id}\`)] : `);
+              pokus_logger.info(`Ths gave the integer : ${testParsingPuppyId}`)
+              pokus_logger.info(`/************************************************************************* `);
+              searchCriterias.puppy_id
+            } catch (e) {
+
+              pokus_logger.error(`/************************************************************************* `);
+              pokus_logger.error(`/****** - Pokus [GET /api/v1/puppies] : `);
+              pokus_logger.error(`/************************************************************************* `);
+              pokus_logger.error(`    The [puppy_id] sent by http request could `);
+              pokus_logger.error(`    not be parsed from string to integer using [const testParsingPuppyId = Number(\`\${request.query.puppy_id}\`)] `);
+              pokus_logger.error(e);
+              pokus_logger.error(`/************************************************************************* `);
+
+
+              errMsg = errMsg + `/****** - Pokus [GET /api/v1/puppies] : ${e}`;
+              errMsg = errMsg + `    The [puppy_id] sent by http request could `;
+              errMsg = errMsg + `    not be parsed from string to integer using [const testParsingPuppyId = Number(\`\${request.query.puppy_id}\`)]`;
+
+
+              throw new Error(errMsg);
+
+            } finally {
+
+
+            }
+
+
+
       if (!isNullOrUndefinedBool) {
-        pokus_dal.getPuppyById(searchCriterias.puppy_id, function (docs) {
+        pokus_dal.getPuppyById(searchCriterias.puppy_id, function (results) {
           pokus_logger.info(`**********************************************************************`);
           pokus_logger.info(``);
           pokus_logger.info(``);
@@ -547,7 +692,7 @@ app.get('/api/v1/puppies', (request, response, next) => {
           pokus_logger.info(`here is the [docs] object received from mongoose : `);
           pokus_logger.info(``);
           pokus_logger.info(``);
-          pokus_logger.info(`${JSON.stringify(docs, " ", 2)}`);
+          pokus_logger.info(`${JSON.stringify(results, " ", 2)}`);
           pokus_logger.info(``);
           pokus_logger.info(``);
           pokus_logger.info(`**********************************************************************`);
@@ -557,7 +702,7 @@ app.get('/api/v1/puppies', (request, response, next) => {
             search: {
               puppy_id: searchCriterias.puppy_id
             },
-            results: docs
+            results: results
           };
           response.status(pokusResponseCode);
           response.json(pokusResponseJSON)

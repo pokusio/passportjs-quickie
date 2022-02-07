@@ -27,12 +27,18 @@ const pokus_logger = winston.createLogger({
 //
 // const defaultConnection = pokus_connections.getConnectionPool()[0].connection;
 // puppies_mongoose_schemas.initializeMongooseAutoIncrement(defaultConnection);
-//  pokus_connections
+//
 //
 // Get the PuppyModel
 const PuppyModel = puppies_mongoose_schemas.getModel().model
 
-const handlecreatePuppyErrors = (err) => {
+const handleCreatePuppyErrors = (err) => {
+  pokus_logger.error(`-----------------------------------------------------------------------------`);
+  pokus_logger.error(`An error occured during the execution of  [createPuppy = () => {] : `);
+  pokus_logger.error(err);
+  pokus_logger.error(`-----------------------------------------------------------------------------`);
+}
+const handleUpdatePuppyErrors = (err) => {
   pokus_logger.error(`-----------------------------------------------------------------------------`);
   pokus_logger.error(`An error occured during the execution of  [createPuppy = () => {] : `);
   pokus_logger.error(err);
@@ -251,6 +257,142 @@ const getPuppyById = (puppyId, pokus_callback) => {
 
 }
 
+
+
+/******************************************************************
+ *     CRUD Puppies : UPDATE
+ ******************************************************************
+ * Inserts a new puppy into the database, with :
+ * @parameter p_puppyId String a valid Mongoose MongoDB ObjectId, wwhich is the _idof the record in the Mongo DB collection
+ * @parameter p_cute_name String
+ * @parameter p_is_female Boolean
+ * @parameter p_description String
+ * @throws MongooseException(s) with Mongoose [save()] method on all models
+ ***/
+const updatePuppyById = (p_response, p_puppyId, p_cute_name, p_is_female, p_description, p_color) => {
+  // will make use of query path parameters and parameters to update the puppy by id,
+
+  const puppyFromReq = {
+    _id: `${p_puppyId}`,
+    cute_name: `${p_cute_name}`,
+    is_female: `${p_is_female}`,
+    description: `${p_description}`,
+    color: `${p_color}`
+  }
+
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`/******FINDME [PUT /api/v1/puppies] Router, [updatePuppyById()] he puppy received from the http request is: `);
+  pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`    Puppy [_id] : '${puppyFromReq._id}'`);
+  pokus_logger.info(`    Puppy [cute_name] : '${puppyFromReq.cute_name}'`);
+  pokus_logger.info(`    Puppy [is_female] : '${puppyFromReq.is_female}'`);
+  pokus_logger.info(`    Puppy [description] : '${puppyFromReq.description}'`);
+  pokus_logger.info(`    Puppy [color] : '${puppyFromReq.color}'`);
+  /// pokus_logger.info(request.body);
+  pokus_logger.info(JSON.stringify(puppyFromReq, " ", 2));
+  pokus_logger.info(`/************************************************************************* `);
+
+
+  pokus_logger.info(` Pokus [PUT /api/v1/puppies], [updatePuppyById()]: the puppy to update in the database is : ${JSON.stringify(puppyFromReq, " ", 2)} `);
+
+  let pokusResponseCode = 599;
+  let pokusResponseJSON = {};
+  try {
+
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`/****** TRACKER 2 - [updatePuppyById = ()] , inspect [puppyId] param : `);
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`    Puppy [p_puppyId] : `);
+    pokus_logger.info(`${puppyFromReq._id}`);
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`/****** [updatePuppyById = ()] , updating puppy of 'puppyId' equal to : [${puppyFromReq._id}]`);
+    pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`/** `);
+
+    PuppyModel.find({ _id: puppyFromReq._id }).then((results) => {
+      // -- // -
+      // pokus_callback(results);
+      // -- // -
+      // if we do find the puppy, then we update, otherwise we throw an Exception
+
+      pokus_logger.info(`/************************************************************************* `);
+      pokus_logger.info(`/****** [updatePuppyById = ()] , updating puppy of 'puppyId' equal to : [${puppyFromReq._id}]`);
+      pokus_logger.info(`/************************************************************************* `);
+      pokus_logger.info(`/** Ok so here are the results i get from PuppyModel.find : `);
+      pokus_logger.info(`${JSON.stringify(results, " ", 2)}`);
+      pokus_logger.info(`results.length=[${results.length}]`);
+      pokus_logger.info(`/** Ok so  : `);
+      /// if (results == {}) { // so the puppy was not found
+      /// if (results == []) { // so the puppy was not found
+      if (results.length == 0) { // so the puppy was not found
+        //
+          pokus_logger.error(`##### ==>>>> TRACKER JB R+1`);
+          pokus_logger.error(`The puppy of ID [${puppyFromReq._id}] was not found in the database, so it cannot be updated`);
+          pokusResponseCode = 404; /// '200 OK' (and not '201  Created'), nothing is created, only updated
+          pokusResponseJSON = {
+            message: `Pokus [PUT /api/v1/puppies], [updatePuppyById()]: the puppy of id [${puppyFromReq._id}] does not exists in the database, so it cannot be updated to : ${JSON.stringify(puppyFromReq, " ", 2)}`,
+            puppy: puppyFromReq
+          };
+          p_response.status(pokusResponseCode);
+          p_response.json(pokusResponseJSON);
+
+          // throw new Error(`The puppy of ID [${puppyFromReq._id}] was not found `);
+      } else {
+          //
+          // throw new Error(`JBL DEBUG POINT`)
+          pokus_logger.error(`##### ==>>>> TRACKER JB R+2`);
+          pokus_logger.info(`The puppy of ID [${puppyFromReq._id}] was found, so we can update if `);
+          PuppyModel.findByIdAndUpdate(p_puppyId, puppyFromReq, function(mongooseErr, result){
+
+              if(mongooseErr){
+                  // res.send(err)
+                  pokus_logger.error(`There was an error while updating puppy of id [${puppyFromReq._id}], to  [${JSON.stringify(puppyFromReq, " ", 2)}]`);
+
+                  pokusResponseCode = 500; /// '200 OK' (and not '201  Created'), nothing is created, only updated
+                  pokusResponseJSON = {
+                    message: `Pokus [PUT /api/v1/puppies], [updatePuppyById()]: the puppy below described puppy was successfully updated in the database : ${JSON.stringify(puppyFromReq, " ", 2)}`,
+                    puppy: puppyFromReq,
+                    rootError: mongooseErr
+                  };
+                  p_response.status(pokusResponseCode);
+                  p_response.json(pokusResponseJSON);
+                  // throw new Error(`There was an error while updating puppy of id [${puppyFromReq._id}], to  [${JSON.stringify(puppyFromReq, " ", 2)}]`);
+              }
+              else{
+                  // res.send(result)
+                  pokus_logger.info(`Successfully updated puppy of id [${puppyFromReq._id}], to  [${JSON.stringify(puppyFromReq, " ", 2)}]`);
+                  pokusResponseCode = 200; /// '200 OK' (and not '201  Created'), nothing is created, only updated
+                  pokusResponseJSON = {
+                    message: `Pokus [PUT /api/v1/puppies], [updatePuppyById()]: the puppy below described puppy was successfully updated in the database : ${JSON.stringify(puppyFromReq, " ", 2)}`,
+                    puppy: puppyFromReq
+                  };
+                  p_response.status(pokusResponseCode);
+                  p_response.json(pokusResponseJSON);
+              }
+
+          })
+      }
+
+    });
+
+
+  } catch (error) {
+    pokus_logger.info(`Pokus [PUT /api/v1/puppies], [updatePuppyById()]: An error occured while trying to update the puppy below attached, in the pokus database. Error message : [${error}]`);
+
+    pokusResponseCode = 500;
+    pokusResponseJSON = {
+      message: `Pokus [PUT /api/v1/puppies], [updatePuppyById()]: An error occured while trying to uodate the puppy below described, in the pokus database : ${JSON.stringify(puppyFromReq, " ", 2)} `,
+      error: `database error`,
+      puppy: puppyFromReq
+    };
+    p_response.status(pokusResponseCode);
+    p_response.json(pokusResponseJSON);
+  } finally {
+    //
+  }
+}
+
 /******************************************************************
  *     CRUD Puppies : CREATE
  ******************************************************************
@@ -297,7 +439,7 @@ const createPuppy = (p_cute_name, p_is_female, p_description, p_color) => {
       pokus_logger.error(`/************************************************************************* `);
       pokus_logger.error(`/****** [createPuppy = ()] Saving Puppy FAILED!!!`);
       pokus_logger.error(`/************************************************************************* `);
-      return handlecreatePuppyErrors(err);
+      return handleCreatePuppyErrors(err);
     } else {
       pokus_logger.info(`/************************************************************************* `);
       pokus_logger.info(`/****** [createPuppy = ()] Puppy  saved! test SUCCESSFUL!!`);
@@ -353,5 +495,6 @@ module.exports = {
     getPuppies: getPuppies,
     getAllPuppies: getAllPuppies,
     getPuppyById: getPuppyById,
-    createPuppy: createPuppy
+    createPuppy: createPuppy,
+    updatePuppyById: updatePuppyById
 };

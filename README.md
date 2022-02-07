@@ -91,7 +91,7 @@ export MY_PUPPY="{ \
 
 curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${MY_PUPPY}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${MY_PUPPY}"
 
-/Users/jbl/hugo-starter-node/test/api/endpoint/puppies/CRUD_C/spec.newman.json
+
 export MY_PUPPY="{ \
   \"cute_name\": \"madison\", \
   \"description\": \"shes a  bit crazy, but madison all in all a real good dog, always cheerful\", \
@@ -206,12 +206,68 @@ export POKUS_QUERY_PARAMS="search=&female=true&color=yellow" && curl -iv "http:/
 
 
 # Get puppy by id
-export POKUS_QUERY_PARAMS="puppy_id=6&search=&female=true&color=yellow" && curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
+export PUPPY_ID="62005b5b827d6996ec40a087"
+export POKUS_QUERY_PARAMS="puppy_id=${PUPPY_ID}&search=&female=true&color=yellow" && curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
 
 
 
 ```
+* test updating a puppy :
 
+```bash
+# --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- #
+# --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- #
+# --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- #
+# 62005b5b827d6996ec40a087 : see [docker/run.template/mongo/mongo-init.js]
+
+export PUPPY_ID="62005b5b827d6996ec40a087"
+export WRONG_PUPPY_ID="92005b5b827d6996ec40a089"
+export MY_PUPPY="{ \
+  \"puppy_id\": \"${PUPPY_ID}\", \
+  \"cute_name\": \"kelly updated\", \
+  \"description\": \"(updated) she's very brave, needs a lot of physical activity, at least 4 long walks a week.\", \
+  \"is_female\": true, \
+  \"color\": \"green\" \
+}"
+
+## Detect error cases first
+
+export POKUS_QUERY_PARAMS="puppy_id=${WRONG_PUPPY_ID}&search=&female=true&color=yellow"
+
+# - #
+# First check indeed there is no puppy with that id
+curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
+
+export MY_PUPPY="{ \
+  \"puppy_id\": \"${WRONG_PUPPY_ID}\", \
+  \"cute_name\": \"kelly updated\", \
+  \"description\": \"(updated) she's very brave, needs a lot of physical activity, at least 4 long walks a week.\", \
+  \"is_female\": true, \
+  \"color\": \"green\" \
+}"
+# - #
+# Then try and update the puppy that does not exist
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${MY_PUPPY}" -X PUT -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${MY_PUPPY}"
+
+
+## Then test successfully updating a puppy
+
+export MY_PUPPY="{ \
+  \"puppy_id\": \"${PUPPY_ID}\", \
+  \"cute_name\": \"kelly updated\", \
+  \"description\": \"(updated) she's very brave, needs a lot of physical activity, at least 4 long walks a week.\", \
+  \"is_female\": true, \
+  \"color\": \"green\" \
+}"
+
+export POKUS_QUERY_PARAMS="puppy_id=${WRONG_PUPPY_ID}&search=&female=true&color=yellow"
+
+curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
+
+curl -iv http://127.0.0.1:9099/api/v1/puppies -d "${MY_PUPPY}" -X PUT -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/puppies -d ${MY_PUPPY}"
+
+curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
+```
 
 * turn all this into newman tests, that will run autolatically with mochajs tests i guess
 
@@ -311,7 +367,7 @@ docker-compose up -d mongo
 
 docker stop jblm && docker rm jblm
 
-docker run -itd --name jblm --restart always -e ME_CONFIG_MONGODB_URL="mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false" --add-host "mongo.pok-us.io:192.168.254.6" --network hugo-starter-node_mongo_net --entrypoint "/bin/sh" debian
+docker run -itd --name jblm --restart always -e ME_CONFIG_MONGODB_URL="mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false" --add-host "mongo.pok-us.io:192.168.1.101" --network hugo-starter-node_mongo_net --entrypoint "/bin/sh" debian
 
 
 docker exec -it jblm bin -c "apt-get update -y && apt-get install -y iputils-ping"
@@ -321,7 +377,7 @@ docker stop jblm && docker rm jblm
 
 # and to test running mongo-express as simply as possible, which works ! Go to http://0.0.0.0:8083/
 docker run -it --name jblmn --rm -p 0.0.0.0:8083:8081 \
-    --add-host "mongo.pok-us.io:192.168.254.6" \
+    --add-host "mongo.pok-us.io:192.168.1.101" \
     -e ME_CONFIG_MONGODB_URL="mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false" \
     -e ME_CONFIG_MONGODB_AUTH_DATABASE="pokus" \
     -e ME_CONFIG_MONGODB_AUTH_USERNAME="pokus" \
@@ -349,7 +405,7 @@ docker exec -it jbltest sh -c "apt-get update -y && apt-get install -y iputils-p
 
 export POKUSDB_USERNAME="user"
 export POKUSDB_USERPWD="user"
-export POKUSDB_NET_HOST="192.168.254.6"
+export POKUSDB_NET_HOST="192.168.1.101"
 
 
 export TEST_QUERY="mongo -u \"${POKUSDB_USERNAME}\" -p \"${POKUSDB_USERPWD}\" ${POKUSDB_NET_HOST} --authenticationDatabase \"admin\""
@@ -366,7 +422,7 @@ docker exec -it jbltest sh -c "${TEST_QUERY}"
 
 # bash-3.2$ export POKUSDB_USERNAME="user"
 # bash-3.2$ export POKUSDB_USERPWD="user"
-# bash-3.2$ export POKUSDB_NET_HOST="192.168.254.6"
+# bash-3.2$ export POKUSDB_NET_HOST="192.168.1.101"
 # bash-3.2$
 # bash-3.2$
 # bash-3.2$ export TEST_QUERY="mongo -u \"${POKUSDB_USERNAME}\" -p \"${POKUSDB_USERPWD}\" ${POKUSDB_NET_HOST} --authenticationDatabase \"admin\""
@@ -375,7 +431,7 @@ docker exec -it jbltest sh -c "${TEST_QUERY}"
 # bash-3.2$ docker exec -it jbltest sh -c "${TEST_QUERY}"
 #
 # MongoDB shell version v5.0.6
-# connecting to: mongodb://192.168.254.6:27017/test?authSource=admin&compressors=disabled&gssapiServiceName=mongodb
+# connecting to: mongodb://192.168.1.101:27017/test?authSource=admin&compressors=disabled&gssapiServiceName=mongodb
 # Error: Authentication failed. :
 # connect@src/mongo/shell/mongo.js:372:17
 # @(connect):2:6
@@ -386,7 +442,7 @@ docker exec -it jbltest sh -c "${TEST_QUERY}"
 
 export POKUSDB_USERNAME="pokus"
 export POKUSDB_USERPWD="pokus"
-export POKUSDB_NET_HOST="192.168.254.6"
+export POKUSDB_NET_HOST="192.168.1.101"
 export POKUSDB_AUTH_DB="admin"
 
 
@@ -412,7 +468,7 @@ docker run --name jbltest -itd --restart always mongo sh
 
 export POKUSDB_USERNAME="pokus"
 export POKUSDB_USERPWD="pokus"
-export POKUSDB_NET_HOST="192.168.254.6"
+export POKUSDB_NET_HOST="192.168.1.101"
 export POKUSDB_AUTH_DB="admin"
 export POKUS_DB_NAME="pokus"
 export MONGO_USER_NAME=pokus
