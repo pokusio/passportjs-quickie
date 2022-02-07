@@ -211,7 +211,7 @@ curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "A
 # To test deleting users :
 
 
-export USER_ID="62007bfa1d6266b54970d9c8"
+export USER_ID="62010f11024452d86c54f6c2"
 export WRONG_USER_ID="92005b5b827d6996ec40a089"
 
 # + -> Should fail (to test the error mgmt behavior) :

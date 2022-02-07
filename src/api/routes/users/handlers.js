@@ -118,7 +118,7 @@ const createHandler = (request, response, next) => {
     email: `${parsedBody.email}`,
     short_intro: `${parsedBody.short_intro}`,
     is_female: parsedBody.is_female,
-    birth_date: `${parsedBody.birth_date}`
+    birth_date: parsedBody.birth_date || `01/01/1970`
   }
 
   pokus_logger.info(`/************************************************************************* `);
