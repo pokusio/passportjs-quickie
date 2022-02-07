@@ -23,11 +23,11 @@
 ## POST /api/v1/pupppies
 #
 export MY_USER="{ \
-  \"p_fullname\": \"linustorvalds\", \
-  \"p_email\": \"linustorvalds@pok-us.io\", \
-  \"p_short_intro\": \"hello, my name is Linus, I founded the GNU/Linux project, and gave girth to git.\", \
-  \"p_is_female\": false, \
-  \"p_birth_date\": \"07/18/1798\" \
+  \"fullname\": \"linustorvalds\", \
+  \"email\": \"linustorvalds@pok-us.io\", \
+  \"short_intro\": \"hello, my name is Linus, I founded the GNU/Linux project, and gave girth to git.\", \
+  \"is_female\": false, \
+  \"birth_date\": \"07/18/1798\" \
 }"
 
 echo "${MY_USER}" | jq .
@@ -35,31 +35,31 @@ echo "${MY_USER}" | jq .
 curl -iv http://127.0.0.1:9099/api/v1/users -d "${MY_USER}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/users -d ${MY_USER}"
 
 export MY_USER="{ \
-  \"p_fullname\": \"claymorehiker\", \
-  \"p_email\": \"claymorehiker@gmail.com\", \
-  \"p_short_intro\": \"hello, my name is Clay, I love working on frontend technologies, lke vue, angular, skeleton, sass/less, rxjs, mainly js stacks.\", \
-  \"p_is_female\": false, \
-  \"p_birth_date\": \"08/23/1821\" \
+  \"fullname\": \"claymorehiker\", \
+  \"email\": \"claymorehiker@gmail.com\", \
+  \"short_intro\": \"hello, my name is Clay, I love working on frontend technologies, lke vue, angular, skeleton, sass/less, rxjs, mainly js stacks.\", \
+  \"is_female\": false, \
+  \"birth_date\": \"08/23/1821\" \
 }"
 curl -iv http://127.0.0.1:9099/api/v1/users -d "${MY_USER}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/users -d ${MY_USER}"
 
 
 export MY_USER="{ \
-  \"p_fullname\": \"kelsoasher\", \
-  \"p_email\": \"kelsoasher@toonies.com\", \
-  \"p_short_intro\": \"hello, my name is Kelso Asher, I am backedn dev. and love working with quarkus.io, golang mainly java and golang stacks.\", \
-  \"p_is_female\": false, \
-  \"p_birth_date\": \"02/11/1998\" \
+  \"fullname\": \"kelsoasher\", \
+  \"email\": \"kelsoasher@toonies.com\", \
+  \"short_intro\": \"hello, my name is Kelso Asher, I am backedn dev. and love working with quarkus.io, golang mainly java and golang stacks.\", \
+  \"is_female\": false, \
+  \"birth_date\": \"02/11/1998\" \
 }"
 
 curl -iv http://127.0.0.1:9099/api/v1/users -d "${MY_USER}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/users -d ${MY_USER}"
 
 export MY_USER="{ \
-  \"p_fullname\": \"kelsoasher\", \
-  \"p_email\": \"kelsoasher@toonies.com\", \
-  \"p_short_intro\": \"hello, my name is Kelso Asher, I am backedn dev. and love working with quarkus.io, golang mainly java and golang stacks.\", \
-  \"p_is_female\": false, \
-  \"p_birth_date\": \"02/11/1998\" \
+  \"fullname\": \"kelsoasher\", \
+  \"email\": \"kelsoasher@toonies.com\", \
+  \"short_intro\": \"hello, my name is Kelso Asher, I am backedn dev. and love working with quarkus.io, golang mainly java and golang stacks.\", \
+  \"is_female\": false, \
+  \"birth_date\": \"02/11/1998\" \
 }"
 
 curl -iv http://127.0.0.1:9099/api/v1/users -d "${MY_USER}" -X POST -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/users -d ${MY_USER}"
@@ -98,13 +98,13 @@ echo "--------------------------------------------------------------------------
 #    ?search=cha&female=false&color=yellow
 #
 
-export POKUS_QUERY_PARAMS="search=ch" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
+export POKUS_QUERY_PARAMS="search=li" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
 
 
 # ---
 # ---
 # ---  with 'color', but no 'is_female' search criterias :
-export POKUS_QUERY_PARAMS="search=ch&color=yellow" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
+export POKUS_QUERY_PARAMS="search=ch&female=true" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
 
 # ---
 # ---

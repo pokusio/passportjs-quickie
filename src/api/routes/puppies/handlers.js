@@ -6,7 +6,7 @@ const users_mongoose_schemas = require("./../../../dal/models/puppy.schema")
 const pokus_connections = require("./../../../dal/connection/pool/")
 
 const pokus_environment = require("./../../../environment/")
-const pokus_dal = require("./../../../dal/")
+const pokus_puppies_dal = require("./../../../dal/")
 
 /*   const pokus_logger = pokus_logging.getLogger();  */
 const pokus_logger = winston.createLogger({
@@ -54,7 +54,7 @@ const deleteHandler = (request, response, next) => {
 
 
     pokus_logger.info(` Pokus [DELETE /api/v1/puppies]: the puppy to delete in the database `);
-    pokus_dal.deletePuppyById(response, request.query.puppy_id);
+    pokus_puppies_dal.deletePuppyById(response, request.query.puppy_id);
 
 };
 
@@ -140,8 +140,8 @@ const createHandler = (request, response, next) => {
   let pokusResponseCode = 599;
   let pokusResponseJSON = {};
   try {
-    // pokus_dal.createPuppy(testPuppy.cute_name, testPuppy.is_female, testPuppy.description);
-    pokus_dal.createPuppy(puppyFromReq.cute_name, puppyFromReq.is_female, puppyFromReq.description, puppyFromReq.color);
+    // pokus_puppies_dal.createPuppy(testPuppy.cute_name, testPuppy.is_female, testPuppy.description);
+    pokus_puppies_dal.createPuppy(puppyFromReq.cute_name, puppyFromReq.is_female, puppyFromReq.description, puppyFromReq.color);
     pokus_logger.info(` `);
 
     pokusResponseCode = 201; /// '201 Created' (and not just '200  OK')
@@ -244,7 +244,7 @@ const updateHandler = (request, response, next) => {
     let requested_url_str = request.url;
 
     pokus_logger.info(` Pokus [PUT /api/v1/puppies]: the puppy to update in the database is : ${JSON.stringify(puppyFromReq, " ", 2)} / requested page : ${requested_url_str}`);
-    pokus_dal.updatePuppyById(response, puppyFromReq.puppy_id, puppyFromReq.cute_name, puppyFromReq.is_female, puppyFromReq.description, puppyFromReq.color);
+    pokus_puppies_dal.updatePuppyById(response, puppyFromReq.puppy_id, puppyFromReq.cute_name, puppyFromReq.is_female, puppyFromReq.description, puppyFromReq.color);
 
 
 };
@@ -257,7 +257,7 @@ const updateHandler = (request, response, next) => {
 // -*- // -*- // -*- // -*- // -*- // -*- // -*- // -*- // -*- // -*- // -*- //
 const retrieveHandler = (request, response, next) => {
   let requested_url_str = request.baseUrl + request.url;
-  if (pokus_environment.getEnvironment().tsl_enabled) {
+  if (pokus_environment.getEnvironment().tls_enabled) {
    requested_url_str = `https://${request.headers.host}${request.url}` ;
   } else {
    requested_url_str = `http://${request.headers.host}${request.url}` ;
@@ -280,10 +280,9 @@ const retrieveHandler = (request, response, next) => {
   let searchCriterias = {};
 
   try {
-
       searchCriterias = {
         search_str: `${request.query.search}`,
-        female: request.query.female || true,
+        female: request.query.female || (`${request.query.female}` === 'true' ) || null, // sex filter
         color: `${request.query.color}` || "",
         puppy_id: `${request.query.puppy_id}`
       }
@@ -375,11 +374,11 @@ const retrieveHandler = (request, response, next) => {
 
 
       if (!isNullOrUndefinedBool) {
-        pokus_dal.getPuppyById(searchCriterias.puppy_id, function (results) {
+        pokus_puppies_dal.getPuppyById(searchCriterias.puppy_id, function (results) {
           pokus_logger.info(`**********************************************************************`);
           pokus_logger.info(``);
           pokus_logger.info(``);
-          pokus_logger.info(` Pokus [GET /api/v1/puppies]: [pokus_dal.getPuppies] callback to retrieve a puppy from its Id :`);
+          pokus_logger.info(` Pokus [GET /api/v1/puppies]: [pokus_puppies_dal.getPuppies] callback to retrieve a puppy from its Id :`);
           pokus_logger.info(``);
           pokus_logger.info(``);
           pokus_logger.info(`here is the [docs] object received from mongoose : `);
@@ -391,7 +390,7 @@ const retrieveHandler = (request, response, next) => {
           pokus_logger.info(`**********************************************************************`);
           pokusResponseCode = 200;
           pokusResponseJSON = {
-            message: `Pokus [GET /api/v1/puppies]: [pokus_dal.getPuppies] callback to retrieve a puppy from its Id :`,
+            message: `Pokus [GET /api/v1/puppies]: [pokus_puppies_dal.getPuppies] callback to retrieve a puppy from its Id :`,
             search: {
               puppy_id: searchCriterias.puppy_id
             },
@@ -409,11 +408,11 @@ const retrieveHandler = (request, response, next) => {
       pokus_logger.info(` Pokus [GET /api/v1/puppies]: [fullSearchBool] = [${fullSearchBool}]  `);
 
       if (!fullSearchBool) {
-        pokus_dal.getPuppies(searchCriterias.search_str, searchCriterias.female, searchCriterias.color, function (docs) {
+        pokus_puppies_dal.getPuppies(searchCriterias.search_str, searchCriterias.female, searchCriterias.color, function (docs) {
           pokus_logger.info(`**********************************************************************`);
           pokus_logger.info(``);
           pokus_logger.info(``);
-          pokus_logger.info(` Pokus [GET /api/v1/puppies]: [pokus_dal.getPuppies] callback to retrieve puppies async from mongoose :`);
+          pokus_logger.info(` Pokus [GET /api/v1/puppies]: [pokus_puppies_dal.getPuppies] callback to retrieve puppies async from mongoose :`);
           pokus_logger.info(``);
           pokus_logger.info(``);
           pokus_logger.info(`here is the [docs] object received from mongoose : `);
@@ -434,11 +433,11 @@ const retrieveHandler = (request, response, next) => {
           response.json(pokusResponseJSON)
         });
       } else {
-        pokus_dal.getAllPuppies(function (docs) {
+        pokus_puppies_dal.getAllPuppies(function (docs) {
           pokus_logger.info(`**********************************************************************`);
           pokus_logger.info(``);
           pokus_logger.info(``);
-          pokus_logger.info(` Pokus [GET /api/v1/puppies][getAllPuppies()]: [pokus_dal.getPuppies] callback to retrieve puppies async from mongoose :`);
+          pokus_logger.info(` Pokus [GET /api/v1/puppies][getAllPuppies()]: [pokus_puppies_dal.getPuppies] callback to retrieve puppies async from mongoose :`);
           pokus_logger.info(``);
           pokus_logger.info(``);
           pokus_logger.info(`here is the [docs] object received from mongoose : `);

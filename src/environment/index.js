@@ -34,7 +34,7 @@ pokus_logger.info(`/************************************************************
 
 const getEnvironment = () => {
   return {
-    tsl_enabled: tlsEnabled,
+    tls_enabled: tlsEnabled,
     port_number: `${port_number}`,
     net_fqdn: `${net_fqdn}`,
     db_net_fqdn: `${db_net_fqdn}`,

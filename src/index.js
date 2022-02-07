@@ -70,7 +70,8 @@ app.use(express.static(`${__dirname}/static`))
 
 
 app.use(puppiesRouter)
-app.use('/api/v1/puppies', puppiesRouter);
+/// app.use('/api/v1/puppies', puppiesRouter);
+app.use(usersRouter);
 /// app.use('/api/v1/users', usersRouter);
 
 /*
@@ -216,14 +217,16 @@ app.get('/api/v1/liveness', (request, response) => {
   *                 ERROR HANDLER
   ************************************************************************************
   **************/
-
+/*  */
 app.use(function (err, req, res, next) {
   pokus_logger.warn(`********************************************************************************************`)
   pokus_logger.warn(`  POKUS ERROR HANDLER JUST CATCHED THIS ERROR : [${JSON.stringify(err, " ", 2)}]`)
+  pokus_logger.warn(`  POKUS ERROR HANDLER JUST CATCHED THIS ERROR : `)
+  pokus_logger.warn(err)
   pokus_logger.warn(`********************************************************************************************`)
   res.status(500)
   let requested_url_str = req.baseUrl + req.url;
-  if (pokus_environment.getEnvironment().tsl_enabled) {
+  if (pokus_environment.getEnvironment().tls_enabled) {
    requested_url_str = `https://${req.headers.host}${req.url}` ;
   } else {
    requested_url_str = `http://${req.headers.host}${req.url}` ;
@@ -231,6 +234,7 @@ app.use(function (err, req, res, next) {
   res.render('500/v1/terminal', { requested_url: `${requested_url_str}`, root_cause: `${JSON.stringify(err.stack, " ", 2)}` });
 
 })
+
  /************************************************************************************
   ************************************************************************************
   *                 NO OTHER ROUTER AFTER THAT POINT : 404 must be last
@@ -289,7 +293,7 @@ app.use(function(req, res, next){
  res.status(404);
 
  let requested_url_str = req.baseUrl + req.url;
- if (pokus_environment.getEnvironment().tsl_enabled) {
+ if (pokus_environment.getEnvironment().tls_enabled) {
   requested_url_str = `https://${req.headers.host}${req.url}` ;
  } else {
   requested_url_str = `http://${req.headers.host}${req.url}` ;

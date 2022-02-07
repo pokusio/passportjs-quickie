@@ -290,7 +290,7 @@ app.put('/api/v1/puppies', (request, response, next) => {
   ****************/
 app.get('/api/v1/puppies', (request, response, next) => {
   let requested_url_str = request.baseUrl + request.url;
-  if (pokus_environment.getEnvironment().tsl_enabled) {
+  if (pokus_environment.getEnvironment().tls_enabled) {
    requested_url_str = `https://${request.headers.host}${request.url}` ;
   } else {
    requested_url_str = `http://${request.headers.host}${request.url}` ;

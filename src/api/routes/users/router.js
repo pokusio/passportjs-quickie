@@ -1,8 +1,10 @@
 // https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/routes
 const express = require('express');
 const router = express.Router();
-
 const winston = require('winston');
+
+const handlers = require('./handlers');
+
 
 /*   const pokus_logger = pokus_logging.getLogger();  */
 const pokus_logger = winston.createLogger({
@@ -30,19 +32,20 @@ try {
 
 router.get('/api/v1/users', (request, response, next) => {
   pokus_logger.info(`/****** JBL DEBUG POINT is tracking {{{{[[GET ROUTER USERS]]}}}}`);
-  // handlers.retrieveHandler(request, response, next);
+  // response.status(200).redirect('/login')
+  handlers.retrieveHandler(request, response, next);
 })
 router.post('/api/v1/users', (request, response, next) => {
   pokus_logger.info(`/****** JBL DEBUG POINT is tracking {{{{[[POST ROUTER USERS]]}}}}`);
-  // handlers.createHandler(request, response, next);
+  handlers.createHandler(request, response, next);
 })
 router.put('/api/v1/users', (request, response, next) => {
   pokus_logger.info(`/****** JBL DEBUG POINT is tracking {{{{[[PUT ROUTER USERS]]}}}}`);
-  // handlers.updateHandler(request, response, next);
+  handlers.updateHandler(request, response, next);
 })
 router.delete('/api/v1/users', (request, response, next) => {
   pokus_logger.info(`/****** JBL DEBUG POINT is tracking {{{{[[DELETE ROUTER USERS]]}}}}`);
-  // handlers.deleteHandler(request, response, next);
+  handlers.deleteHandler(request, response, next);
 })
 
 /*

@@ -44,7 +44,7 @@ const handlecreateUserErrors = (err) => {
   pokus_logger.error(`An error occured during the execution of  [createUser = () => {] : `);
   pokus_logger.error(err);
   pokus_logger.error(`-----------------------------------------------------------------------------`);
-  throw err;
+  /// throw err;
 }
 
 const handletestDbReadsErrors = (err) => {
@@ -52,7 +52,7 @@ const handletestDbReadsErrors = (err) => {
   pokus_logger.error(`An error occured during the execution of  [testDbReads = () => {] : `);
   pokus_logger.error(err);
   pokus_logger.error(`-----------------------------------------------------------------------------`);
-  throw err;
+  /// throw err;
 }
 
 
@@ -270,6 +270,7 @@ const getUserById = (userId, pokus_callback) => {
 /// const createUser = (p_cute_name, p_is_female, p_description, p_color) => {
 const createUser = (p_fullname, p_email, p_short_intro, p_is_female, p_birth_date) => {
 
+/// pokus_users_dal.createUser(userFromReq.fullname, userFromReq.email, userFromReq.short_intro, userFromReq.is_female, userFromReq.birth_date);
 
   /// --- /// --- /// --- /// --- /// --- /// --- /// --- ///
   // Create an instance of model UserModel
@@ -287,11 +288,11 @@ const createUser = (p_fullname, p_email, p_short_intro, p_is_female, p_birth_dat
   pokus_logger.info(`/************************************************************************* `);
   pokus_logger.info(`/****** [createUser = ()] , test inserting a new user: `);
   pokus_logger.info(`/************************************************************************* `);
-  pokus_logger.info(`    User [fullname] : '${fullname}'`);
-  pokus_logger.info(`    User [email] : ${email}`);
-  pokus_logger.info(`    User [short_intro] : "${short_intro}"`);
-  pokus_logger.info(`    User [is_female] : "${is_female}"`);
-  pokus_logger.info(`    User [birth_date] : "${birth_date}"`);
+  pokus_logger.info(`    User [fullname] : '${new_user_to_create.fullname}'`);
+  pokus_logger.info(`    User [email] : ${new_user_to_create.email}`);
+  pokus_logger.info(`    User [short_intro] : "${new_user_to_create.short_intro}"`);
+  pokus_logger.info(`    User [is_female] : "${new_user_to_create.is_female}"`);
+  pokus_logger.info(`    User [birth_date] : "${new_user_to_create.birth_date}"`);
   pokus_logger.info(`/************************************************************************* `);
 
   /// --- /// --- /// --- /// --- /// --- /// --- /// --- ///

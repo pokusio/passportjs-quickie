@@ -227,7 +227,7 @@ app.use(function (err, req, res, next) {
   pokus_logger.warn(`********************************************************************************************`)
   res.status(500)
   let requested_url_str = req.baseUrl + req.url;
-  if (pokus_environment.getEnvironment().tsl_enabled) {
+  if (pokus_environment.getEnvironment().tls_enabled) {
    requested_url_str = `https://${req.headers.host}${req.url}` ;
   } else {
    requested_url_str = `http://${req.headers.host}${req.url}` ;
@@ -292,7 +292,7 @@ app.use(function(req, res, next){
  res.status(404);
 
  let requested_url_str = req.baseUrl + req.url;
- if (pokus_environment.getEnvironment().tsl_enabled) {
+ if (pokus_environment.getEnvironment().tls_enabled) {
   requested_url_str = `https://${req.headers.host}${req.url}` ;
  } else {
   requested_url_str = `http://${req.headers.host}${req.url}` ;
