@@ -220,7 +220,7 @@ export POKUS_QUERY_PARAMS="puppy_id=${PUPPY_ID}&search=&female=true&color=yellow
 # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- #
 # 62005b5b827d6996ec40a087 : see [docker/run.template/mongo/mongo-init.js]
 
-export PUPPY_ID="62005b5b827d6996ec40a087"
+export PUPPY_ID="62007bfa1d6266b54970d9c8"
 export WRONG_PUPPY_ID="92005b5b827d6996ec40a089"
 export MY_PUPPY="{ \
   \"puppy_id\": \"${PUPPY_ID}\", \
@@ -260,7 +260,7 @@ export MY_PUPPY="{ \
   \"color\": \"green\" \
 }"
 
-export POKUS_QUERY_PARAMS="puppy_id=${WRONG_PUPPY_ID}&search=&female=true&color=yellow"
+export POKUS_QUERY_PARAMS="puppy_id=${PUPPY_ID}&search=&female=true&color=yellow"
 
 curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
 

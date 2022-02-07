@@ -524,26 +524,8 @@ app.put('/api/v1/puppies', (request, response, next) => {
     let requested_url_str = request.url;
 
     pokus_logger.info(` Pokus [PUT /api/v1/puppies]: the puppy to update in the database is : ${JSON.stringify(puppyFromReq, " ", 2)} / requested page : ${requested_url_str}`);
-    let pokusResponseCode = 599;
-    let pokusResponseJSON = {};
-    try {
-      // pokus_dal.createPuppy(testPuppy.cute_name, testPuppy.is_female, testPuppy.description);
-      pokus_dal.updatePuppyById(response, puppyFromReq.puppy_id, puppyFromReq.cute_name, puppyFromReq.is_female, puppyFromReq.description, puppyFromReq.color);
+    pokus_dal.updatePuppyById(response, puppyFromReq.puppy_id, puppyFromReq.cute_name, puppyFromReq.is_female, puppyFromReq.description, puppyFromReq.color);
 
-    } catch (pokusError) {
-      pokus_logger.error(`Pokus [PUT /api/v1/puppies]: An error occured while trying to save the puppy below attached, in the pokus database [[${pokusError}]]`);
-      pokusResponseCode = 500;
-      pokusResponseJSON = {
-        message: `Pokus [PUT /api/v1/puppies]: An error occured while trying to update the puppy below described, in the pokus database : ${JSON.stringify(puppyFromReq, " ", 2)} `,
-        error: pokusError,
-        puppy: puppyFromReq
-      };
-      /// response.status(pokusResponseCode);
-      /// response.json(pokusResponseJSON)
-    } finally {
-      /// response.status(pokusResponseCode);
-      /// response.json(pokusResponseJSON)
-    }
 
 });
  /**********************************************************************
