@@ -277,7 +277,7 @@ export WRONG_PUPPY_ID="92005b5b827d6996ec40a089"
 
 # + -> Should fail (to test the error mgmt behavior) :
 curl -X DELETE -iv "http://127.0.0.1:9099/api/v1/puppies?puppy_id=${WRONG_PUPPY_ID}"
-# + -> Should succeed : 
+# + -> Should succeed :
 curl -X DELETE -iv "http://127.0.0.1:9099/api/v1/puppies?puppy_id=${PUPPY_ID}"
 
 ```

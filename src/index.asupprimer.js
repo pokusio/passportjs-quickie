@@ -69,18 +69,8 @@ app.enable('verbose errors');
 app.use(express.static(`${__dirname}/static`))
 
 
-app.use(puppiesRouter)
-app.use('/api/v1/puppies', puppiesRouter);
-/// app.use('/api/v1/users', usersRouter);
 
-/*
-app.get('/api/v1/puppies', (request, response) => {
-  response.status(200);
-  response.send('Hello Pokus [/api/v1/puppies]!')
-});
-*/
 
-app.use('/api/v1/users', usersRouter);
 /************************************************************************************
  *   GET / Router / (un-protected)
  **************/
@@ -123,6 +113,19 @@ app.get('/api/v1/', (request, response) => {
   response.redirect(`https://api-docs.pok-us.io`);
 
 })
+/************************************************************************************
+ *   GET /api/ Router / (un-protected) :
+ * ---> returns a beautiful 404
+ * ---> that 404 is a hugo project
+ **************/
+
+/*
+app.get('/api', (request, response) => {
+   response.status(404);
+   response.sendFile(`${__dirname}/static/404/v1/raw/index.html`)
+})
+
+*/
 
 /************************************************************************************
  *   GET /api/v1/liveness Router :
@@ -135,24 +138,6 @@ app.get('/api/v1/liveness', (request, response) => {
     whoami: `pokus`
   })
 })
-
-
-
-/************************************************************************************
- *   GET /api/v1/machines Router / (protected):
- * ---> list all virtual machines
- **************/
- app.get('/api/v1/machines', (request, response) => {
- /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
- response.json({
-   message: `Pokus answers : Oh yes I am alive, very much alive !`,
-   whoami: `pokus`
- })
-})
-
-
-
-
 
 
 
@@ -179,6 +164,25 @@ app.get('/api/v1/liveness', (request, response) => {
      whoami: `pokus`
    })
  })
+
+
+/************************************************************************************
+ *   GET /api/v1/machines Router / (protected):
+ * ---> list all virtual machines
+ **************/
+ app.get('/api/v1/machines', (request, response) => {
+ /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
+ response.json({
+   message: `Pokus answers : Oh yes I am alive, very much alive !`,
+   whoami: `pokus`
+ })
+})
+
+
+
+
+app.use('/api/v1/puppies', puppiesRouter);
+app.use('/api/v1/users', usersRouter);
 
 
  /************************************************************************************
@@ -236,7 +240,7 @@ app.use(function (err, req, res, next) {
   *                 NO OTHER ROUTER AFTER THAT POINT : 404 must be last
   ************************************************************************************
   **************/
-/*
+
 app.get('/404', function(req, res, next){
   // trigger a 404 since no other middleware
   // will match /404 after this one, and we're not
@@ -255,7 +259,7 @@ app.get('/500', function(req, res, next){
   // trigger a generic (500) error
   next(new Error('keyboard cat!'));
 });
-*/
+
 // Error handlers
 
 // Since this is the last non-error-handling
@@ -284,7 +288,6 @@ app.get('/500', function(req, res, next){
   *    +--> $ curl -iv http://127.0.0.1:9099/notfound -H "Accept: text/plain"
   *
   **************/
-
 app.use(function(req, res, next){
  res.status(404);
 
@@ -314,10 +317,31 @@ app.use(function(req, res, next){
      res.type('txt').send('Not found')
    }
  })
+
+/*
+
+ // respond with html page
+ if (req.accepts('html')) {
+   pokus_logger.info(` Pokus : rendering 404 page for requested page :  [req.baseUrl] = [${req.baseUrl}]`);
+   pokus_logger.info(` Pokus : rendering 404 page for requested page :  [req.headers] = [${JSON.stringify(req.headers, " ", 2)}]`);
+   pokus_logger.info(` Pokus : rendering 404 page for requested page :  [req.url] = [${req.url}]`);
+   pokus_logger.info(` Pokus : rendering 404 page for requested page : ${requested_url_str}`);
+
+
+   res.render('404/v1/terminal', { requested_url: `${requested_url_str}`, root_cause: `raw hard coded exeception` });
+   return;
+ }
+
+ // respond with json
+ if (req.accepts('json')) {
+   res.send({ error: 'Not found' });
+   return;
+ }
+*/
+ // default to plain-text. send()
+ /// res.type('txt').send('Not found');
 });
 
-/*  */
-
 app.listen(pokus_environment.getEnvironment().port_number, () => {
-  pokus_logger.info(`PokuBox Listening on http://${pokus_environment.getEnvironment().net_fqdn}:${pokus_environment.getEnvironment().port_number}`)
+  pokus_logger.info(`Listening on http://${pokus_environment.getEnvironment().net_fqdn}:${pokus_environment.getEnvironment().port_number}`)
 });

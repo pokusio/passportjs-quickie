@@ -1,6 +1,6 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-var autoIncrement = require('mongoose-auto-increment'); /// this plugin uses the 'identitycounters' collection in the pokus database
+/// var autoIncrement = require('mongoose-auto-increment'); /// this plugin uses the 'identitycounters' collection in the pokus database
 
 //Define a schema
 var Schema = mongoose.Schema;
@@ -73,10 +73,12 @@ var UserSchema = new Schema({
 
 
 // var connection = mongoose.createConnection("mongodb://localhost/myDatabase");
+/*
 const initializeMongooseAutoIncrement = (connection) => {
   autoIncrement.initialize(connection);
   UserSchema.plugin(autoIncrement.plugin, 'UserId');
 }
+*/
 const getModel = () => {
 
   var UserModel = mongoose.model('UserModel', UserSchema );
@@ -90,6 +92,6 @@ const getModel = () => {
 
 
 module.exports = {
-    getModel: getModel,
-    initializeMongooseAutoIncrement: initializeMongooseAutoIncrement
+    getModel: getModel/*,
+    initializeMongooseAutoIncrement: initializeMongooseAutoIncrement */
 };

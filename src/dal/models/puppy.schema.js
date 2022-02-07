@@ -42,6 +42,7 @@ const initializeMongooseAutoIncrement = (connection) => {
   autoIncrement.initialize(connection);
   PuppySchema.plugin(autoIncrement.plugin, 'PuppyId');
 }
+
 const getModel = () => {
 
   var PuppyModel = mongoose.model('PuppyModel', PuppySchema );
