@@ -148,14 +148,14 @@ export POKUS_QUERY_PARAMS="user_id=${USER_ID}&search=&female=true&color=yellow" 
 # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- #
 # 62005b5b827d6996ec40a087 : see [docker/run.template/mongo/mongo-init.js]
 
-export USER_ID="62007bfa1d6266b54970d9c8"
+export USER_ID="62010f11024452d86c54f6c2"
 export WRONG_USER_ID="92005b5b827d6996ec40a089"
 export MY_USER="{ \
   \"user_id\": \"${USER_ID}\", \
   \"fullname\": \"kelly updated\", \
-  \"description\": \"(updated) she's very brave, needs a lot of physical activity, at least 4 long walks a week.\", \
+  \"short_intro\": \"(updated) she's very brave, needs a lot of physical activity, at least 4 long walks a week.\", \
   \"is_female\": true, \
-  \"color\": \"green\" \
+  \"email\": \"rheiner@gmail.com\" \
 }"
 
 ## Detect error cases first
@@ -169,9 +169,9 @@ curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "A
 export MY_USER="{ \
   \"user_id\": \"${WRONG_USER_ID}\", \
   \"fullname\": \"kelly updated\", \
-  \"description\": \"(updated) she's very brave, needs a lot of physical activity, at least 4 long walks a week.\", \
+  \"short_intro\": \"(updated) she's very brave, needs a lot of physical activity, at least 4 long walks a week.\", \
   \"is_female\": true, \
-  \"color\": \"green\" \
+  \"email\": \"kelly@gmail.com\" \
 }"
 # - #
 # Then try and update the user that does not exist
@@ -183,9 +183,9 @@ curl -iv http://127.0.0.1:9099/api/v1/users -d "${MY_USER}" -X PUT -H "Accept: a
 export MY_USER="{ \
   \"user_id\": \"${USER_ID}\", \
   \"fullname\": \"kelly updated\", \
-  \"description\": \"(updated) she's very brave, needs a lot of physical activity, at least 4 long walks a week.\", \
+  \"short_intro\": \"(updated) she's very brave, needs a lot of physical activity, at least 4 long walks a week.\", \
   \"is_female\": true, \
-  \"color\": \"green\" \
+  \"email\": \"kelly@gmail.com\" \
 }"
 
 export POKUS_QUERY_PARAMS="user_id=${USER_ID}&search=&female=true&color=yellow"

@@ -397,7 +397,14 @@ const deleteUserById = (p_response, p_userId) => {
 }
 
 
-
+/*
+pokus_users_dal.updateUserById(response, userFromReq.user_id,
+                               userFromReq.fullname,
+                               userFromReq.email,
+                               userFromReq.short_intro,
+                               userFromReq.is_female,
+                               userFromReq.birth_date);
+*/
 
 /******************************************************************
  *     CRUD Users : UPDATE
@@ -413,7 +420,7 @@ const updateUserById = (p_response, p_userId, p_fullname, p_email, p_short_intro
   // will make use of query path parameters and parameters to update the user by id,
 
   const userFromReq = {
-    _id: `${p_userId}`,
+    user_id: `${p_userId}`,
     fullname: `${p_fullname}`,
     email: `${p_email}`,
     short_intro: `${p_short_intro}`,
@@ -424,7 +431,7 @@ const updateUserById = (p_response, p_userId, p_fullname, p_email, p_short_intro
   pokus_logger.info(`/************************************************************************* `);
   pokus_logger.info(`/******FINDME [PUT /api/v1/users] Router, [updateUserById()] he user received from the http request is: `);
   pokus_logger.info(`/************************************************************************* `);
-  pokus_logger.info(`    User [_id] : '${userFromReq._id}'`);
+  pokus_logger.info(`    User [_id] : '${userFromReq.user_id}'`);
   pokus_logger.info(`    User [fullname] : '${userFromReq.fullname}'`);
   pokus_logger.info(`    User [email] : '${userFromReq.email}'`);
   pokus_logger.info(`    User [short_intro] : '${userFromReq.short_intro}'`);
@@ -445,21 +452,21 @@ const updateUserById = (p_response, p_userId, p_fullname, p_email, p_short_intro
     pokus_logger.info(`/****** TRACKER 2 - [updateUserById = ()] , inspect [userId] param : `);
     pokus_logger.info(`/************************************************************************* `);
     pokus_logger.info(`    User [p_userId] : `);
-    pokus_logger.info(`${userFromReq._id}`);
+    pokus_logger.info(`${userFromReq.user_id}`);
     pokus_logger.info(`/************************************************************************* `);
     pokus_logger.info(`/************************************************************************* `);
-    pokus_logger.info(`/****** [updateUserById = ()] , updating user of 'userId' equal to : [${userFromReq._id}]`);
+    pokus_logger.info(`/****** [updateUserById = ()] , updating user of 'userId' equal to : [${userFromReq.user_id}]`);
     pokus_logger.info(`/************************************************************************* `);
     pokus_logger.info(`/** `);
 
-    UserModel.find({ _id: userFromReq._id }).then((results) => {
+    UserModel.find({ _id: userFromReq.user_id }).then((results) => {
       // -- // -
       // pokus_callback(results);
       // -- // -
       // if we do find the user, then we update, otherwise we throw an Exception
 
       pokus_logger.info(`/************************************************************************* `);
-      pokus_logger.info(`/****** [updateUserById = ()] , updating user of 'userId' equal to : [${userFromReq._id}]`);
+      pokus_logger.info(`/****** [updateUserById = ()] , updating user of 'userId' equal to : [${userFromReq.user_id}]`);
       pokus_logger.info(`/************************************************************************* `);
       pokus_logger.info(`/** Ok so here are the results i get from UserModel.find : `);
       pokus_logger.info(`${JSON.stringify(results, " ", 2)}`);
@@ -470,27 +477,27 @@ const updateUserById = (p_response, p_userId, p_fullname, p_email, p_short_intro
       if (results.length == 0) { // so the user was not found
         //
           pokus_logger.error(`##### ==>>>> TRACKER JB R+1`);
-          pokus_logger.error(`The user of ID [${userFromReq._id}] was not found in the database, so it cannot be updated`);
+          pokus_logger.error(`The user of ID [${userFromReq.user_id}] was not found in the database, so it cannot be updated`);
           pokusResponseCode = 404; /// '200 OK' (and not '201  Created'), nothing is created, only updated
           pokusResponseJSON = {
-            message: `Pokus [PUT /api/v1/users], [updateUserById()]: the user of id [${userFromReq._id}] does not exists in the database, so it cannot be updated to : ${JSON.stringify(userFromReq, " ", 2)}`,
+            message: `Pokus [PUT /api/v1/users], [updateUserById()]: the user of id [${userFromReq.user_id}] does not exists in the database, so it cannot be updated to : ${JSON.stringify(userFromReq, " ", 2)}`,
             user: userFromReq
           };
           p_response.status(pokusResponseCode);
           p_response.json(pokusResponseJSON);
 
-          // throw new Error(`The user of ID [${userFromReq._id}] was not found `);
+          // throw new Error(`The user of ID [${userFromReq.user_id}] was not found `);
       } else {
           //
           // throw new Error(`JBL DEBUG POINT`)
           pokus_logger.error(`##### ==>>>> TRACKER JB R+2`);
-          pokus_logger.info(`The user of ID [${userFromReq._id}] was found, so we can update if `);
-          UserModel.findByIdAndUpdate(p_userId, userFromReq, function(mongooseErr, result){
+          pokus_logger.info(`The user of ID [${userFromReq.user_id}] was found, so we can update it :  `);
+          UserModel.findByIdAndUpdate(userFromReq.user_id, userFromReq, function(mongooseErr, result) {
 
               if(mongooseErr){
                   // res.send(err)
-                  pokus_logger.error(`There was an error while updating user of id [${userFromReq._id}], to  [${JSON.stringify(userFromReq, " ", 2)}]`);
-
+                  pokus_logger.error(`There was an error while updating user of id [${userFromReq.user_id}], to  [${JSON.stringify(userFromReq, " ", 2)}]`);
+                  pokus_logger.error(mongooseErr);
                   pokusResponseCode = 500; /// '200 OK' (and not '201  Created'), nothing is created, only updated
                   pokusResponseJSON = {
                     message: `Pokus [PUT /api/v1/users], [updateUserById()]: the user below described user was successfully updated in the database : ${JSON.stringify(userFromReq, " ", 2)}`,
@@ -499,11 +506,11 @@ const updateUserById = (p_response, p_userId, p_fullname, p_email, p_short_intro
                   };
                   p_response.status(pokusResponseCode);
                   p_response.json(pokusResponseJSON);
-                  // throw new Error(`There was an error while updating user of id [${userFromReq._id}], to  [${JSON.stringify(userFromReq, " ", 2)}]`);
+                  // throw new Error(`There was an error while updating user of id [${userFromReq.user_id}], to  [${JSON.stringify(userFromReq, " ", 2)}]`);
               }
               else{
                   // res.send(result)
-                  pokus_logger.info(`Successfully updated user of id [${userFromReq._id}], to  [${JSON.stringify(userFromReq, " ", 2)}]`);
+                  pokus_logger.info(`Successfully updated user of id [${userFromReq.user_id}], to  [${JSON.stringify(userFromReq, " ", 2)}]`);
                   pokusResponseCode = 200; /// '200 OK' (and not '201  Created'), nothing is created, only updated
                   pokusResponseJSON = {
                     message: `Pokus [PUT /api/v1/users], [updateUserById()]: the user below described user was successfully updated in the database : ${JSON.stringify(userFromReq, " ", 2)}`,

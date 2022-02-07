@@ -114,9 +114,9 @@ const createHandler = (request, response, next) => {
       /// const createUser(p_email, p_email, p_short_intro, p_is_female, p_birth_date)
       /// userFromReq.email, userFromReq.email, userFromReq.short_intro, userFromReq.is_female, userFromReq.birth_date
   const userFromReq = {
+    fullname: `${parsedBody.fullname}`,
     email: `${parsedBody.email}`,
-    email: `${parsedBody.email}`,
-    description: `${parsedBody.short_intro}`,
+    short_intro: `${parsedBody.short_intro}`,
     is_female: parsedBody.is_female,
     birth_date: `${parsedBody.birth_date}`
   }
@@ -124,14 +124,14 @@ const createHandler = (request, response, next) => {
   pokus_logger.info(`/************************************************************************* `);
   pokus_logger.info(`/******FINDME [POST /api/v1/users] Router, The user received from the http request is: `);
   pokus_logger.info(`/************************************************************************* `);
+  pokus_logger.info(`    User [request.body.fullname] : '${request.body.fullname}'`);
   pokus_logger.info(`    User [request.body.email] : '${request.body.email}'`);
-  pokus_logger.info(`    User [request.body.email] : '${request.body.email}'`);
-  pokus_logger.info(`    User [request.body.description] : ${request.body.description}`);
+  pokus_logger.info(`    User [request.body.short_intro] : ${request.body.short_intro}`);
   pokus_logger.info(`    User [request.body.is_female] : "${request.body.is_female}"`);
   pokus_logger.info(`    User [request.body.birth_date] : "${request.body.birth_date}"`);
+  pokus_logger.info(`    User [parsedBody.fullname] : '${parsedBody.fullname}'`);
   pokus_logger.info(`    User [parsedBody.email] : '${parsedBody.email}'`);
-  pokus_logger.info(`    User [parsedBody.email] : '${parsedBody.email}'`);
-  pokus_logger.info(`    User [parsedBody.description] : ${parsedBody.description}`);
+  pokus_logger.info(`    User [parsedBody.short_intro] : ${parsedBody.short_intro}`);
   pokus_logger.info(`    User [parsedBody.is_female] : "${parsedBody.is_female}"`);
   pokus_logger.info(`    User [parsedBody.birth_date] : "${parsedBody.birth_date}"`);
   pokus_logger.info(`    User [request.body] : `);
@@ -150,7 +150,7 @@ const createHandler = (request, response, next) => {
 
     /// const createUser(p_email, p_email, p_short_intro, p_is_female, p_birth_date)
     /// userFromReq.email, userFromReq.email, userFromReq.short_intro, userFromReq.is_female, userFromReq.birth_date
-    pokus_users_dal.createUser(userFromReq.email, userFromReq.email, userFromReq.short_intro, userFromReq.is_female, userFromReq.birth_date);
+    pokus_users_dal.createUser(userFromReq.fullname, userFromReq.email, userFromReq.short_intro, userFromReq.is_female, userFromReq.birth_date);
 
     pokusResponseCode = 201; /// '201 Created' (and not just '200  OK')
     pokusResponseJSON = {
@@ -225,24 +225,27 @@ const updateHandler = (request, response, next) => {
     /// const createUser(p_email, p_email, p_short_intro, p_is_female, p_birth_date)
     /// userFromReq.email, userFromReq.email, userFromReq.short_intro, userFromReq.is_female, userFromReq.birth_date
     const userFromReq = {
+      user_id: `${parsedBody.user_id}`,
+      fullname: `${parsedBody.fullname}`,
       email: `${parsedBody.email}`,
-      email: `${parsedBody.email}`,
-      description: `${parsedBody.description}`,
+      short_intro: `${parsedBody.short_intro}`,
       is_female: parsedBody.is_female,
-      birth_date: `${parsedBody.birth_date}`
+      birth_date: parsedBody.birth_date || `01/01/1970`
     }
 
     pokus_logger.info(`/************************************************************************* `);
     pokus_logger.info(`/******FINDME [PUT /api/v1/users] Router, The user received from the http request is: `);
     pokus_logger.info(`/************************************************************************* `);
+    pokus_logger.info(`    User [request.body.user_id] : '${request.body.user_id}'`);
+    pokus_logger.info(`    User [request.body.fullname] : '${request.body.fullname}'`);
     pokus_logger.info(`    User [request.body.email] : '${request.body.email}'`);
-    pokus_logger.info(`    User [request.body.email] : '${request.body.email}'`);
-    pokus_logger.info(`    User [request.body.description] : ${request.body.description}`);
+    pokus_logger.info(`    User [request.body.short_intro] : ${request.body.short_intro}`);
     pokus_logger.info(`    User [request.body.is_female] : "${request.body.is_female}"`);
     pokus_logger.info(`    User [request.body.birth_date] : "${request.body.birth_date}"`);
+    pokus_logger.info(`    User [parsedBody.user_id] : '${parsedBody.user_id}'`);
+    pokus_logger.info(`    User [parsedBody.fullname] : '${parsedBody.fullname}'`);
     pokus_logger.info(`    User [parsedBody.email] : '${parsedBody.email}'`);
-    pokus_logger.info(`    User [parsedBody.email] : '${parsedBody.email}'`);
-    pokus_logger.info(`    User [parsedBody.description] : ${parsedBody.description}`);
+    pokus_logger.info(`    User [parsedBody.short_intro] : ${parsedBody.short_intro}`);
     pokus_logger.info(`    User [parsedBody.is_female] : "${parsedBody.is_female}"`);
     pokus_logger.info(`    User [parsedBody.birth_date] : "${parsedBody.birth_date}"`);
     pokus_logger.info(`    User [request.body] : `);
@@ -251,8 +254,8 @@ const updateHandler = (request, response, next) => {
     pokus_logger.info(`/************************************************************************* `);
 
 
-    pokus_logger.info(` Pokus [PUT /api/v1/users]: the user to update in the database is : ${JSON.stringify(userFromReq, " ", 2)} / requested page : ${requested_url_str}`);
-    pokus_users_dal.updateUserById(response, userFromReq.user_id, userFromReq.email, userFromReq.email, userFromReq.description, userFromReq.is_female, userFromReq.birth_date);
+    pokus_logger.info(` Pokus [PUT /api/v1/users]: the user to update in the database is : ${JSON.stringify(userFromReq, " ", 2)}  `);
+    pokus_users_dal.updateUserById(response, userFromReq.user_id, userFromReq.fullname, userFromReq.email, userFromReq.short_intro, userFromReq.is_female, userFromReq.birth_date);
 
     ///
 
