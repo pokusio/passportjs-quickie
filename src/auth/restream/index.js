@@ -5,6 +5,9 @@ const pokus_environment = require("../../environment/")
 const pokus_secrets = require("../../pokus_secrets/")
 
 
+const authController = require("../../controllers/authController");
+
+const userModel = require("../../testmodels/userModel").userModel;
 /************************************************************************************
  *   cccccccccccc ?
  *    -->  cccc
@@ -37,11 +40,25 @@ passport.use(new OAuth2Strategy({
    clientSecret: pokus_secrets.getRestreamioOauth2Secrets().clientID, //
    callbackURL: `http://${pokus_environment.getEnvironment().net_fqdn}:${pokus_environment.getEnvironment().port_number}/restream/callback`
  },
- function(accessToken, refreshToken, profile, cb) {
+ /// --- ///
+ function(accessToken, refreshToken, profile, cb) { /// store accessToken refreshToken in clear ? hash its impossible we need the clear values
+   /// --- ///
+   /// handlers.updateHandler(request, response, next);
+   /// --- /// https://github.com/Aidanator17/DevWebAppLAB6/blob/a69c69391f4af397e551719ba125928953a88f4c/middleware/passport.js#L112
+   /// --- ///
+
+   console.log("!!!!!!RESTREEAM OAUTH !!!!",profile)
+   let user = authController.getUserByRestreamIdOrCreate(profile, accessToken, refreshToken)
+   return cb(null, user);
+
+   /// --- ///
+   /*
    User.findOrCreate({ exampleId: profile.id }, function (err, user) {
      return cb(err, user);
    });
+   */
  }
+
 ));
 
 

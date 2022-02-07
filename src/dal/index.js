@@ -5,7 +5,7 @@ const fs = require('fs');
 
 const pokus_environment = require("../environment/")
 const pokus_secrets = require("../pokus_secrets/")
-const puppies_mongoose_schemas = require("./models/puppy.schema")
+const puppies_mongoose_schemas = require("./models/puppies/puppy.schema")
 
 const mongoUsername = pokus_secrets.getDatabaseSecrets().username;
 const mongoUserPassword = pokus_secrets.getDatabaseSecrets().password;

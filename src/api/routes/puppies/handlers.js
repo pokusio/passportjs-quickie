@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const winston = require('winston');
 
-const users_mongoose_schemas = require("./../../../dal/models/puppy.schema")
+const users_mongoose_schemas = require("./../../../dal/models/puppies/puppy.schema")
 const pokus_connections = require("./../../../dal/connection/pool/")
 
 const pokus_environment = require("./../../../environment/")

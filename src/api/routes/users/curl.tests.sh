@@ -93,9 +93,9 @@ echo "--------------------------------------------------------------------------
 
 
 ## GET /api/v1/pupppies
-#    ?search=cha
-#    ?search=cha&female=false
-#    ?search=cha&female=false&color=yellow
+#    ?search=lia
+#    ?search=lia&female=false
+#    ?search=lia&female=false&email=gmail
 #
 
 export POKUS_QUERY_PARAMS="search=li" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
@@ -103,32 +103,41 @@ export POKUS_QUERY_PARAMS="search=li" && curl -iv "http://127.0.0.1:9099/api/v1/
 
 # ---
 # ---
-# ---  with 'color', but no 'is_female' search criterias :
-export POKUS_QUERY_PARAMS="search=ch&female=true" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
+# ---  with 'female', but no 'email' search criterias :
+# expect : no results
+export POKUS_QUERY_PARAMS="search=li&female=true" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
+# expect : one result, linus torvalds
+export POKUS_QUERY_PARAMS="search=li&female=false" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
 
 # ---
 # ---
-# ---  with 'color', but no 'is_female' search criterias :
-export POKUS_QUERY_PARAMS="search=ch&color=blue" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
-
-export POKUS_QUERY_PARAMS="search=cha"
+# ---  with 'email', but no 'is_female' search criterias :
+# expect : one result, linus torvalds
+export POKUS_QUERY_PARAMS="search=li&email=a" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
+# expect : no results
+export POKUS_QUERY_PARAMS="search=li&email=b" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
+# expect : one result, linus torvalds
+export POKUS_QUERY_PARAMS="search=li&email=a"
 curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
 
 
 
-# --->>> no 'color', but with 'is_female' search criterias :
-export POKUS_QUERY_PARAMS="search=cha&female=false" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
 
-export POKUS_QUERY_PARAMS="search=cha&female=true" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
-
-export POKUS_QUERY_PARAMS="search=ch&female=true&color=yellow" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
-
-export POKUS_QUERY_PARAMS="search=&female=true&color=yellow" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
+# --->>> no 'email', but with 'is_female' search criterias :
+# expect : one result, linus torvalds
+export POKUS_QUERY_PARAMS="search=li&female=false" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
+# expect : no results
+export POKUS_QUERY_PARAMS="search=li&female=true" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
+# expect : no results
+export POKUS_QUERY_PARAMS="search=li&female=true&emailu" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
+# expect : one result, linus torvalds
+export POKUS_QUERY_PARAMS="search=&female=false&email=u" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
 
 
 # Get user by id
-export USER_ID="62005b5b827d6996ec40a087"
-export POKUS_QUERY_PARAMS="user_id=${USER_ID}&search=&female=true&color=yellow" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
+# expect : "claymorehiker"
+export USER_ID="620167ff95e6f9bd213d7136"
+export POKUS_QUERY_PARAMS="user_id=${USER_ID}&search=&female=true&email=gmail" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
 
 
 
@@ -148,7 +157,7 @@ export POKUS_QUERY_PARAMS="user_id=${USER_ID}&search=&female=true&color=yellow" 
 # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- #
 # 62005b5b827d6996ec40a087 : see [docker/run.template/mongo/mongo-init.js]
 
-export USER_ID="62010f11024452d86c54f6c2"
+export USER_ID="620167ff95e6f9bd213d7136"
 export WRONG_USER_ID="92005b5b827d6996ec40a089"
 export MY_USER="{ \
   \"user_id\": \"${USER_ID}\", \
@@ -160,10 +169,11 @@ export MY_USER="{ \
 
 ## Detect error cases first
 
-export POKUS_QUERY_PARAMS="user_id=${WRONG_USER_ID}&search=&female=true&color=yellow"
+export POKUS_QUERY_PARAMS="user_id=${WRONG_USER_ID}&search=&female=true&email=gmail"
 
 # - #
 # First check indeed there is no user with that id
+# expect : no results
 curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
 
 export MY_USER="{ \
@@ -175,7 +185,22 @@ export MY_USER="{ \
 }"
 # - #
 # Then try and update the user that does not exist
-curl -iv http://127.0.0.1:9099/api/v1/users -d "${MY_USER}" -X PUT -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/users -d ${MY_USER}"
+# expect : response 404, ith json like :
+# - #
+# {
+#  "message": "Pokus [PUT /api/v1/users], [updateUserById()]: the user of id [92005b5b827d6996ec40a089] does not exists in the database, so it cannot be updated to : {\n  \"user_id\": \"92005b5b827d6996ec40a089\",\n  \"fullname\": \"kelly updated\",\n  \"email\": \"kelly@gmail.com\",\n  \"short_intro\": \"(updated) she's very brave, needs a lot of physical activity, at least 4 long walks a week.\",\n  \"is_female\": \"true\",\n  \"birth_date\": \"01/01/1970\"\n}",
+#  "user": {
+#    "user_id": "92005b5b827d6996ec40a089",
+#    "fullname": "kelly updated",
+#    "email": "kelly@gmail.com",
+#    "short_intro": "(updated) she's very brave, needs a lot of physical activity, at least 4 long walks a week.",
+#    "is_female": "true",
+#    "birth_date": "01/01/1970"
+#  }
+#}
+# - #
+
+curl -iv http://127.0.0.1:9099/api/v1/users -d "${MY_USER}" -X PUT -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users -d ${MY_USER}"
 
 
 ## Then test successfully updating a user
@@ -188,14 +213,32 @@ export MY_USER="{ \
   \"email\": \"kelly@gmail.com\" \
 }"
 
-export POKUS_QUERY_PARAMS="user_id=${USER_ID}&search=&female=true&color=yellow"
-
+export POKUS_QUERY_PARAMS="user_id=${USER_ID}&search=&female=true&email=gmail"
+# expect : "claymorehiker"
 curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
-
-curl -iv http://127.0.0.1:9099/api/v1/users -d "${MY_USER}" -X PUT -H "Accept: application/json" && echo "http://127.0.0.1:9099/api/v1/users -d ${MY_USER}"
-
+# expect: taht the record is updated in the database
+curl -iv http://127.0.0.1:9099/api/v1/users -d "${MY_USER}" -X PUT -H "Accept: application/json" | tail -n 1 | jq .  && echo "http://127.0.0.1:9099/api/v1/users -d ${MY_USER}"
+# expect: that the record with updated values is retireved from the database
 curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
-
+# -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- #
+# {
+#   "message": "Pokus [GET /api/v1/users]: [pokus_users_dal.getUsers] callback to retrieve a user from its Id :",
+#   "search": {
+#     "user_id": "620167ff95e6f9bd213d7136"
+#   },
+#   "results": [
+#     {
+#       "_id": "620167ff95e6f9bd213d7136",
+#       "fullname": "rihanna updated",
+#       "email": "kelly@gmail.com",
+#       "short_intro": "(updated) she's very brave, needs a lot of physical activity, at least 4 long walks a week.",
+#       "is_female": true,
+#       "birth_date": "1969-12-31T23:00:00.000Z",
+#       "__v": 0
+#     }
+#   ]
+# }
+# -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- # -+-+- #
 
 
 
@@ -211,10 +254,24 @@ curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "A
 # To test deleting users :
 
 
-export USER_ID="62010f11024452d86c54f6c2"
+export USER_ID="62017f07cf30a5601b1e6e87"
 export WRONG_USER_ID="92005b5b827d6996ec40a089"
 
-# + -> Should fail (to test the error mgmt behavior) :
+
+export POKUS_QUERY_PARAMS="user_id=${USER_ID}"
+# - #
+# First check indeed there is no user with that id
+# expect : claymorehiker
+curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
+
+# + -> Should fail (to test the error mgmt behavior) : (for the momeent it just succeeds, but does not change anything to the database. Taht makes delete operation idempotent)
 curl -X DELETE -iv "http://127.0.0.1:9099/api/v1/users?user_id=${WRONG_USER_ID}"
 # + -> Should succeed :
 curl -X DELETE -iv "http://127.0.0.1:9099/api/v1/users?user_id=${USER_ID}"
+# expect : that there is zero result brought back from the mongo d database
+
+export POKUS_QUERY_PARAMS="user_id=${USER_ID}"
+# - #
+# check indeed there is no more user with that id
+# expect : no results
+curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"

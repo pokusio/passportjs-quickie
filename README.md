@@ -563,3 +563,4 @@ docker exec -it jbltest sh -c "mongo ${MONGO_DB_URI} /root/mongo.script.js"
         * deploy the website with updated livestream links,
         * send all the links with a discord bot, to discord channels (for all people who added the discord bot to their servers
         * send a new post on all socials (hackernoon etc etc)
+* https://www.npmjs.com/package/mongoose-findorcreate

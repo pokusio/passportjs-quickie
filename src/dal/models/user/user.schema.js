@@ -48,6 +48,11 @@ var UserSchema = new Schema({
   // ----------------------
   // Restream OAuth2
   // ----------------------
+  restream_profile_id: {
+    type: String,
+    required: false/*,
+    unique: true*/
+  },
   restream_accessToken: {
     type: String,
     required: false
@@ -59,6 +64,11 @@ var UserSchema = new Schema({
   // ----------------------
   // Google OAuth2
   // ----------------------
+  restream_google_id: {
+    type: String,
+    required: false/*,
+    unique: true*/
+  },
   google_accessToken: {
     type: String,
     required: false
@@ -68,6 +78,7 @@ var UserSchema = new Schema({
     required: false
   }
 }, { collection: `users` });
+
 
 // var Book = connection.model('Book', bookSchema);
 
@@ -89,6 +100,9 @@ const getModel = () => {
       }
 }
 // Compile model from schema
+
+
+
 
 
 module.exports = {

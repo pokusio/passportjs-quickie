@@ -295,7 +295,8 @@ const retrieveHandler = (request, response, next) => {
 
       searchCriterias = {
         search_str: `${request.query.search}`, // search on fullname
-        female: request.query.female || (`${request.query.female}` === 'true' ) || null, // sex filter
+        //female: request.query.female || (`${request.query.female}` === 'true' ) || null, // sex filter
+        female: request.query.female, // sex filter
         email: `${request.query.email}` || "", // email search
         user_id: `${request.query.user_id}` // search by Id
       }
@@ -485,9 +486,11 @@ const isNullOrUndefined = (myvariable) => {
   }
 
 }
-// -+-
+
+// -+- // -+- // -+- // -+- // -+- // -+- // -+- // -+- // -+- // -+- // -+- // -+- //
 // -+- returns a bollean : if true, then we will execute find() to get all users
-// -+-
+// -+- // -+- // -+- // -+- // -+- // -+- // -+- // -+- // -+- // -+- // -+- // -+- //
+
 const doIsearchAll = (p_search_str, p_female, p_email) => {
   let doIsearchAll = false;
   pokus_logger.info(`/************************************************************************* `);

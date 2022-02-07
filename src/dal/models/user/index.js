@@ -67,6 +67,7 @@ const handletestDbReadsErrors = (err) => {
  * @parameter p_search_str String query string as first letters of the user's 'fullname' (see mongoose Schema), or string occuring inside 'short_intro'
  * @parameter p_female Boolean search only among females?
  * @parameter p_email String the email of the user you're looking for. provided string shpuld have an exact match
+ * @parameter pokus_callback Function A callback function to catch the results back from mongo db
  ***/
 /// const getUsers = async (p_search_str, p_female, p_co lor) => {
 const getUsers = (p_search_str, p_female, p_email, pokus_callback) => {
@@ -189,10 +190,20 @@ const getUsers = (p_search_str, p_female, p_email, pokus_callback) => {
 
       // executes, passing results to callback
       /// retrievedUsers = UserModel.find({ cute_name: `/${p_search_str}/i`, email: p_co lor}, function (err, docs) {});
-      UserModel.find({ cute_name: { $regex: searchRegExp }, is_female: p_female }).limit(20).then((docs) => {
+      UserModel.find({ fullname: { $regex: searchRegExp }, is_female: p_female }).limit(20).then((docs) => {
         pokus_callback(docs);
       });
-
+      /*
+      UserModel.find({
+            $and: [
+              { fullname: { $regex: searchRegExp } },
+              { is_female: { $regex: p_is_female } }
+            ]
+          }
+        ).limit(20).then((docs) => {
+        pokus_callback(docs);
+      });
+      */
     } else {
       pokus_logger.info(`/** ******** with both 'email', and 'is_female' search criterias : `);
       pokus_logger.info(`        XxxxModel.find({ fullname: { $regex: "^${p_search_str}.*$" }}) `);

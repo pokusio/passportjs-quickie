@@ -35,6 +35,7 @@ var PuppySchema = new Schema({
   birth_date: Date
 }, { collection: `puppies` });
 
+
 // var Book = connection.model('Book', bookSchema);
 
 // var connection = mongoose.createConnection("mongodb://localhost/myDatabase");
