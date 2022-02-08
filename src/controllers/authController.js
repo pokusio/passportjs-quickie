@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const winston = require('winston');
 
 const users_mongoose_schemas = require("./../dal/models/user/user.schema")
-const pokus_connections = require("./../connection/pool/")
+const pokus_connections = require("./../dal/connection/pool/")
 
 
 /*   const pokus_logger = pokus_logging.getLogger();  */
@@ -16,14 +16,14 @@ const pokus_logger = winston.createLogger({
 const UserModel = users_mongoose_schemas.getModel().model
 
 
-const getUserByRestreamIdOrCreate = (restreamProfile, restreamAccessToken, restreamRefreshToken) {
+const getUserByRestreamIdOrCreate = (restreamProfile, restreamAccessToken, restreamRefreshToken) => {
    // restreamProfile.id      //  restream_profile_id
    // restreamAccessToken     //  restream_accessToken
    // restreamRefreshToken    //  restream_refreshToken
 
 
    // We try and find User of restream_profile_id [restreamProfile.id]
-   returun updateUserByRestreamOAuth2Profile(restreamProfile, restreamAccessToken, restreamRefreshToken);
+   return updateUserByRestreamOAuth2Profile(restreamProfile, restreamAccessToken, restreamRefreshToken);
 
 
    // If the user exists in the database, we check if accessToken and refreshToken match between database and received by http request

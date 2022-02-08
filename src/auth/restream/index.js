@@ -1,13 +1,27 @@
 const passport = require("passport");
-const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
+const OAuth2Strategy = require( 'passport-oauth2' ).Strategy;
+const winston = require('winston');
 
 const pokus_environment = require("../../environment/")
 const pokus_secrets = require("../../pokus_secrets/")
 
+const pokusClientID = pokus_secrets.getRestreamioOauth2Secrets().clientID;
+/// const pokusClientSecret = pokus_secrets.getRestreamioOauth2Secrets().clientSecret;
+/// const pokusClientID = `pokus_secrets.getRestreamioOauth2Secrets().clientID`;
+const clientSecret = pokus_secrets.getRestreamioOauth2Secrets().clientSecret;
+/// const pokusClientSecret = `pokus_secrets.getRestreamioOauth2Secrets().clientSecret`;
+/// const pokusClientSecret = `pokus_secrets.getRestreamioOauth2Secrets().clientSecret`;
+const pokus_connections = require("./../../dal/connection/pool/")
+
+/*   const pokus_logger = pokus_logging.getLogger();  */
+const pokus_logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.cli(),
+  transports: [new winston.transports.Console()],
+});
 
 const authController = require("../../controllers/authController");
 
-const userModel = require("../../testmodels/userModel").userModel;
 /************************************************************************************
  *   cccccccccccc ?
  *    -->  cccc
@@ -33,12 +47,13 @@ const userModel = require("../../testmodels/userModel").userModel;
  * https://developers.restream.io/docs#in-progress-events, see the note `Required scopes: stream.read` below setion title
  **************/
 
+
 passport.use(new OAuth2Strategy({
    authorizationURL: 'https://api.restream.io/login', // https://developers.restream.io/docs
    tokenURL: 'https://api.restream.io/oauth/token', // https://developers.restream.io/docs#refreshing-tokens
-   clientID: pokus_secrets.getRestreamioOauth2Secrets().clientID, //
-   clientSecret: pokus_secrets.getRestreamioOauth2Secrets().clientID, //
-   callbackURL: `http://${pokus_environment.getEnvironment().net_fqdn}:${pokus_environment.getEnvironment().port_number}/restream/callback`
+   clientID: `pokusClientID`, //
+   clientSecret: `pokusClientSecret`, //
+   callbackURL: `http://${pokus_environment.getEnvironment().net_fqdn}:${pokus_environment.getEnvironment().port_number}/oauth2/restream/callback`
  },
  /// --- ///
  function(accessToken, refreshToken, profile, cb) { /// store accessToken refreshToken in clear ? hash its impossible we need the clear values
@@ -61,7 +76,9 @@ passport.use(new OAuth2Strategy({
 
 ));
 
-
+passport.serializeUser((user, done) => {
+  done(null, user);
+})
 ///
 /*
 module.exports = {

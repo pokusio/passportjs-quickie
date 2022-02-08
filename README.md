@@ -564,3 +564,13 @@ docker exec -it jbltest sh -c "mongo ${MONGO_DB_URI} /root/mongo.script.js"
         * send all the links with a discord bot, to discord channels (for all people who added the discord bot to their servers
         * send a new post on all socials (hackernoon etc etc)
 * https://www.npmjs.com/package/mongoose-findorcreate
+* https://www.passportjs.org/packages/passport-oauth2/
+* provision your own OAuth2 service with custom scopes (authorzations for APIs) :
+  * https://github.com/jaredhanson/oauth2orize
+  * I must try and use this... : and it can also provide OIDC ....
+  * Ok what I wanna know, is how to add `OIDC` auth and Bearer Token authentication, and at the same time, manage permissions per user, per OAuth2 "_application_"
+* Express JS and cache control :
+  * https://regbrain.com/article/cache-headers-express-js
+  * https://medium.com/the-node-js-collection/simple-server-side-cache-for-express-js-with-node-js-45ff296ca0f0
+* https://github.com/mde/ejs/issues/151#issuecomment-212607792
+* https://blog.logrocket.com/documenting-your-express-api-with-swagger/

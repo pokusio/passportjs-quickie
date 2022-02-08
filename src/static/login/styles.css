@@ -1,83 +1,36 @@
-body {
-  background-color: #1F77ED;
-	font-family: 'Roboto', sans-serif;
+* {
+  padding:auto;
+  margin: auto;
 }
-
 .container {
-	margin-top: 3rem;
+  padding-left:3em;
+  padding-right:3em;
+  margin: auto;
+}
+.row.grille {
+  padding: 2em;
+  margin-top: 3vh;
+}
+.row.premiere.ligne.grille {
+  padding: 2em;
+  margin-top: 6vh;
 }
 
-#login-form {
-  margin-top:1rem;
-	padding: 3rem;
-  background-color: #fff;
-	border-radius: 10px;
-	-webkit-box-shadow: 0px 5px 5px 0px rgba(114,138,175,1);
--moz-box-shadow: 0px 5px 5px 0px rgba(114,138,175,1);
-box-shadow: 0px 5px 5px 0px rgba(114,138,175,1);
+.btn.btn-primary.btn-lg.btn-block.login.restream {
+  background-color: #74d0e6!important;
+  border-color: transparent!important;
 }
 
-
-input {
-  background-color: #e3e3e3 !important;
-	margin-left: 1rem;
+.btn.btn-primary.btn-lg.btn-block.login.restream span {
+  background-color: transparent!important;
+  border-color: transparent!important;
 }
 
-.login-header {
-  padding: 1rem;
+.btn.btn-primary.btn-lg.btn-block.login.google {
+  background-color: #007bff!important;
+  border-color: #007bff!important;
 }
 
-.submit, .form-check{
-	margin: 1rem;
-}
-
-.register {
-	color:#0069d9;
-	Font-weight: 700;
-}
-
-.forgot-pass {
-	text-decosration:none;
-	color:#878787 ;
-	Font-weight: 700;
-}
-
-.social-login {
-	width: 75%;
-	margin: 2rem auto;
-	padding: 1rem;
-	border-radius: 10px;
-}
-
-.social-icons {
-	margin-right:1rem;
-}
-
-.facebook {
-	background-color: #4166B5;
-	color: #fff;
-}
-
-.google {
-	background-color: #DC4C39;
-	color: #fff;
-}
-
-.github {
-	background-color: #444444;
-	color: #fff;
-}
-
-
-/** - - - - - - - - - - - - - - -- - - - - - - - - -**/
-
-
-div#login-form.login.with.restream {
-	margin:4em;
-	font-size: 2em;
-
-}
-div.row.login.with.restream {
-	margin:9em;
-	font-size: 2em;
+a, span {
+  text-align: left;
 }

@@ -1,13 +1,25 @@
 const express = require("express")
-const winston = require('winston');
-
-const path = require('path');
-const ejs = require('ejs');
+const passport = require("passport")
+const winston = require('winston')
+const path = require('path')
+const ejs = require('ejs')
 
 const hugo = require("./middlewares/hugo")
 const pokus_environment = require("./environment/")
 const pokus_logging = require("./logger/")
 const pokus_dal = require("./dal/")
+
+
+/// const pokus_secrets = require("./pokus_secrets/")
+/// const pokusClientID = pokus_secrets.getRestreamioOauth2Secrets().clientID;
+/// const pokusClientSecret = pokus_secrets.getRestreamioOauth2Secrets().clientSecret;
+
+/// const pokus_restream_auth = require("./auth/restream/")
+/// // const pokus_restream_auth = require("./auth/google/")
+
+require("./auth/restream/")
+require("./auth/google/")
+// require("./auth/google/")
 
 /*** REQUIRES FOR API ENDPOINTS ROUTERS
  *
@@ -31,16 +43,8 @@ pokus_logger.info(`/************************************************************
 pokus_logger.info(`/****** POKUS BOX APP ROOT Initializing Winston logs : `);
 pokus_logger.info(`/************************************************************************* `);
 pokus_logger.info(`    [process.env.LOG_LEVEL] : ${process.env.LOG_LEVEL}`);
-pokus_logger.error(`Winston Init Tests:  error message`);
-pokus_logger.warn(`Winston Init Tests:  warn message`);
-pokus_logger.info(`Winston Init Tests:  info message`);
-pokus_logger.verbose(`Winston Init Tests:  verbose message`);
-pokus_logger.debug(`Winston Init Tests:  debug message`);
-pokus_logger.silly(`Winston Init Tests:  silly message`);
 pokus_logger.info(`/************************************************************************* `);
 pokus_logger.info(`/************************************************************************* `);
-
-
 
 
 const app = express();
@@ -69,19 +73,8 @@ app.enable('verbose errors');
 app.use(express.static(`${__dirname}/static`))
 
 
-app.use(puppiesRouter)
-/// app.use('/api/v1/puppies', puppiesRouter);
+app.use(puppiesRouter);
 app.use(usersRouter);
-/// app.use('/api/v1/users', usersRouter);
-
-/*
-app.get('/api/v1/puppies', (request, response) => {
-  response.status(200);
-  response.send('Hello Pokus [/api/v1/puppies]!')
-});
-*/
-
-app.use('/api/v1/users', usersRouter);
 /************************************************************************************
  *   GET / Router / (un-protected)
  **************/
@@ -106,7 +99,7 @@ app.get('/api/v1/', (request, response) => {
 
   // respond with rediretion to API docs if required content type is HTML
   if (request.accepts('html')) {
-     response.status(302);
+   response.status(302);
    response.redirect(`https://api-docs.pok-us.io`);
    return;
   }
@@ -160,25 +153,34 @@ app.get('/api/v1/liveness', (request, response) => {
 /************************************************************************************
  ************************************************************************************
  ************************************************************************************
- *   GET /api/v1/login Router / (un-protected) : Login page
- *   GET /api/v1/auth/google Router /          : target of the "Login with Google" button
- *   GET /api/v1/auth/restream Router /        : target of the "Login with Restream" button
- *   GET /api/v1/auth/github Router /          : target of the "Login with Github" button
+ *   GET /login Router / (un-protected) : Login page
+ **** **** **** **** **** **** **** **** **** **** **** **** **** **** **** **** ****
+ *   GET /oauth2/google    Router   : target of the "Login with Google" button
+ *   GET /oauth2/restream  Router   : target of the "Login with Restream" button
+ *   GET /oauth2/github    Router   : target of the "Login with Github" button
  ************************************************************************************
  ************************************************************************************
  ************************************************************************************
- **************/
+ **/
 
 /************************************************************************************
- *   GET /api/v1/login Router / (un-protected) :
+ *   GET /login Router / (un-protected) :
  * ---> trigger the Oauth2 Authentication flow
  **************/
- app.get('/api/v1/login', (request, response) => {
-   /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
+ app.get('/login', (request, response) => {
+
+   let requested_url_str = request.baseUrl + request.url;
+   if (pokus_environment.getEnvironment().tls_enabled) {
+    requested_url_str = `https://${request.headers.host}${request.url}` ;
+   } else {
+    requested_url_str = `http://${request.headers.host}${request.url}` ;
+   }
+   response.render('login/index.ejs', { requested_url: `${requested_url_str}` , cache: false });
+  /*
    response.json({
-     message: `Pokus answers : Oh yes I al alive, very much alive !`,
+     message: `Pokus Box Authentication : use the POST method to authenticate !`,
      whoami: `pokus`
-   })
+   }) */
  })
 
 
@@ -192,24 +194,34 @@ app.get('/api/v1/liveness', (request, response) => {
   *   GET /google/callback Router / (Google OAuth2 Success):
   * ---> list all virtual machines
   **************/
-  app.get('/google/callback', (request, response) => {
-    /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
-    response.json({
-      message: `Pokus answers : Oh you just successfully logged in with Google OAuth2 !`,
-      whoami: `pokus`
-    })
-  })
+  app.get('/oauth2/google', passport.authenticate('google', { scope:
+        [ 'email', 'profile' ] }
+  ));
+  app.get('/oauth2/google/callback', passport.authenticate( 'google', {
+          successRedirect: '/auth/google/success',
+          failureRedirect: '/auth/google/failure'
+  }));
   /************************************************************************************
-   *   GET /restream/callback Router / (Restream OAuth2 Success):
+   *   GET /oauth2/restream/callback Router / (Restream OAuth2 Success):
    * ---> list all virtual machines
    **************/
-   app.get('/google/callback', (request, response) => {
-     /// response.send(`Pokus answers : Oh yes I al alive, very much alive !`)
-     response.json({
-       message: `Pokus answers : Oh you just successfully logged in with Restream OAuth2 !`,
-       whoami: `pokus`
-     })
-   })
+
+   /*
+   app.get('/oauth2/restream', passport.authenticate('oauth2', { scope:
+         [ 'email', 'profile' ] }
+   ));*/
+   app.get('/oauth2/restream', passport.authenticate('oauth2'));
+
+   app.get('/oauth2/restream/callback', passport.authenticate('oauth2', {
+           successRedirect: '/auth/restream/success',
+           failureRedirect: '/auth/restream/failure'
+   }));
+
+
+   /************************************************************************************
+    *   GET /oauth2/restream/ Router / (Restream OAuth2 Success):
+    * ---> list all virtual machines
+    **************/
 
 
  /************************************************************************************

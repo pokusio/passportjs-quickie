@@ -34,7 +34,7 @@ const getSecrets = () => {
   return loadedSecretJson;
 }
 
-const getRestreamioOauth2Secret = () => {
+const getRestreamioOauth2Secrets = () => {
     return {
       clientID: `${loadedSecretJson.auth.restream.clientID}`,
       clientSecret: `${loadedSecretJson.auth.restream.clientSecret}`
@@ -96,7 +96,7 @@ pokus_logger.info(`/************************************************************
 
 module.exports = {
     getSecrets: getSecrets,
-    getRestreamioOauth2Secret: getRestreamioOauth2Secret,
+    getRestreamioOauth2Secrets: getRestreamioOauth2Secrets,
     getGoogleOauth2Secrets: getGoogleOauth2Secrets,
     getDatabaseSecrets: getDatabaseSecrets
 };

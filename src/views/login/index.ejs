@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+	<!--
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	 -->
+	<!-- <link rel="stylesheet" href="/path/to/font-awesome/css/font-awesome.min.css"> -->
+	<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.0.13/css/fontawesome.min.css"> -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css">
+
+	<!--
+
+  -->
+	<link rel="stylesheet" type="text/css" href="/login/styles.css" />
+	<!-- meta responsiveness -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+
+<body>
+
+	<div class="container">
+		<div class="row premiere ligne de la grille">
+		</div>
+		<div class="row deuxième ligne de la grille">
+			<div class="col-6">
+				<h1 class="title">Pokus Box</h1>
+				<a href="http://0.0.0.0:9099/oauth2/restream" class="btn btn-primary btn-lg btn-block login restream">
+					<span class="pokus social icon"><i class="fas fa-stream" aria-hidden="true"></i>&nbsp;&nbsp;<span>
+							Login with Restream.io
+				</a>
+				<a href="http://0.0.0.0:9099/oauth2/google" class="btn btn-primary btn-lg btn-block login google">
+					<span class="pokus social icon"><i class="fab fa-google" aria-hidden="true"></i>&nbsp;&nbsp;<span>
+							Login with Google
+				</a>
+				<!--
+				<a href="/oauth2/twitch" class="btn btn-primary btn-lg btn-block">
+					<span class="pokus social icon"><i class="fas fa-stream" aria-hidden="true"></i>&nbsp;&nbsp;<span>
+							Login with Twitch
+				</a>
+			  -->
+			</div>
+
+			<div class="col-6">
+				<h1 class="title">Login with email/password</h1>
+
+				<form>
+					<div class="form-group">
+						<label for="exampleInputEmail1">Email address</label>
+						<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+						<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+					</div>
+					<div class="form-group">
+						<label for="exampleInputPassword1">Password</label>
+						<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+					</div>
+					<button type="submit" class="btn btn-primary">Sign in</button>
+					<label class="form-check-label" >You <a href="/auth/passwword-reset">forgot your password?</a></label>
+					<!-- <div class="form-group form-check">
+						<input type="checkbox" class="form-check-input" id="exampleCheck1">
+						<label class="form-check-label" for="exampleCheck1">Keep me logged in</label>
+					</div> -->
+					<div class="form-group form-check">
+
+					</div>
+				</form>
+			</div>
+		</div>
+
+
+	</div>
+
+
+</body>
+
+</html>

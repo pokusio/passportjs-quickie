@@ -11,7 +11,7 @@ const mongoUsername = pokus_secrets.getDatabaseSecrets().username;
 const mongoUserPassword = pokus_secrets.getDatabaseSecrets().password;
 const mongoDbName = pokus_secrets.getDatabaseSecrets().dbname;
 
-const pokus_connections = require("./connection/pool/")
+const pokus_connections = require("./../dal/connection/pool/")
 
 /*   const pokus_logger = pokus_logging.getLogger();  */
 const pokus_logger = winston.createLogger({
@@ -21,14 +21,6 @@ const pokus_logger = winston.createLogger({
 });
 
 // // ---
-// // initialize the autoIncrement on Puppy Model, before getting the model (always)
-// //
-// // ---> If I use auto increment Plugin, Object Id is not of the right format anymore
-//
-// const defaultConnection = pokus_connections.getConnectionPool()[0].connection;
-// puppies_mongoose_schemas.initializeMongooseAutoIncrement(defaultConnection);
-//
-//
 // Get the PuppyModel
 const PuppyModel = puppies_mongoose_schemas.getModel().model
 
