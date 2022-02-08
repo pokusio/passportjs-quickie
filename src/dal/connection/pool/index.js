@@ -1,7 +1,6 @@
 // getting-started.js
 const mongoose = require('mongoose');
 const winston = require('winston');
-const fs = require('fs');
 
 const pokus_environment = require("../../../environment/")
 const pokus_secrets = require("../../../pokus_secrets/")

@@ -5,6 +5,17 @@ var router = express.Router();
 const handlers = require('./handlers');
 
 const winston = require('winston');
+const pokus_auth_commons = require('./../../../auth')
+
+
+
+
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!         LOGGING      ****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+
 
 /*   const pokus_logger = pokus_logging.getLogger();  */
 const pokus_logger = winston.createLogger({
@@ -14,20 +25,43 @@ const pokus_logger = winston.createLogger({
 });
 
 
-try {
-  pokus_logger.info(`/****** [PUPPIES ROUTER] JBL DEBUG POINT is tracking an error`);
-} catch (trackedError) {
-  pokus_logger.info(`/****** [PUPPIES ROUTER] JBL DEBUG POINT error found :`);
-  pokus_logger.error(trackedError);
 
-} finally {
-  pokus_logger.info(`/****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!* `);
-  pokus_logger.info(`/****** [PUPPIES ROUTER] JBL DEBUG POINT`);
-  pokus_logger.info(`/****** [PUPPIES ROUTER] JBL DEBUG POINT`);
-  pokus_logger.info(`/****** [PUPPIES ROUTER] JBL DEBUG POINT`);
-  pokus_logger.info(`/****** [PUPPIES ROUTER] JBL DEBUG POINT`);
-  pokus_logger.info(`/****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!* `);
-}
+
+
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!      MIDDLEWARES     ****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+
+
+// We inspect the resquest and response objects to check what's in the HTTP session object
+// router.use(pokus_auth_commons.httpSessionInspector) // https://expressjs.com/en/guide/using-middleware.html#middleware.router
+
+router.use(pokus_auth_commons.isLoggedIn) // https://expressjs.com/en/guide/using-middleware.html#middleware.router
+
+
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!      ROUTES     ****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+
+
+/// try {
+///   pokus_logger.info(`/****** [PUPPIES ROUTER] JBL DEBUG POINT is tracking an error`);
+/// } catch (trackedError) {
+///   pokus_logger.info(`/****** [PUPPIES ROUTER] JBL DEBUG POINT error found :`);
+///   pokus_logger.error(trackedError);
+///
+/// } finally {
+///   pokus_logger.info(`/****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!* `);
+///   pokus_logger.info(`/****** [PUPPIES ROUTER] JBL DEBUG POINT`);
+///   pokus_logger.info(`/****** [PUPPIES ROUTER] JBL DEBUG POINT`);
+///   pokus_logger.info(`/****** [PUPPIES ROUTER] JBL DEBUG POINT`);
+///   pokus_logger.info(`/****** [PUPPIES ROUTER] JBL DEBUG POINT`);
+///   pokus_logger.info(`/****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!* `);
+/// }
 
 
 router.get('/api/v1/puppies', (request, response, next) => {

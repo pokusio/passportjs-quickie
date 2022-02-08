@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+  	<!-- meta responsiveness -->
+  	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Successfully Logged-in!</title>
+
+
+  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  	<!--
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    -->
+  	<link rel="stylesheet" type="text/css" href="/auth/oauth2/google/success/index.css" />
+    <script src="/auth/oauth2/google/success/index.js" integrity="sha384-wa9YVYzVIfzkaZ8RGXUn+63I58zqVsO1qC4Ao+PAJfOck42XRC5glGCnKtBPaW0Q" crossorigin="anonymous"></script>
+
+
+  </head>
+  <body>
+
+    <div id="container">
+      <div id="success-box">
+        <div class="dot"></div>
+        <div class="dot two"></div>
+        <div class="face">
+          <div class="eye"></div>
+          <div class="eye right"></div>
+          <div class="mouth happy"></div>
+        </div>
+        <div class="shadow scale"></div>
+        <div class="message"><h1 class="alert">Success!</h1><p>yay, everything is working.</p></div>
+        <button class="button-box"><h1 class="green">continue</h1></button>
+      </div>
+      <div id="error-box">
+        <div class="dot"></div>
+        <div class="dot two"></div>
+        <div class="face2">
+          <div class="eye"></div>
+          <div class="eye right"></div>
+          <div class="mouth sad"></div>
+        </div>
+        <div class="shadow move"></div>
+        <div class="message"><h1 class="alert">Error!</h1><p>oh no, something went wrong.</div>
+        <button class="button-box"><h1 class="red">try again</h1></button>
+      </div>
+      <div class="row">
+        <div class="col-12">
+
+
+          <article class="forecast">
+              <h1>Inspection report of the http request, response and session</h1>
+              <article class="express js request">
+                  <h2> HTTP Request</h2>
+                  <p>
+                  The [<%= requested_url %>] HTTP Request <code>ExpressJS</code> Object is made of :
+                  </p>
+                  <pre>
+                      <%= request_object %>
+                  </pre>
+
+              </article>
+              <article class="express js response">
+                  <h2>HTTP Response</h2>
+                  <p>The associated HTTP Response <code>ExpressJS</code> Object is made of : </p>
+                <pre>
+                    <%= response_object %>
+                </pre>
+              </article>
+              <article class="day-forecast">
+                  <h2>05 March 2018</h2>
+                  <p>Heavy rain.</p>
+              </article>
+          </article>
+
+
+
+
+
+
+
+
+        </div>
+        <div class="col-12">
+
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>made by <a href="https://codepen.io/juliepark"> julie</a> ♡
+    </footer>
+
+  </body>
+</html>

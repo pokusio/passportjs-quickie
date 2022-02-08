@@ -21,7 +21,9 @@ const getUserByRestreamIdOrCreate = (restreamProfile, restreamAccessToken, restr
    // restreamAccessToken     //  restream_accessToken
    // restreamRefreshToken    //  restream_refreshToken
 
-
+  pokus_logger.info(`ENTERING METHOD [src/controllers/authController.js] {getUserByRestreamIdOrCreate} `)
+  pokus_logger.info(`ENTERING METHOD [src/controllers/authController.js] {getUserByRestreamIdOrCreate} `)
+  pokus_logger.info(`ENTERING METHOD [src/controllers/authController.js] {getUserByRestreamIdOrCreate} `)
    // We try and find User of restream_profile_id [restreamProfile.id]
    return updateUserByRestreamOAuth2Profile(restreamProfile, restreamAccessToken, restreamRefreshToken);
 

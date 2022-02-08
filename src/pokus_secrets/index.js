@@ -50,7 +50,14 @@ const getDatabaseSecrets = () => {
     return {
       username: `${loadedSecretJson.auth.mongoose.username}`,
       password: `${loadedSecretJson.auth.mongoose.password}`,
-      dbname: `${loadedSecretJson.auth.mongoose.dbname}`
+      dbname: `${loadedSecretJson.auth.mongoose.dbname}`,
+      mongostore_dbname: `${loadedSecretJson.auth.mongoose.mongostore_dbname}`
+    }
+}
+const getHttpSecrets = () => {
+    return {
+      session_secret: `${loadedSecretJson.http.session_secret}`,
+      cookie_secret: `${loadedSecretJson.http.cookie_secret}`
     }
 }
 
@@ -98,5 +105,6 @@ module.exports = {
     getSecrets: getSecrets,
     getRestreamioOauth2Secrets: getRestreamioOauth2Secrets,
     getGoogleOauth2Secrets: getGoogleOauth2Secrets,
-    getDatabaseSecrets: getDatabaseSecrets
+    getDatabaseSecrets: getDatabaseSecrets,
+    getHttpSecrets: getHttpSecrets
 };

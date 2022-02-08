@@ -3,35 +3,33 @@ const passport = require("passport")
 const winston = require('winston')
 const path = require('path')
 const ejs = require('ejs')
-
+const http_session = require("express-session")
+const MongoStore = require('connect-mongo');
 const hugo = require("./middlewares/hugo")
 const pokus_environment = require("./environment/")
 const pokus_logging = require("./logger/")
 const pokus_dal = require("./dal/")
-
+const cookieParser = require('cookie-parser');
+// const sessionInitializer = require("./middlewares/session/");
+const pokus_secrets = require("./pokus_secrets/")
 
 /// const pokus_secrets = require("./pokus_secrets/")
 /// const pokusClientID = pokus_secrets.getRestreamioOauth2Secrets().clientID;
 /// const pokusClientSecret = pokus_secrets.getRestreamioOauth2Secrets().clientSecret;
 
-/// const pokus_restream_auth = require("./auth/restream/")
-/// // const pokus_restream_auth = require("./auth/google/")
 
-require("./auth/restream/")
-require("./auth/google/")
-// require("./auth/google/")
 
-/*** REQUIRES FOR API ENDPOINTS ROUTERS
- *
- **/
-// puppies
-const puppiesRouter = require('./api/routes/puppies/router');
-// users
-const usersRouter = require('./api/routes/users/router');
-// const virtualboxMachinesApiEndpoint = require("./api/routes/virtualbox/machines/")
-// const virtualboxDisksApiEndpoint = require("./api/routes/virtualbox/disks/")
-// const virtualboxSnapshotsApiEndpoint = require("./api/routes/virtualbox/snapshots/")
 
+/************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ *************************** WINSTON LOGGINF SETUP ****************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************/
 
 const pokus_logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
@@ -48,6 +46,143 @@ pokus_logger.info(`/************************************************************
 
 
 const app = express();
+
+
+/************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ *************************** EXPRESS JS SESSION SETUP ****************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************   [The session is used by the Authentication Mechanism]
+ ************************************************************************************
+ ************   [The User is stored into the HTTP Session]
+ ************************************************************************************
+ ************   [So we need an HTTP Session]
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ * -------------------------------------------------------------------------------- *
+ *   GET /api/v1 Router / (un-protected) :
+ * ---> gives a beautiful hugo geenrated OpenAPI Doc, with all the api documentation, served at /api/v1
+ * ---> the hugo generated project for the doc contains and versions in the data folder, the [openapi.json] file
+ *
+ *    +--> $ curl -iv http://127.0.0.1:9099/api/v1 -H "Accept: text/html"
+ *    +--> $ curl -iv http://127.0.0.1:9099/api/v1 -H "Accept: application/json" | tail -n 1 | jq .
+ *    +--> $ curl -iv http://127.0.0.1:9099/api/v1 -H "Accept: text/plain"
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ **************/
+
+
+
+/************************************************************************************
+ ***************  COOKIES
+ ************************************************************************************
+ **************/
+ /*
+app.use(cookieParser({
+  secret: `${pokus_secrets.getHttpSecrets().cookie_secret}`
+})); // openssl rand -hex 32
+*/
+/// /// var secretsCookieParser = [`${pokus_secrets.getHttpSecrets().cookie_secret}`, 'a', 'two', 'b'];
+/// var secretsCookieParser = [`${pokus_secrets.getHttpSecrets().cookie_secret}`];
+
+/// app.use(cookieParser(secretsCookieParser)); // openssl rand -hex 32
+/// app.use(cookieParser(secretsCookieParser)); // openssl rand -hex 32
+/// app.use(cookieParser()); // openssl rand -hex 32
+
+// const httpSessionMongoStore = sessionInitializer.getHttpSessionMongoStore();
+
+
+
+/************************************************************************************
+ ***************  COOKIES
+ ************************************************************************************
+ **************/
+const mongoUsername = pokus_secrets.getDatabaseSecrets().username;
+const mongoUserPassword = pokus_secrets.getDatabaseSecrets().password;
+const mongoDbName = pokus_secrets.getDatabaseSecrets().dbname;
+const httpSessionMongoStoreDbName = pokus_secrets.getDatabaseSecrets().mongostore_dbname;
+
+
+
+// // "mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false"
+const mongoDbURI = `mongodb://${mongoUsername}:${mongoUserPassword}@192.168.1.101:27017/${httpSessionMongoStoreDbName}?authSource=admin&ssl=false&retryWrites=true&w=majority`;
+
+
+
+pokus_logger.info(`>>>>>>>>>>>>>>>>>>>>>>>>><<>>>>>>>>>>>>>>>>>>>>>>>>><<>>>>>>>>>>>>>>>>>>>>>>>>><<`)
+pokus_logger.info(`PETIT REPERE JB dans [PRJ_ROOT/src/index.js] >>>>>>>>>>>>>>>>>>>>>>>>><<`)
+pokus_logger.info(`>>>>>>>>>>>>>>>>>>>>>>>>><<>>>>>>>>>>>>>>>>>>>>>>>>><<>>>>>>>>>>>>>>>>>>>>>>>>><<`)
+const httpSessionMongoStore = new MongoStore({
+        mongoUrl: `${mongoDbURI}`,
+        collection: `pokus_http_sessions`/*,
+        ttl: 30 * 24 * 60 * 60 // = 30 days */
+    })
+
+
+app.use(http_session({
+    secret: `${pokus_secrets.getHttpSecrets().cookie_secret}`, // cookie secret// openssl rand -hex 32
+    name: `pokusbox`, // name of the cookie
+    store: httpSessionMongoStore, // connect-mongo session store
+    proxy: true,
+    resave: true,
+    saveUninitialized: true
+}));
+/*
+*/
+
+
+
+
+
+
+
+/************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ****************        END OF EXPRESS JS SESSION SETUP ****************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ ************************************************************************************
+ **************/
+
+
+/*** REQUIRE STATEMENTS FOR AUTH ENDPOINTS
+ *
+ **/
+require("./auth/restream/")
+require("./auth/google/")
+// require("./auth/twitch/")
+
+/*** REQUIRE STATEMENTS FOR API ENDPOINTS ROUTERS
+ *
+ **/
+// puppies
+const puppiesRouter = require('./api/routes/puppies/router');
+// users
+const usersRouter = require('./api/routes/users/router');
+// const virtualboxMachinesApiEndpoint = require("./api/routes/virtualbox/machines/")
+// const virtualboxDisksApiEndpoint = require("./api/routes/virtualbox/disks/")
+// const virtualboxSnapshotsApiEndpoint = require("./api/routes/virtualbox/snapshots/")
+
+
 
 // app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json());
@@ -201,6 +336,67 @@ app.get('/api/v1/liveness', (request, response) => {
           successRedirect: '/auth/google/success',
           failureRedirect: '/auth/google/failure'
   }));
+
+  app.get('/auth/google/success', (request, response) => { // 200 OK
+    pokus_logger.info(`********************************************************************************************`)
+    pokus_logger.info(`***** [GET /auth/google/success]       +++++        *****`);
+    pokus_logger.info(`  POKUS GOOGLE OAUTH2 SUCCESS!! HANDLER JUST CATCHED THIS ERROR : `)
+    pokus_logger.info(`----`)
+    pokus_logger.info(`       inspect  {request} : `)
+    pokus_logger.info(`----`)
+    pokus_logger.info(request)
+    pokus_logger.info(`----`)
+    pokus_logger.info(`       inspect  {response} : `)
+    pokus_logger.info(`----`)
+    pokus_logger.info(response)
+    pokus_logger.info(`----`)
+    pokus_logger.info(`  POKUS The Authenticated User present in the Express session ? `)
+    pokus_logger.info(`********************************************************************************************`)
+    response.status(200) // 200 OK authentication success
+    let requested_url_str = request.baseUrl + request.url;
+    if (pokus_environment.getEnvironment().tls_enabled) {
+     requested_url_str = `https://${request.headers.host}${request.url}` ;
+    } else {
+     requested_url_str = `http://${request.headers.host}${request.url}` ;
+    }
+    response.render('auth/oauth2/google/success', {
+      requested_url: `${requested_url_str}`,
+      request_object: `${JSON.stringify(request, " ", 2)}`,
+      response_object: `${JSON.stringify(response, " ", 2)}`
+    });
+
+  });
+
+  app.get('/auth/google/failure', (request, response) => { // 401 Unauthorized
+    pokus_logger.info(`********************************************************************************************`)
+    pokus_logger.info(`***** [GET /auth/google/success]       +++++        *****`);
+    pokus_logger.info(`  POKUS GOOGLE OAUTH2 SUCCESS!! HANDLER JUST CATCHED THIS ERROR : `)
+    pokus_logger.info(`----`)
+    pokus_logger.info(`       inspect  {request} : `)
+    pokus_logger.info(`----`)
+    pokus_logger.info(request)
+    pokus_logger.info(`----`)
+    pokus_logger.info(`       inspect  {response} : `)
+    pokus_logger.info(`----`)
+    pokus_logger.info(response)
+    pokus_logger.info(`----`)
+    pokus_logger.info(`  POKUS The Authenticated User present in the Express session ? `)
+    pokus_logger.info(`********************************************************************************************`)
+    response.status(401) // 200 OK authentication success
+    let requested_url_str = request.baseUrl + request.url;
+    if (pokus_environment.getEnvironment().tls_enabled) {
+     requested_url_str = `https://${request.headers.host}${request.url}` ;
+    } else {
+     requested_url_str = `http://${request.headers.host}${request.url}` ;
+    }
+    response.render('auth/oauth2/google/success', {
+      requested_url: `${requested_url_str}`,
+      request_object: `${JSON.stringify(request, " ", 2)}`,
+      response_object: `${JSON.stringify(response, " ", 2)}`
+    });
+
+  });
+
   /************************************************************************************
    *   GET /oauth2/restream/callback Router / (Restream OAuth2 Success):
    * ---> list all virtual machines

@@ -33,22 +33,30 @@ const pokus_logger = winston.createLogger({
  *    -->  cccccccccccc ?
  *    -->  cccccccccccc :
  *
- *
- *
- *
- *
- *
- **************/
-
-
-
+ **/
 passport.use(new GoogleStrategy({
     clientID: pokus_secrets.getRestreamioOauth2Secrets().clientID, //
-    clientSecret: pokus_secrets.getRestreamioOauth2Secrets().clientID, //
+    clientSecret: pokus_secrets.getRestreamioOauth2Secrets().clientSecret, //
     callbackURL: `http://${pokus_environment.getEnvironment().net_fqdn}:${pokus_environment.getEnvironment().port_number}/oauth2/google/callback`,
     passReqToCallback   : true
   },
   function(request, accessToken, refreshToken, profile, done) {
+    pokus_logger.info(`/****************************************************************************************** `);
+    pokus_logger.info(`/****************** !!!!!!GOOGLE OAUTH2 FLOW !!!! `);
+    pokus_logger.info(`/****************************************************************************************** `);
+    pokus_logger.info(`/****** +++ [./AUTH/GOOGLE/INDEX.JS] [function(accessToken, refreshToken, profile, cb)] : `);
+    pokus_logger.info(`/--------------------- `);
+    pokus_logger.info(`/****** +++       accessToken  : `);
+    pokus_logger.info(accessToken);
+    pokus_logger.info(`/--------------------- `);
+    pokus_logger.info(`/****** +++       refreshToken  : `);
+    pokus_logger.info(refreshToken);
+    pokus_logger.info(`/--------------------- `);
+    pokus_logger.info(`/****** +++       profile : `);
+    pokus_logger.info(profile);
+    pokus_logger.info(`/--------------------- `);
+    pokus_logger.info(`/****************************************************************************************** `);
+    pokus_logger.info(`/****************************************************************************************** `);
     pokus_logger.error(`Not Implemented`);
     throw new Error(`Not Implemented`)
     User.findOrCreate({ googleId: profile.id }, function (err, user) {

@@ -3,7 +3,19 @@ const express = require('express');
 const router = express.Router();
 const winston = require('winston');
 
+
+
 const handlers = require('./handlers');
+const pokus_auth_commons = require('./../../../auth')
+
+
+
+
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!         LOGGING      ****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
 
 
 /*   const pokus_logger = pokus_logging.getLogger();  */
@@ -14,20 +26,27 @@ const pokus_logger = winston.createLogger({
 });
 
 
-try {
-  pokus_logger.info(`/****** JBL DEBUG POINT is tracking an error`);
-} catch (trackedError) {
-  pokus_logger.info(`/****** JBL DEBUG POINT error found :`);
-  pokus_logger.error(trackedError);
 
-} finally {
-  pokus_logger.info(`/****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!* `);
-  pokus_logger.info(`/****** JBL DEBUG POINT`);
-  pokus_logger.info(`/****** JBL DEBUG POINT`);
-  pokus_logger.info(`/****** JBL DEBUG POINT`);
-  pokus_logger.info(`/****** JBL DEBUG POINT`);
-  pokus_logger.info(`/****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!* `);
-}
+
+
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!      MIDDLEWARES     ****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+
+
+// We inspect the resquest and response objects to check what's in the HTTP session object
+// router.use(pokus_auth_commons.httpSessionInspector) // https://expressjs.com/en/guide/using-middleware.html#middleware.router
+
+router.use(pokus_auth_commons.isLoggedIn) // https://expressjs.com/en/guide/using-middleware.html#middleware.router
+
+
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!      ROUTES     ****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
+// ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //
 
 
 router.get('/api/v1/users', (request, response, next) => {

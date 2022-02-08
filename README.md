@@ -524,6 +524,72 @@ docker exec -it jbltest sh -c "mongo ${MONGO_DB_URI} /root/mongo.script.js"
 # puppies.find({ cute_name: "/ch/i"})
 ```
 
+
+### Restream IO OAuth2 Scopes
+
+While I logged in `Restream.IO` for the first time, I saw a list of the OAuth2 scopes available at `Restream.IO` :
+
+![`Restream.IO` OAuth2 scopes - s1](./documentation/images/oauth2/restream/POKUS_RESTREAM_IO_OAUTH2_STEP1.png)
+
+![`Restream.IO` OAuth2 scopes - s2](./documentation/images/oauth2/restream/POKUS_RESTREAM_IO_OAUTH2_STEP2.png)
+
+Here are the scopes :
+
+```JavaScript
+/****
+ *
+ * ------------------------------ - - - - -
+ * ------------------------------ - - - - -
+ *
+ * ---->>>  pokus permissions:
+ * ---->>>     -  Read your account profile
+ * ---->>>     -  Read your channel information
+ * ---->>>     -  Read your webchat messages
+ * ---->>>     -  Post messages to your webchat on your behalf
+ * ---->>>     -  Write your channel information
+ * ---->>>     -  Read your account stream key
+ *
+ * ------------------------------ - - - - -
+ * ------------------------------ - - - - -
+ *
+ **/
+```
+
+### The `S.R.I.` of a JavaScript File
+
+
+* For `GNU/Linux` :
+
+```bash
+
+export JS_FILE_PATH=`$(pwd)/src/static/auth/oauth2/google/success/index.js`
+cat ${JS_FILE_PATH} | openssl dgst -sha384 -binary | openssl base64 -A
+```
+
+* For `Mac OS` :
+
+```bash
+export JS_FILE_PATH=`$(pwd)/src/static/auth/oauth2/google/success/index.js`
+shasum -b -a 384 ${JS_FILE_PATH} | awk '{ print $1 }' | xxd -r -p | base64
+```
+
+
+Example with a file of this project :
+
+
+```bash
+export JS_FILE_PATH=$(pwd)/src/static/auth/oauth2/google/success/index.js
+shasum -b -a 384 ${JS_FILE_PATH} | awk '{ print $1 }' | xxd -r -p | base64 -
+```
+
+Gives this std output :
+
+```bash
+bash-3.2$ export JS_FILE_PATH=$(pwd)/src/static/auth/oauth2/google/success/index.js
+bash-3.2$ shasum -b -a 384 ${JS_FILE_PATH} | awk '{ print $1 }' | xxd -r -p | base64 -
+wa9YVYzVIfzkaZ8RGXUn+63I58zqVsO1qC4Ao+PAJfOck42XRC5glGCnKtBPaW0Q
+```
+
 ## References
 
 * https://www.passportjs.org/concepts/authentication/http-bearer/
@@ -574,3 +640,6 @@ docker exec -it jbltest sh -c "mongo ${MONGO_DB_URI} /root/mongo.script.js"
   * https://medium.com/the-node-js-collection/simple-server-side-cache-for-express-js-with-node-js-45ff296ca0f0
 * https://github.com/mde/ejs/issues/151#issuecomment-212607792
 * https://blog.logrocket.com/documenting-your-express-api-with-swagger/
+* https://expressjs.com/en/guide/using-middleware.html#middleware.router
+* I must replace the PUT http method, by the patch. PUT is designed for sending a whole file as a blob.
+* Managing multiple MongoDb Connections
