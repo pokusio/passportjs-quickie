@@ -136,7 +136,7 @@ export POKUS_QUERY_PARAMS="search=&female=false&email=u" && curl -iv "http://127
 
 # Get user by id
 # expect : "claymorehiker"
-export USER_ID="620167ff95e6f9bd213d7136"
+export USER_ID="6203c1f76be67686cb35eb35"
 export POKUS_QUERY_PARAMS="user_id=${USER_ID}&search=&female=true&email=gmail" && curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}"
 
 
@@ -157,7 +157,7 @@ export POKUS_QUERY_PARAMS="user_id=${USER_ID}&search=&female=true&email=gmail" &
 # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- # --- #
 # 62005b5b827d6996ec40a087 : see [docker/run.template/mongo/mongo-init.js]
 
-export USER_ID="620167ff95e6f9bd213d7136"
+export USER_ID="6203c1f76be67686cb35eb35"
 export WRONG_USER_ID="92005b5b827d6996ec40a089"
 export MY_USER="{ \
   \"user_id\": \"${USER_ID}\", \
@@ -224,11 +224,11 @@ curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "A
 # {
 #   "message": "Pokus [GET /api/v1/users]: [pokus_users_dal.getUsers] callback to retrieve a user from its Id :",
 #   "search": {
-#     "user_id": "620167ff95e6f9bd213d7136"
+#     "user_id": "6203c1f76be67686cb35eb35"
 #   },
 #   "results": [
 #     {
-#       "_id": "620167ff95e6f9bd213d7136",
+#       "_id": "6203c1f76be67686cb35eb35",
 #       "fullname": "rihanna updated",
 #       "email": "kelly@gmail.com",
 #       "short_intro": "(updated) she's very brave, needs a lot of physical activity, at least 4 long walks a week.",
@@ -254,7 +254,7 @@ curl -iv "http://127.0.0.1:9099/api/v1/users?${POKUS_QUERY_PARAMS}" -X GET -H "A
 # To test deleting users :
 
 
-export USER_ID="62017f07cf30a5601b1e6e87"
+export USER_ID="6203c1f76be67686cb35eb35"
 export WRONG_USER_ID="92005b5b827d6996ec40a089"
 
 

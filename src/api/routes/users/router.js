@@ -6,7 +6,7 @@ const winston = require('winston');
 
 
 const handlers = require('./handlers');
-const pokus_auth_commons = require('./../../../auth')
+/// const pokus_auth_commons = require('./../../../auth')
 
 
 
@@ -39,7 +39,7 @@ const pokus_logger = winston.createLogger({
 // We inspect the resquest and response objects to check what's in the HTTP session object
 // router.use(pokus_auth_commons.httpSessionInspector) // https://expressjs.com/en/guide/using-middleware.html#middleware.router
 
-router.use(pokus_auth_commons.isLoggedIn) // https://expressjs.com/en/guide/using-middleware.html#middleware.router
+/// router.use(pokus_auth_commons.isLoggedIn) // https://expressjs.com/en/guide/using-middleware.html#middleware.router
 
 
 // ****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!****!!!!!!!**** //

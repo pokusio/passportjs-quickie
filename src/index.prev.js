@@ -9,8 +9,8 @@ const hugo = require("./middlewares/hugo")
 const pokus_environment = require("./environment/")
 const pokus_logging = require("./logger/")
 const pokus_dal = require("./dal/")
-const cookieParser = require('cookie-parser');
-const sessionInitializer = require("./middlewares/session/");
+// const cookieParser = require('cookie-parser');
+// const sessionInitializer = require("./middlewares/session/");
 const pokus_secrets = require("./pokus_secrets/")
 
 /// const pokus_secrets = require("./pokus_secrets/")
@@ -18,16 +18,6 @@ const pokus_secrets = require("./pokus_secrets/")
 /// const pokusClientSecret = pokus_secrets.getRestreamioOauth2Secrets().clientSecret;
 
 
-/*** REQUIRE STATEMENTS FOR API ENDPOINTS ROUTERS
- *
- **/
-// puppies
-const puppiesRouter = require('./api/routes/puppies/router');
-// users
-const usersRouter = require('./api/routes/users/router');
-// const virtualboxMachinesApiEndpoint = require("./api/routes/virtualbox/machines/")
-// const virtualboxDisksApiEndpoint = require("./api/routes/virtualbox/disks/")
-// const virtualboxSnapshotsApiEndpoint = require("./api/routes/virtualbox/snapshots/")
 
 
 /************************************************************************************
@@ -62,9 +52,7 @@ const app = express();
  ************************************************************************************
  ************************************************************************************
  ************************************************************************************
- ***************************  HTTP SESSION SETUP ****************************
- ************************************************************************************
- ***************************  HTTP COOKIE SETUP ****************************
+ *************************** EXPRESS JS SESSION SETUP ****************************
  ************************************************************************************
  ************************************************************************************
  ************************************************************************************
@@ -80,9 +68,9 @@ const app = express();
  ************************************************************************************
  ************************************************************************************
  * -------------------------------------------------------------------------------- *
- *   ccccccccccccccccccccccccccccc
- * ---> ccccccccccccccccccccccccccccc
- * ---> ccccccccccccccccccccccccccccc
+ *   GET /api/v1 Router / (un-protected) :
+ * ---> gives a beautiful hugo geenrated OpenAPI Doc, with all the api documentation, served at /api/v1
+ * ---> the hugo generated project for the doc contains and versions in the data folder, the [openapi.json] file
  *
  *    +--> $ curl -iv http://127.0.0.1:9099/api/v1 -H "Accept: text/html"
  *    +--> $ curl -iv http://127.0.0.1:9099/api/v1 -H "Accept: application/json" | tail -n 1 | jq .
@@ -101,114 +89,58 @@ const app = express();
  ***************  COOKIES
  ************************************************************************************
  **************/
-pokus_logger.info(`/************************************************************************* `);
-pokus_logger.info(`/****** POKUS BOX HTTP COOKIES Initialization : `);
-pokus_logger.info(`/************************************************************************* `);
-
-/*
+ /*
 app.use(cookieParser({
-  secret: `${pokus_secrets.getHttpSecrets().cookie_secret}`,
-  options: {
-    expires: `360`
-  }
+  secret: `${pokus_secrets.getHttpSecrets().cookie_secret}`
 })); // openssl rand -hex 32
 */
-/// /// var cookieParserSecrets = [`${pokus_secrets.getHttpSecrets().cookie_secret}`, 'a', 'two', 'b'];
-var cookieParserSecrets = [`${pokus_secrets.getHttpSecrets().cookie_secret}`];
+/// /// var secretsCookieParser = [`${pokus_secrets.getHttpSecrets().cookie_secret}`, 'a', 'two', 'b'];
+/// var secretsCookieParser = [`${pokus_secrets.getHttpSecrets().cookie_secret}`];
 
-
-let LocalDate = require("@js-joda/core").LocalDate;
-let LocalTime = require("@js-joda/core").LocalTime;
-let ZoneOffset = require("@js-joda/core").ZoneOffset;
-// obtain the current time in the system default time zone, e.g. '10:29:05.743'
-let pokusNow = LocalTime.now();
-
-// obtain the current time in the UTC time zone, e.g. '09:29:05.743'
-let pokusNowUTC = LocalTime.now(ZoneOffset.UTC);
-
-// obtain the current date in the system default time zone, e.g. 2016-02-23
-let pokusToday = LocalDate.now();
-
-// obtain the current date in the UTC time zone, e.g. 2016-02-23
-let pokusTodayUTC = LocalDate.now(ZoneOffset.UTC);
-
-pokus_logger.info(`    [pokusNow] : ${pokusNow}`);
-pokus_logger.info(`    [pokusNowUTC] : ${pokusNowUTC}`);
-pokus_logger.info(`    [pokusToday] : ${pokusToday}`);
-pokus_logger.info(`    [pokusTodayUTC] : ${pokusTodayUTC}`);
-
-
-/// let date1 = LocalDate.parse("2022-02-09T00:00:00")
-///   .atStartOfDay()
-///   .plusMonths(2); // 2022-02-09T00:00:00
-
-/// let date3 = LocalDate.parse("2022-02-09")
-///   .atStartOfDay()
-///   .plusDays(2); // 2013-02-24T00:00:00
-
-var d = LocalDate.parse("2012-12-24")
-  .atStartOfDay()
-  .plusMonths(2); // 2013-02-24T00:00:00
-
-let pokusNowPlusTwoMinutes = pokusNow.plusMinutes(2); // ccc
-pokus_logger.info(`    [pokusNowPlusTwoMinutes] : ${pokusNowPlusTwoMinutes}`);
-let pokusTodayPlusTwoMinutesStr = `${pokusToday}` + `T${pokusNowPlusTwoMinutes}`; // ccc
-pokus_logger.info(`    [pokusTodayPlusTwoMinutesStr] : ${pokusTodayPlusTwoMinutesStr}`);
-// /// pokus_logger.info(`    [ccccc] : ${cccc}`);
-// /// pokus_logger.info(`    [ccccc] : ${cccc}`);
-// /// pokus_logger.info(`    [ccccc] : ${cccc}`);
-
-/// app.use(cookieParser(cookieParserSecrets)); // openssl rand -hex 32
-app.use(cookieParser(cookieParserSecrets, {
-  expires: `${pokusTodayPlusTwoMinutesStr}`
-})); // openssl rand -hex 32
+/// app.use(cookieParser(secretsCookieParser)); // openssl rand -hex 32
+/// app.use(cookieParser(secretsCookieParser)); // openssl rand -hex 32
 /// app.use(cookieParser()); // openssl rand -hex 32
-pokus_logger.info(`    HTTP COOKIE MIDDLEWARE IS NOW INITIALIZED`);
-pokus_logger.info(`/************************************************************************* `);
-pokus_logger.info(`/************************************************************************* `);
 
+// const httpSessionMongoStore = sessionInitializer.getHttpSessionMongoStore();
 
 
 
 /************************************************************************************
- ***************  SESSION
+ ***************  COOKIES
  ************************************************************************************
  **************/
-pokus_logger.info(`/************************************************************************* `);
-pokus_logger.info(`/****** POKUS BOX HTTP SESSION INITIALIZATION : `);
-pokus_logger.info(`/************************************************************************* `);
-
-let pokusNowPlusThreeMinutes = pokusNow.plusMinutes(3); // ccc
-let pokusNowPlusFiveMinutes = pokusNow.plusMinutes(5); // ccc
-let pokusTodayPlusThreeMinutesStr = `${pokusToday}` + `T${pokusNowPlusThreeMinutes}`;
-let pokusTodayPlusFiveMinutesStr = `${pokusToday}` + `T${pokusNowPlusFiveMinutes}`;
-
-pokus_logger.info(`    [pokusNowPlusThreeMinutes] : ${pokusNowPlusThreeMinutes}`);
-pokus_logger.info(`    [pokusTodayPlusThreeMinutesStr] : ${pokusTodayPlusThreeMinutesStr}`);
-pokus_logger.info(`    [pokusTodayPlusFiveMinutesStr] : ${pokusTodayPlusFiveMinutesStr}`);
+const mongoUsername = pokus_secrets.getDatabaseSecrets().username;
+const mongoUserPassword = pokus_secrets.getDatabaseSecrets().password;
+const mongoDbName = pokus_secrets.getDatabaseSecrets().dbname;
+const httpSessionMongoStoreDbName = pokus_secrets.getDatabaseSecrets().mongostore_dbname;
 
 
-// /// pokus_logger.info(`    [ccccc] : ${cccc}`);
-// /// pokus_logger.info(`    [ccccc] : ${cccc}`);
-pokus_logger.info(`    HTTP SESSION MIDDLEWARE IS NOW INITIALIZED !!!`);
-pokus_logger.info(`/************************************************************************* `);
-pokus_logger.info(`/************************************************************************* `);
+
+// // "mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false"
+const mongoDbURI = `mongodb://${mongoUsername}:${mongoUserPassword}@192.168.1.102:27017/${httpSessionMongoStoreDbName}?authSource=admin&ssl=false&retryWrites=true&w=majority`;
 
 
-const httpSessionMongoStore = sessionInitializer.getHttpSessionMongoStore();
+
+pokus_logger.info(`>>>>>>>>>>>>>>>>>>>>>>>>><<>>>>>>>>>>>>>>>>>>>>>>>>><<>>>>>>>>>>>>>>>>>>>>>>>>><<`)
+pokus_logger.info(`PETIT REPERE JB dans [PRJ_ROOT/src/index.js] >>>>>>>>>>>>>>>>>>>>>>>>><<`)
+pokus_logger.info(`>>>>>>>>>>>>>>>>>>>>>>>>><<>>>>>>>>>>>>>>>>>>>>>>>>><<>>>>>>>>>>>>>>>>>>>>>>>>><<`)
+const httpSessionMongoStore = new MongoStore({
+        mongoUrl: `${mongoDbURI}`,
+        collection: `pokus_http_sessions`/*,
+        ttl: 30 * 24 * 60 * 60 // = 30 days */
+    })
+
 
 app.use(http_session({
-    // secret: `${pokus_secrets.getHttpSecrets().session_secret}`, // cookie secret// openssl rand -hex 32
     secret: `${pokus_secrets.getHttpSecrets().cookie_secret}`, // cookie secret// openssl rand -hex 32
-    name: `pokusbox_http_session`, // name of the cookie
+    name: `pokusbox`, // name of the cookie
     store: httpSessionMongoStore, // connect-mongo session store
     proxy: true,
     resave: true,
-    saveUninitialized: true,
-    expires: `${pokusTodayPlusThreeMinutesStr}`,
-    originalMaxAge: `${pokusTodayPlusFiveMinutesStr}`
+    saveUninitialized: true
 }));
-
+/*
+*/
 
 
 
@@ -239,6 +171,19 @@ require("./auth/restream/")
 require("./auth/google/")
 // require("./auth/twitch/")
 
+/*** REQUIRE STATEMENTS FOR API ENDPOINTS ROUTERS
+ *
+ **/
+// puppies
+const puppiesRouter = require('./api/routes/puppies/router');
+// users
+const usersRouter = require('./api/routes/users/router');
+// const virtualboxMachinesApiEndpoint = require("./api/routes/virtualbox/machines/")
+// const virtualboxDisksApiEndpoint = require("./api/routes/virtualbox/disks/")
+// const virtualboxSnapshotsApiEndpoint = require("./api/routes/virtualbox/snapshots/")
+
+
+
 // app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -260,7 +205,7 @@ app.enable('verbose errors');
 /************************************************************************************
  *   GET /static Router / (un-protected) (static folder served, for static pages like login 404 etc...)
  **************/
-app.use(`/static`, express.static(`${__dirname}/static`))
+app.use(express.static(`${__dirname}/static`))
 
 
 app.use(puppiesRouter);

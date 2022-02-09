@@ -180,13 +180,13 @@ echo "--------------------------------------------------------------------------
 export POKUS_QUERY_PARAMS="search=ch" && curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
 
 
-# ---  
-# ---  
+# ---
+# ---
 # ---  with 'color', but no 'is_female' search criterias :
 export POKUS_QUERY_PARAMS="search=ch&color=yellow" && curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
 
-# ---  
-# ---  
+# ---
+# ---
 # ---  with 'color', but no 'is_female' search criterias :
 export POKUS_QUERY_PARAMS="search=ch&color=blue" && curl -iv "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}" -X GET -H "Accept: application/json" | tail -n 1 | jq . && echo "http://127.0.0.1:9099/api/v1/puppies?${POKUS_QUERY_PARAMS}"
 
@@ -380,7 +380,7 @@ docker-compose up -d mongo
 
 docker stop jblm && docker rm jblm
 
-docker run -itd --name jblm --restart always -e ME_CONFIG_MONGODB_URL="mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false" --add-host "mongo.pok-us.io:192.168.1.101" --network hugo-starter-node_mongo_net --entrypoint "/bin/sh" debian
+docker run -itd --name jblm --restart always -e ME_CONFIG_MONGODB_URL="mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false" --add-host "mongo.pok-us.io:192.168.1.102" --network hugo-starter-node_mongo_net --entrypoint "/bin/sh" debian
 
 
 docker exec -it jblm bin -c "apt-get update -y && apt-get install -y iputils-ping"
@@ -390,7 +390,7 @@ docker stop jblm && docker rm jblm
 
 # and to test running mongo-express as simply as possible, which works ! Go to http://0.0.0.0:8083/
 docker run -it --name jblmn --rm -p 0.0.0.0:8083:8081 \
-    --add-host "mongo.pok-us.io:192.168.1.101" \
+    --add-host "mongo.pok-us.io:192.168.1.102" \
     -e ME_CONFIG_MONGODB_URL="mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false" \
     -e ME_CONFIG_MONGODB_AUTH_DATABASE="pokus" \
     -e ME_CONFIG_MONGODB_AUTH_USERNAME="pokus" \
@@ -418,7 +418,7 @@ docker exec -it jbltest sh -c "apt-get update -y && apt-get install -y iputils-p
 
 export POKUSDB_USERNAME="user"
 export POKUSDB_USERPWD="user"
-export POKUSDB_NET_HOST="192.168.1.101"
+export POKUSDB_NET_HOST="192.168.1.102"
 
 
 export TEST_QUERY="mongo -u \"${POKUSDB_USERNAME}\" -p \"${POKUSDB_USERPWD}\" ${POKUSDB_NET_HOST} --authenticationDatabase \"admin\""
@@ -435,7 +435,7 @@ docker exec -it jbltest sh -c "${TEST_QUERY}"
 
 # bash-3.2$ export POKUSDB_USERNAME="user"
 # bash-3.2$ export POKUSDB_USERPWD="user"
-# bash-3.2$ export POKUSDB_NET_HOST="192.168.1.101"
+# bash-3.2$ export POKUSDB_NET_HOST="192.168.1.102"
 # bash-3.2$
 # bash-3.2$
 # bash-3.2$ export TEST_QUERY="mongo -u \"${POKUSDB_USERNAME}\" -p \"${POKUSDB_USERPWD}\" ${POKUSDB_NET_HOST} --authenticationDatabase \"admin\""
@@ -444,7 +444,7 @@ docker exec -it jbltest sh -c "${TEST_QUERY}"
 # bash-3.2$ docker exec -it jbltest sh -c "${TEST_QUERY}"
 #
 # MongoDB shell version v5.0.6
-# connecting to: mongodb://192.168.1.101:27017/test?authSource=admin&compressors=disabled&gssapiServiceName=mongodb
+# connecting to: mongodb://192.168.1.102:27017/test?authSource=admin&compressors=disabled&gssapiServiceName=mongodb
 # Error: Authentication failed. :
 # connect@src/mongo/shell/mongo.js:372:17
 # @(connect):2:6
@@ -455,7 +455,7 @@ docker exec -it jbltest sh -c "${TEST_QUERY}"
 
 export POKUSDB_USERNAME="pokus"
 export POKUSDB_USERPWD="pokus"
-export POKUSDB_NET_HOST="192.168.1.101"
+export POKUSDB_NET_HOST="192.168.1.102"
 export POKUSDB_AUTH_DB="admin"
 
 
@@ -481,7 +481,7 @@ docker run --name jbltest -itd --restart always mongo sh
 
 export POKUSDB_USERNAME="pokus"
 export POKUSDB_USERPWD="pokus"
-export POKUSDB_NET_HOST="192.168.1.101"
+export POKUSDB_NET_HOST="192.168.1.102"
 export POKUSDB_AUTH_DB="admin"
 export POKUS_DB_NAME="pokus"
 export MONGO_USER_NAME=pokus
@@ -589,6 +589,38 @@ bash-3.2$ export JS_FILE_PATH=$(pwd)/src/static/auth/oauth2/google/success/index
 bash-3.2$ shasum -b -a 384 ${JS_FILE_PATH} | awk '{ print $1 }' | xxd -r -p | base64 -
 wa9YVYzVIfzkaZ8RGXUn+63I58zqVsO1qC4Ao+PAJfOck42XRC5glGCnKtBPaW0Q
 ```
+
+
+## Pokuq Box Http
+
+### Cookies
+
+Express JS Cookies :
+* we need to manage precise Date time,
+* so we use joda time just like in java https://js-joda.github.io/js-joda/
+
+And that works great, look at the HTTP Session Cookie :
+
+
+![Http Sssion Cookie Epxiry](./documentation/images/http/cookie/pokus_http_cookies_expiry.png)
+
+
+There as you can see i set the expiry time to be set 2 minutes after Now (look at the winston logs) :
+* does this mean that HTTP Session will ewpire after 2 minutes ?
+* No, session is a server side concept, so i will set expiry at 3 minutes after now, for HTTP session, and :
+  * the wookie will expire a first time after 2 minutes, be re-issued by the express sesion middleware
+  * and after 1 more minute, the session should expire, and the user forced to login again if he di not check the "keep me logged in" option
+  * Ok, so actually what's the use of the pokus cookie ? a question to be answered later.
+
+
+### HTTP Sessions
+
+https://expressjs.com/en/resources/middleware/session.html
+
+I waqn toi b e able to configure for each Http session :
+
+* when it expires
+* 
 
 ## References
 

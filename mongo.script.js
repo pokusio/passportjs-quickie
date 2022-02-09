@@ -1,5 +1,5 @@
 
-var db = connect('mongodb://pokus:pokus@192.168.1.101:27017/pokus?authSource=admin&ssl=false');
+var db = connect('mongodb://pokus:pokus@192.168.1.102:27017/pokus?authSource=admin&ssl=false');
 print('Database connected');
 
 allPuppies = db.puppies.find();

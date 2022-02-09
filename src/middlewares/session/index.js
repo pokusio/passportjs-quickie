@@ -20,11 +20,11 @@ const pokus_logger = winston.createLogger({
 });
 
 // // "mongodb://pokus:pokus@mongo.pok-us.io:27017/pokus?ssl=false"
-const mongoDbURI = `mongodb://${mongoUsername}:${mongoUserPassword}@192.168.1.101:27017/${httpSessionMongoStoreDbName}?authSource=admin&ssl=false&retryWrites=true&w=majority`;
+const mongoDbURI = `mongodb://${mongoUsername}:${mongoUserPassword}@192.168.1.102:27017/${httpSessionMongoStoreDbName}?authSource=admin&ssl=false&retryWrites=true&w=majority`;
 
-
-
-pokus_logger.info(`PETIT REPERE JB>>>>>>>>>>>>>>>>>>>>>>>>><<`)
+pokus_logger.info(`>>>>>>>>>>>>>>>>>>>>>>>>><<>>>>>>>>>>>>>>>>>>>>>>>>><<>>>>>>>>>>>>>>>>>>>>>>>>><<`)
+pokus_logger.info(`PETIT REPERE JB dans [PRJ_ROOT/src/middleware/session/index.js] >>>>>>>>>>>>>>>>>>>>>>>>><<`)
+pokus_logger.info(`>>>>>>>>>>>>>>>>>>>>>>>>><<>>>>>>>>>>>>>>>>>>>>>>>>><<>>>>>>>>>>>>>>>>>>>>>>>>><<`)
 const httpSessionMongoStore = new MongoStore({
         mongoUrl: `${mongoDbURI}`,
         collection: `${httpSessionMongoStoreDbName}s_collection`/*,
