@@ -15,6 +15,8 @@
     "watch": "export POKUS_DB_NET_FQDN=${POKUS_DB_NET_FQDN:-'192.168.1.102'}  && export POKUS_PORT=${POKUS_PORT:-'9099'} && nodemon --trace-warnings ./src/index.js",
     "clean-logs": "touch ./pokus.tests.e2e-api.logs && rm ./*.logs",
     "wlog": "npm run clean-logs && npm run watch 2>&1 | tee -a ./pokus.watch.logs",
+    "init": "./.npm.scripts/init.sh",
+    "src": "serve ./src",
     "help": "echo \"set OS_DISTRIB to either 'macos' or 'linux'\"  && exit 127"
   },
   "keywords": [],
