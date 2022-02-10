@@ -4,7 +4,8 @@ npm uninstall -s newman
 npm uninstall -g newman
 npm uninstall -s newman-reporter-html
 npm uninstall -g newman-reporter-html
-
+npm i -g serve
+npm i -g nodemon
 
 npm install --save-dev newman
 npm install --save-dev newman-reporter-htmlextra
@@ -14,7 +15,6 @@ npm install --save-dev @decathlon/newman-reporter-pullrequest-decorator
 npm install --save-dev newman-reporter-json
 
 
-npm i -g serve
 
 # https://www.npmjs.com/package/newman-reporter-htmlextra-and-perf
 # https://www.npmjs.com/package/@decathlon/newman-reporter-pullrequest-decorator

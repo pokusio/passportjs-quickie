@@ -37,14 +37,16 @@ echo "${GENERATED_SECRET}" > docker/run/.secrets/site_sessionsecret.txt
 #### start the mongo database
 
 ```bash
-docker-compose up -d mongo
+export DOCKER_COMPOSE_PATH="docker-compose/run/dev/database/docker-compose.mongo.yml"
+docker-compose -f ${DOCKER_COMPOSE_PATH} up -d mongo
 # ---> ---> ---> ---> ---> ---> ---> ---> ---> ---> ---> ---> ---> ---> --->
 # ---> Then go to http://0.0.0.0:8084/  for the MongoDB WebUI
 
 # To restart with fresh empty database :
-# docker-compose down --volumes && docker-compose up --force-recreate -d && docker-compose logs -f mongo_webui | more
+# docker-compose -f ${DOCKER_COMPOSE_PATH} down --volumes && docker-compose -f ${DOCKER_COMPOSE_PATH} up --force-recreate -d && docker-compose -f ${DOCKER_COMPOSE_PATH} logs -f mongo_webui | more
 
 ```
+
 * Now go to http://0.0.0.0:8084/ , you should have the Mongo Express Web UI :
 
 ![mongo webui](./documentation/images/mongo_express.png)
@@ -372,9 +374,9 @@ I experienced a small issue while setting up MongoExpress as Web UI for my mongo
 That issue was about networking, and here is how i diagnosed all this :
 
 ```bash
-
+export DOCKER_COMPOSE_PATH="docker-compose/run/dev/database/docker-compose.mongo.yml"
 # I first start the mong database only (not mongo express)
-docker-compose up -d mongo
+docker-compose -f ${DOCKER_COMPOSE_PATH} up -d mongo
 
 # then i run a standalone container, connecting it into the same docker network, of type bridge.
 
@@ -620,7 +622,7 @@ https://expressjs.com/en/resources/middleware/session.html
 I waqn toi b e able to configure for each Http session :
 
 * when it expires
-* 
+*
 
 ## References
 

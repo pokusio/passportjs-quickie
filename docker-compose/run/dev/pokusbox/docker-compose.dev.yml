@@ -1,0 +1,17 @@
+version: "3.7"
+# version: "3"
+networks:
+  mongo_net:
+    driver: bridge
+volumes:
+  mongodb_server_data:
+  excluded_node_modules:
+
+services:
+  pokusbox_dev:
+    image: pokus.io:5000/pokusbox/api:0.0.1-dev
+    command: npm run wlogs
+    volumes:
+      - ./:/usr/local/app/
+      # the volume above prevents our host system's node_modules to be mounted
+      - excluded_node_modules:/usr/local/app/node_modules/

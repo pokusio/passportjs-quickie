@@ -120,6 +120,7 @@ var cookieParserSecrets = [`${pokus_secrets.getHttpSecrets().cookie_secret}`];
 let LocalDate = require("@js-joda/core").LocalDate;
 let LocalTime = require("@js-joda/core").LocalTime;
 let ZoneOffset = require("@js-joda/core").ZoneOffset;
+let Duration = require("@js-joda/core").Duration;
 // obtain the current time in the system default time zone, e.g. '10:29:05.743'
 let pokusNow = LocalTime.now();
 
@@ -196,7 +197,9 @@ pokus_logger.info(`/************************************************************
 
 
 const httpSessionMongoStore = sessionInitializer.getHttpSessionMongoStore();
-
+/// const pokusMaxAgeFiveMinutesStr = Duration.ofMinutes(5).toString(); // 'PT10H'
+const pokusMaxAgeFiveMinutesInteger = 300000; // integer number of milliseconds in fuive minutes
+const pokusMaxAgeSevenMinutesInteger = 420000; // integer number of milliseconds in fuive minutes
 app.use(http_session({
     // secret: `${pokus_secrets.getHttpSecrets().session_secret}`, // cookie secret// openssl rand -hex 32
     secret: `${pokus_secrets.getHttpSecrets().cookie_secret}`, // cookie secret// openssl rand -hex 32
@@ -205,8 +208,14 @@ app.use(http_session({
     proxy: true,
     resave: true,
     saveUninitialized: true,
-    expires: `${pokusTodayPlusThreeMinutesStr}`,
-    originalMaxAge: `${pokusTodayPlusFiveMinutesStr}`
+    cookie: {
+      secure: false, // true requires https setup : will be done with a docker-compose ??
+      expires: `${pokusTodayPlusFiveMinutesStr}`, // same as maxAge, both exists for browser support, i guess, see https://mrcoles.com/blog/cookies-max-age-vs-expires/
+      originalMaxAge: pokusMaxAgeSevenMinutesInteger, // The req.session.cookie.originalMaxAge property
+                                                      // returns the original maxAge (time-to-live), in
+                                                      // milliseconds, of the session cookie.
+      maxAge: pokusMaxAgeFiveMinutesInteger // the maximum duration of a session cookien before it expires ?
+    }
 }));
 
 

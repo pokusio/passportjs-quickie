@@ -1,0 +1,150 @@
+version: "3.7"
+# version: "3"
+networks:
+  mongo_net:
+    driver: bridge
+volumes:
+  mongodb_server_data:
+
+services:
+#   node:
+#     build:
+#       context: .
+#       dockerfile: ./docker/node/Dockerfile
+#     # volumes:
+#     # # https://stackoverflow.com/a/32785014/232619
+#       # - .:/app
+#       # - /app/node_modules
+#     command: /usr/local/wait-for-it.sh mongo:27017 -- npm start
+#     env_file:
+#       - .env
+#     ports:
+#       - 9099:3000
+#     depends_on:
+#       - mongo
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    ports:
+      - 0.0.0.0:27017:27017
+    env_file: .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    volumes:
+      - mongodb_server_data:/data/db
+      - $PWD/docker/run/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+    extra_hosts:
+      - "mongo.pok-us.io:${DOCK_HOST_IP_ADDR}"
+      - "mongo:${DOCK_HOST_IP_ADDR}"
+    networks:
+      mongo_net:
+        aliases:
+          - mongo.pok-us.io
+          - mongo
+# ---------- ---------- ---------- ---------- ---------- ---------- ---------- #
+# https://hub.docker.com/_/mongo-express
+# ---------- ---------- ---------- ---------- ---------- ---------- ---------- #
+  mongo_webui:
+    image: mongo-express:0.54.0
+    container_name: mongo_webui
+    restart: always
+    ports:
+      - 0.0.0.0:8084:8081
+    env_file: .env
+    environment:
+      ME_CONFIG_OPTIONS_EDITORTHEME: ${ME_CONFIG_OPTIONS_EDITORTHEME}
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
+      # --- all secrets :
+      # ME_CONFIG_MONGODB_URL: ${ME_CONFIG_MONGODB_URL}
+      # ME_CONFIG_MONGODB_AUTH_DATABASE: ${ME_CONFIG_MONGODB_AUTH_DATABASE}
+      # ME_CONFIG_MONGODB_AUTH_USERNAME: ${ME_CONFIG_MONGODB_AUTH_USERNAME}
+      # ME_CONFIG_MONGODB_AUTH_PASSWORD: ${ME_CONFIG_MONGODB_AUTH_PASSWORD}
+      # ME_CONFIG_BASICAUTH_USERNAME: ${ME_CONFIG_BASICAUTH_USERNAME}
+      # ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
+      # ME_CONFIG_MONGODB_ADMINUSERNAME: ${ME_CONFIG_MONGODB_ADMINUSERNAME}
+      # ME_CONFIG_MONGODB_ADMINPASSWORD: ${ME_CONFIG_MONGODB_ADMINPASSWORD}
+      # - same secrets, but as files :
+      ME_CONFIG_MONGODB_URL_FILE: /run/secrets/mongodb_url
+      ME_CONFIG_MONGODB_AUTH_DATABASE_FILE: /run/secrets/mongodb_auth_database
+      ME_CONFIG_MONGODB_AUTH_USERNAME_FILE: /run/secrets/mongodb_auth_username
+      ME_CONFIG_MONGODB_AUTH_PASSWORD_FILE: /run/secrets/mongodb_auth_password
+      ME_CONFIG_BASICAUTH_USERNAME_FILE: /run/secrets/basicauth_username
+      ME_CONFIG_BASICAUTH_PASSWORD_FILE: /run/secrets/basicauth_password
+      ME_CONFIG_MONGODB_ADMINUSERNAME_FILE: /run/secrets/mongodb_adminusername
+      ME_CONFIG_MONGODB_ADMINPASSWORD_FILE: /run/secrets/mongodb_adminpassword
+      ME_CONFIG_SITE_COOKIESECRET_FILE: /run/secrets/site_cookiesecret
+      ME_CONFIG_SITE_SESSIONSECRET_FILE: /run/secrets/site_sessionsecret
+
+
+      # --- More of them
+      # ME_CONFIG_MONGODB_SERVER: ${ME_CONFIG_MONGODB_SERVER}
+      # ME_CONFIG_SITE_BASEURL: http://0.0.0.0:8084/
+      # ME_CONFIG_REQUEST_SIZE: ${ME_CONFIG_REQUEST_SIZE}
+      # ME_CONFIG_SITE_SSL_ENABLED: "false"
+      # ME_CONFIG_MONGODB_SSLVALIDATE: ${ME_CONFIG_MONGODB_SSLVALIDATE}
+      # ME_CONFIG_SITE_SSL_CRT_PATH: ${ME_CONFIG_SITE_SSL_CRT_PATH}
+      # ME_CONFIG_SITE_SSL_KEY_PATH: ${ME_CONFIG_SITE_SSL_KEY_PATH}
+      # --> File Injected secrets with docker secrets
+      # ME_CONFIG_MONGODB_CA_FILE: ${ME_CONFIG_MONGODB_CA_FILE}
+      # ME_CONFIG_BASICAUTH_USERNAME_FILE: /run/secrets/basicauth_username
+      # ME_CONFIG_BASICAUTH_PASSWORD_FILE: /run/secrets/basicauth_password
+      # ME_CONFIG_MONGODB_ADMINUSERNAME_FILE: /run/secrets/mongo_admin_user
+      # ME_CONFIG_MONGODB_ADMINPASSWORD_FILE: /run/secrets/mongo_admin_pass
+      # ME_CONFIG_MONGODB_AUTH_USERNAME_FILE: /run/secrets/mongodb_auth_username
+      # ME_CONFIG_MONGODB_AUTH_PASSWORD_FILE: /run/secrets/mongodb_auth_password
+      # ME_CONFIG_SITE_COOKIESECRET_FILE: /run/secrets/site_cookiesecret
+      # ME_CONFIG_SITE_SESSIONSECRET_FILE: /run/secrets/site_sessionsecret
+      # ME_CONFIG_MONGODB_URL_FILE: /run/secrets/mongodb_url
+
+      # ME_CONFIG_MONGODB_AUTH_DATABASE_FILE: /run/secrets/mongodb_auth_database
+      # ME_CONFIG_MONGODB_AUTH_USERNAME_FILE: /run/secrets/mongodb_auth_username
+      # ME_CONFIG_MONGODB_AUTH_PASSWORD_FILE: /run/secrets/mongodb_auth_password
+    secrets:
+      - mongo_admin_user
+      - mongo_admin_pass
+      - basicauth_username
+      - basicauth_password
+      - site_cookiesecret
+      - site_sessionsecret
+      - mongodb_url
+      - mongodb_auth_database
+      - mongodb_auth_username
+      - mongodb_auth_password
+    volumes:
+      - mongodb_server_data:/data/db
+      - $PWD/docker/run/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+    # extra_hosts:
+      # - "mongo.pok-us.io:${DOCK_HOST_IP_ADDR}"
+      # - "mongo:${DOCK_HOST_IP_ADDR}"
+    networks:
+      mongo_net:
+        aliases:
+          - mongoui.pok-us.io
+#       webui_net:
+#         aliases:
+#           - mongo.pok-us.io
+#           # - alias3
+secrets:
+  mongo_admin_user:
+    file: ./docker/run/.secrets/mongo_admin_user.txt
+  mongo_admin_pass:
+    file: ./docker/run/.secrets/mongo_admin_pass.txt
+  basicauth_username:
+    file: ./docker/run/.secrets/basicauth_username.txt
+  basicauth_password:
+    file: ./docker/run/.secrets/basicauth_password.txt
+  site_cookiesecret:
+    file: ./docker/run/.secrets/site_cookiesecret.txt
+  site_sessionsecret:
+    file: ./docker/run/.secrets/site_sessionsecret.txt
+  mongodb_url:
+    file: ./docker/run/.secrets/mongodb_url.txt
+  mongodb_auth_database:
+    file: ./docker/run/.secrets/mongodb_auth_database.txt
+  mongodb_auth_username:
+    file: ./docker/run/.secrets/mongodb_auth_username.txt
+  mongodb_auth_password:
+    file: ./docker/run/.secrets/mongodb_auth_password.txt
